@@ -4,13 +4,49 @@
 
 <h1 align="center">Vibe Coding Template</h1>
 
-<p align="center"><strong>A drop-in rule set + project scaffold that makes AI coding agents behave like a disciplined senior engineer — on any agent, any OS, any stack.</strong></p>
+<p align="center">
+  <strong>Your AI coding agent just tried to delete your database.</strong><br/>
+  <strong>This stops it.</strong>
+</p>
 
-AI agents are fast but reckless: they overcomplicate, touch code they shouldn't, claim "this should work" without proof, drop secrets into logs, and run destructive commands. This template installs the guardrails, workflow, and safety hooks that fix those failure modes — so you get speed *and* discipline.
+<p align="center"><em>A drop-in rule set + hooks that make Claude Code, Cursor, Windsurf, and Copilot behave like a disciplined senior engineer — not a reckless speed demon.</em></p>
 
-It's not a framework or a dependency. It's a set of plain files (rules, hooks, CI, scripts) you drop into a project. Nothing to import, nothing to lock into.
+<p align="center">
+  <a href="#quick-start">⚡ Setup: 2 minutes</a> • 
+  <a href="#why-this-exists">🛑 See what it blocks</a> • 
+  <a href="#presets">🏗️ Works with any stack</a>
+</p>
 
-> License: MIT. Use it, fork it, ship it. Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+---
+
+### The Problem Every Dev Faces
+
+AI agents are **fast** but **reckless**:
+- ✗ Claim "this should work" without proof → you ship untested code
+- ✗ Overcomplicate: 1000 lines where 100 would do
+- ✗ Edit files they shouldn't touch → you revert bad code
+- ✗ Read `.env` + print secrets to chat → your keys are compromised
+- ✗ Run `rm -rf /` or `DROP TABLE` without WHERE → your data is gone
+- ✗ Different rules for Cursor vs Claude vs Copilot → chaos
+
+### What This Does
+
+This is not a framework. It's a **set of plain files** (rules + hooks + CI) you drop into your project:
+
+| Problem | Solution |
+|---------|----------|
+| "This should work" | **Mandatory test gate:** typecheck + lint + test + build, all green before commit |
+| Over-engineering | **File-size budgets** enforced in CI — god-files get split before they metastasize |
+| Scope drift | **Scope lock:** agent states which files change BEFORE editing anything |
+| Session death = lost work | **Per-edit commits + auto-push** — crashed session loses ~nothing |
+| Secret leaks + destructive commands | **Permission deny-list + hooks** block `rm -rf`, `DROP TABLE`, `cat .env`, etc. |
+| Rule chaos (different per agent) | **Single source of truth:** `AGENTS.md` → auto-generates config for every agent |
+
+**Result:** Your AI agent behaves like a senior engineer, not a burnout shipping broken code at 3 AM.
+
+---
+
+It's MIT. Use it, fork it, ship it. No import, no dependency, no lock-in.
 
 ---
 
