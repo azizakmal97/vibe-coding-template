@@ -1,0 +1,13 @@
+{
+  "_preset": "fullstack",
+  "dev": "npm run dev",
+  "build": "npm run build",
+  "test": "npm test",
+  "test:e2e": "npm run test:e2e",
+  "lint": "npm run lint",
+  "typecheck": "npx tsc --noEmit",
+  "db:migrate": "npx prisma migrate dev",
+  "db:studio": "npx prisma studio",
+  "checkpoint": "npx tsc --noEmit && npm run lint && npm test -- --run && npm run build",
+  "filesize": "node scripts/check-file-sizes.mjs"
+}

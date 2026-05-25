@@ -1,0 +1,30 @@
+# Local AI-tool settings — never publish (may contain machine paths / personal allowlists)
+**/settings.local.json
+.claude/settings.local.json
+
+# Personal working notes (not part of the template)
+NEXT_SESSION.md
+
+# Dependencies
+node_modules/
+
+# Build / tool output
+dist/
+build/
+.next/
+.vite/
+graphify-out/
+.graphify_*
+
+# E2E artifacts
+e2e/.auth/
+playwright-report/
+test-results/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp

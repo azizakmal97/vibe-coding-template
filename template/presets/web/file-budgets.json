@@ -1,0 +1,21 @@
+{
+  "_preset": "web",
+  "soft": {
+    "src/pages/**/*.tsx": 250,
+    "src/components/**/*.tsx": 150,
+    "src/hooks/**/*.ts": 100,
+    "src/lib/**/*.ts": 200
+  },
+  "hard": {
+    "src/pages/**/*.tsx": 400,
+    "src/components/**/*.tsx": 300,
+    "src/hooks/**/*.ts": 200,
+    "src/lib/**/*.ts": 400
+  },
+  "whitelist": [
+    "src/components/ui/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.vite/**"
+  ]
+}

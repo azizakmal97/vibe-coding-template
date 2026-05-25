@@ -1,0 +1,11 @@
+{
+  "_preset": "mobile",
+  "dev": "flutter run",
+  "build": "flutter build apk --release",
+  "test": "flutter test",
+  "test:integration": "flutter test integration_test",
+  "lint": "flutter analyze",
+  "typecheck": "flutter analyze",
+  "checkpoint": "flutter analyze && flutter test && flutter build apk --debug",
+  "filesize": "node scripts/check-file-sizes.mjs"
+}

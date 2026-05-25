@@ -1,0 +1,16 @@
+# Normalize line endings so shell scripts + Node hooks work across OSes.
+* text=auto eol=lf
+
+# Scripts and hooks MUST stay LF (CRLF breaks shebang execution on Unix).
+*.sh    text eol=lf
+*.mjs   text eol=lf
+*.js    text eol=lf
+
+# PowerShell is fine with either; keep CRLF on Windows-only scripts.
+*.ps1   text eol=crlf
+
+# Binary assets — never normalize.
+*.png   binary
+*.jpg   binary
+*.xlsx  binary
+*.ico   binary

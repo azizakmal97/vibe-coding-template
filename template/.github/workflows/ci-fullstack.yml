@@ -1,0 +1,135 @@
+name: CI (fullstack)
+
+# Auto-runs on every push + pull request.
+# Robot reviewer: lint -> typecheck -> prisma validate -> test (w/ test DB) -> build -> file-size.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+      NEXTAUTH_SECRET: ci-secret-do-not-use-in-prod
+      NEXTAUTH_URL: http://localhost:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Prisma generate + validate
+        run: |
+          npx prisma generate
+          npx prisma validate
+
+      - name: Apply migrations (test DB)
+        run: npx prisma migrate deploy
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Tests
+        run: npm test -- --run
+
+      - name: Build
+        run: npm run build
+
+      - name: File-size budget check
+        run: node scripts/check-file-sizes.mjs
+
+  # Real-browser E2E. Separate job (own DB service) so the fast unit gate above
+  # isn't slowed by the browser install. Auto-skips until the Playwright scaffold
+  # is filled in (e2e/auth.setup.ts exists) — see e2e/README.md.
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+      NEXTAUTH_SECRET: ci-secret-do-not-use-in-prod
+      NEXTAUTH_URL: http://localhost:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Check E2E is set up
+        id: e2e
+        run: |
+          if [ -f e2e/auth.setup.ts ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::e2e/auth.setup.ts not found — skipping E2E. Fill in the scaffold (see e2e/README.md)."
+          fi
+
+      - name: Install dependencies
+        if: steps.e2e.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Prisma generate + migrate (test DB)
+        if: steps.e2e.outputs.ready == 'true'
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+
+      - name: Install Chromium
+        if: steps.e2e.outputs.ready == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E
+        if: steps.e2e.outputs.ready == 'true'
+        run: npm run test:e2e
+
+      - name: Upload report on failure
+        if: ${{ failure() && steps.e2e.outputs.ready == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

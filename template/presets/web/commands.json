@@ -1,0 +1,11 @@
+{
+  "_preset": "web",
+  "dev": "npm run dev",
+  "build": "npm run build",
+  "test": "npm test",
+  "test:e2e": "npm run test:e2e",
+  "lint": "npm run lint",
+  "typecheck": "npx tsc --noEmit",
+  "checkpoint": "npx tsc --noEmit && npm test -- --run && npm run build",
+  "filesize": "node scripts/check-file-sizes.mjs"
+}

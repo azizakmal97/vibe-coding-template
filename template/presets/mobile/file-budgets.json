@@ -1,0 +1,22 @@
+{
+  "_preset": "mobile",
+  "soft": {
+    "lib/screens/**/*.dart": 300,
+    "lib/widgets/**/*.dart": 200,
+    "lib/services/**/*.dart": 250,
+    "lib/providers/**/*.dart": 200
+  },
+  "hard": {
+    "lib/screens/**/*.dart": 500,
+    "lib/widgets/**/*.dart": 300,
+    "lib/services/**/*.dart": 400,
+    "lib/providers/**/*.dart": 350
+  },
+  "whitelist": [
+    "lib/generated/**",
+    "**/*.g.dart",
+    "**/*.freezed.dart",
+    "build/**",
+    ".dart_tool/**"
+  ]
+}

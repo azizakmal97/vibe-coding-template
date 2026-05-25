@@ -1,0 +1,91 @@
+name: CI (web)
+
+# Auto-runs on every push + pull request.
+# Robot reviewer: lint -> typecheck -> test -> build -> file-size.
+# Each step is its own job step so failures are obvious.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit + integration tests
+        run: npm test -- --run
+
+      - name: Build
+        run: npm run build
+
+      - name: File-size budget check
+        run: node scripts/check-file-sizes.mjs
+
+  # Real-browser E2E. Separate job so the fast unit gate above isn't slowed by
+  # the browser install. Auto-skips until the Playwright scaffold is filled in
+  # (e2e/auth.setup.ts exists) — see e2e/README.md.
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Check E2E is set up
+        id: e2e
+        run: |
+          if [ -f e2e/auth.setup.ts ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::e2e/auth.setup.ts not found — skipping E2E. Fill in the scaffold (see e2e/README.md)."
+          fi
+
+      - name: Install dependencies
+        if: steps.e2e.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Install Chromium
+        if: steps.e2e.outputs.ready == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E
+        if: steps.e2e.outputs.ready == 'true'
+        run: npm run test:e2e
+
+      - name: Upload report on failure
+        if: ${{ failure() && steps.e2e.outputs.ready == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

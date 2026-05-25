@@ -1,0 +1,56 @@
+import { test as setup, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+
+/**
+ * ─────────────────────────────────────────────────────────────────────────────
+ * TEMPLATE — copy this file to `e2e/auth.setup.ts` and fill in the [PLACEHOLDERS].
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * Programmatic login that runs ONCE before the suite. It logs in via the real
+ * API (no clicking through the login form), then saves browser storageState so
+ * every spec starts already authenticated — specs then test the FEATURE under
+ * test, not the login plumbing.
+ *
+ * Two common auth shapes — keep the one that matches your app, delete the other:
+ *
+ *   A. TOKEN IN localStorage (SPA + bearer token; e.g. zustand-persist, Redux)
+ *      → hit the login endpoint, then write the token into localStorage exactly
+ *        the way your real login does. storageState captures localStorage.
+ *
+ *   B. HTTP-ONLY SESSION COOKIE (Next.js / server-session apps)
+ *      → just POST the login endpoint via `request`; the Set-Cookie is captured
+ *        by storageState automatically. You can DELETE the `page.evaluate` block.
+ *
+ * Prereq: your test user must exist in the local/test DB. Seed it first
+ * (see e2e/README.md → "Seeding").
+ */
+const authFile = path.join('e2e', '.auth', 'user.json');
+
+setup('authenticate', async ({ page, request }) => {
+  // 1. Log in against the REAL endpoint.
+  const res = await request.post('[LOGIN_ENDPOINT e.g. /api/login]', {
+    data: { /* [LOGIN_PAYLOAD e.g. email + password for your seeded test user] */ },
+  });
+  expect(
+    res.ok(),
+    `login failed (HTTP ${res.status()}). Seed the test user first (see e2e/README.md).`,
+  ).toBeTruthy();
+
+  // ── Shape A: token in localStorage ─────────────────────────────────────────
+  // Delete this whole block if your app uses session cookies (Shape B).
+  const body = (await res.json()) as { /* [SHAPE of your login response] */ token: string };
+  expect(body.token, 'login response had no token').toBeTruthy();
+
+  await page.goto('/');
+  await page.evaluate((b) => {
+    // Mirror EXACTLY what your real login writes to localStorage.
+    // Example (adjust keys + shape to your app):
+    localStorage.setItem('[AUTH_STORE_KEY]', JSON.stringify({ /* [persisted state] */ }));
+    localStorage.setItem('[TOKEN_KEY]', b.token);
+  }, body);
+  // ── end Shape A ─────────────────────────────────────────────────────────────
+
+  fs.mkdirSync(path.dirname(authFile), { recursive: true });
+  await page.context().storageState({ path: authFile });
+});

@@ -1,0 +1,27 @@
+{
+  "_preset": "fullstack",
+  "soft": {
+    "app/**/page.tsx": 250,
+    "app/**/layout.tsx": 150,
+    "app/api/**/route.ts": 300,
+    "components/**/*.tsx": 150,
+    "lib/services/**/*.ts": 300,
+    "lib/db/**/*.ts": 200,
+    "actions/**/*.ts": 200
+  },
+  "hard": {
+    "app/**/page.tsx": 400,
+    "app/**/layout.tsx": 250,
+    "app/api/**/route.ts": 600,
+    "components/**/*.tsx": 300,
+    "lib/services/**/*.ts": 500,
+    "lib/db/**/*.ts": 400,
+    "actions/**/*.ts": 400
+  },
+  "whitelist": [
+    "components/ui/**",
+    "prisma/migrations/**",
+    "**/node_modules/**",
+    "**/.next/**"
+  ]
+}

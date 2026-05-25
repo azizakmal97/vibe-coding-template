@@ -1,0 +1,23 @@
+{
+  "_comment": "Per-preset budgets are copied here by setup.sh / setup.ps1. Hard breach fails CI. Soft warns post-edit.",
+  "soft": {
+    "**/*.ts": 300,
+    "**/*.tsx": 250,
+    "**/*.js": 300,
+    "**/*.jsx": 250
+  },
+  "hard": {
+    "**/*.ts": 500,
+    "**/*.tsx": 400,
+    "**/*.js": 500,
+    "**/*.jsx": 400
+  },
+  "whitelist": [
+    "**/components/ui/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.next/**",
+    "**/generated/**"
+  ]
+}
