@@ -65,7 +65,7 @@ if (existsSync(report)) {
 
 const check = spawnSync('graphify', ['--version'], { encoding: 'utf8' });
 if (check.error || check.status !== 0) {
-  console.log('[graphify-bootstrap] `graphify` not installed. Install via: pip install graphify');
+  console.log('[graphify-bootstrap] `graphify` not installed. Install via: pip install graphifyy');
   console.log('[graphify-bootstrap] Or use the Claude Code skill: /graphify');
   process.exit(0);
 }
@@ -74,5 +74,8 @@ console.log(`[graphify-bootstrap] ${sourceFileCount} source files. Running graph
 const run = spawnSync('graphify', ['generate', '.', '--output', 'graphify-out'], { stdio: 'inherit' });
 if (run.status !== 0) {
   console.error('[graphify-bootstrap] graphify failed; continuing setup.');
+} else {
+  console.log('[graphify-bootstrap] Done. Output is an Obsidian vault:');
+  console.log('[graphify-bootstrap]   Obsidian → "Open folder as vault" → graphify-out  (use Graph View)');
 }
 process.exit(0);
