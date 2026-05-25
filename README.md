@@ -10,6 +10,14 @@ It's not a framework or a dependency. It's a set of plain files (rules, hooks, C
 
 ---
 
+## Demo
+
+![Vibe Coding Template — destructive and secret-leaking commands blocked automatically](demo/vibe-coding-demo.gif)
+
+*Your AI agent's destructive and secret-leaking commands (`rm -rf`, `DROP TABLE`, `cat .env`) are blocked before they run. Reproduce or regenerate this GIF with [`demo/demo.tape`](demo/demo.tape).*
+
+---
+
 ## Why this exists
 
 | The problem (every AI agent does this) | What this template adds |
