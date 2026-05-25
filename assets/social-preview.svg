@@ -1,0 +1,42 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2b2d3a"/>
+      <stop offset="1" stop-color="#191a21"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="64" y1="50" x2="192" y2="204" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#bd93f9"/>
+      <stop offset="1" stop-color="#ff79c6"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="500" y1="0" x2="900" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#bd93f9"/>
+      <stop offset="1" stop-color="#ff79c6"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- logo mark (shield + terminal prompt) -->
+  <g transform="translate(-12,28) scale(2.3)">
+    <path d="M128 50 C150 62 172 70 192 74 V122 C192 164 163 190 128 204 C93 190 64 164 64 122 V74 C84 70 106 62 128 50 Z"
+          fill="#bd93f9" fill-opacity="0.08" stroke="url(#shield)" stroke-width="7" stroke-linejoin="round"/>
+    <g filter="url(#glow)" stroke="#50fa7b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <polyline points="107,107 132,128 107,149"/>
+      <line x1="140" y1="152" x2="166" y2="152"/>
+    </g>
+  </g>
+
+  <!-- wordmark + tagline -->
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="500" y="266" font-size="74" font-weight="800" fill="#f8f8f2">Vibe Coding</text>
+    <text x="500" y="352" font-size="74" font-weight="800" fill="#f8f8f2">Template</text>
+    <rect x="500" y="384" width="150" height="6" rx="3" fill="url(#rule)"/>
+    <text x="500" y="446" font-size="31" fill="#c7c4d6">Guardrails that make AI coding agents</text>
+    <text x="500" y="488" font-size="31" fill="#c7c4d6">act like a disciplined senior engineer.</text>
+    <text x="500" y="556" font-size="26" font-weight="600" fill="#50fa7b">Any agent &#183; any OS &#183; any stack</text>
+  </g>
+</svg>

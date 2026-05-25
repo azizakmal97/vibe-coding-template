@@ -1,6 +1,10 @@
-# Vibe Coding Template
+<p align="center">
+  <img src="assets/logo.svg" alt="Vibe Coding Template logo" width="128" />
+</p>
 
-**A drop-in rule set + project scaffold that makes AI coding agents behave like a disciplined senior engineer — on any agent, any OS, any stack.**
+<h1 align="center">Vibe Coding Template</h1>
+
+<p align="center"><strong>A drop-in rule set + project scaffold that makes AI coding agents behave like a disciplined senior engineer — on any agent, any OS, any stack.</strong></p>
 
 AI agents are fast but reckless: they overcomplicate, touch code they shouldn't, claim "this should work" without proof, drop secrets into logs, and run destructive commands. This template installs the guardrails, workflow, and safety hooks that fix those failure modes — so you get speed *and* discipline.
 

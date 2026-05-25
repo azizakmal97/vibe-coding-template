@@ -1,0 +1,29 @@
+<svg width="512" height="512" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vibe Coding Template logo">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2b2d3a"/>
+      <stop offset="1" stop-color="#1b1c24"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="64" y1="50" x2="192" y2="204" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#bd93f9"/>
+      <stop offset="1" stop-color="#ff79c6"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- app tile -->
+  <rect x="4" y="4" width="248" height="248" rx="56" fill="url(#tile)" stroke="#44475a" stroke-width="2"/>
+
+  <!-- shield (guardrails) -->
+  <path d="M128 50 C150 62 172 70 192 74 V122 C192 164 163 190 128 204 C93 190 64 164 64 122 V74 C84 70 106 62 128 50 Z"
+        fill="#bd93f9" fill-opacity="0.08" stroke="url(#shield)" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- terminal prompt >_  (the commands the shield guards) -->
+  <g filter="url(#glow)" stroke="#50fa7b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <polyline points="107,107 132,128 107,149"/>
+    <line x1="140" y1="152" x2="166" y2="152"/>
+  </g>
+</svg>
