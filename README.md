@@ -5,15 +5,21 @@
 <h1 align="center">Vibe Coding Template</h1>
 
 <p align="center">
+  <img src="https://img.shields.io/github/stars/azizakmal97/vibe-coding-template?style=social" alt="GitHub stars" />
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
+</p>
+
+<p align="center">
   <strong>Your AI coding agent just tried to delete your database.</strong><br/>
   <strong>This stops it.</strong>
 </p>
 
-<p align="center"><em>A drop-in rule set + hooks that make Claude Code, Cursor, Windsurf, and Copilot behave like a disciplined senior engineer — not a reckless speed demon.</em></p>
+<p align="center"><em>Go ahead, code purely on vibes. The CI gate and safety hooks will catch you if you fall.<br/>A drop-in rule set + hooks that make Claude Code, Cursor, Windsurf, and Copilot behave like a disciplined senior engineer — not a reckless speed demon.</em></p>
 
 <p align="center">
   <a href="#quick-start">⚡ Setup: 2 minutes</a> • 
-  <a href="#why-this-exists">🛑 See what it blocks</a> • 
+  <a href="#what-this-does">🛑 See what it blocks</a> • 
   <a href="#presets">🏗️ Works with any stack</a>
 </p>
 
@@ -44,6 +50,15 @@ This is not a framework. It's a **set of plain files** (rules + hooks + CI) you 
 
 **Result:** Your AI agent behaves like a senior engineer, not a burnout shipping broken code at 3 AM.
 
+### 🧠 Stop prompting for code. Start prompting for contracts.
+
+Most AI templates tell the model to "write the app". This template enforces a **hybrid methodology**:
+- **New APIs:** Spec-Driven Development (write the Zod contract first).
+- **Business Logic:** Test-Driven Development (red → green → refactor).
+- **Legacy Code:** Characterization Tests (lock behavior before refactoring).
+
+[Read the full methodology below.](#methodology--baked-in-not-bolted-on)
+
 ---
 
 It's MIT. Use it, fork it, ship it. No import, no dependency, no lock-in.
@@ -58,16 +73,11 @@ It's MIT. Use it, fork it, ship it. No import, no dependency, no lock-in.
 
 ---
 
-## Why this exists
+## 🌌 See your codebase as a graph (Obsidian)
 
-| The problem (every AI agent does this) | What this template adds |
-|---|---|
-| "This should work" with no proof | A mandatory test-before-commit gate: typecheck + lint + test + build, output pasted |
-| Overcomplicates — 1000 lines where 100 would do | Simplicity rules + file-size budgets enforced in CI |
-| Edits code it didn't need to touch | Scope-lock rule: state what changes before editing |
-| Loses work when the session dies mid-task | Per-edit commits + auto-push + a session-resume protocol |
-| Reads/prints secrets, runs `rm -rf`, drops tables | Permission deny-list + a command-validation hook that blocks destructive + secret-leaking commands |
-| Different rules for Cursor vs Claude vs Copilot | One source of truth (`AGENTS.md`) → generated config for every agent |
+> **📸 Tip for you:** *Drop a screenshot or GIF of your Obsidian graph view here! E.g. `![Graphify in Obsidian](assets/graph-preview.png)`*
+
+Agents navigate by structure, not grep. `graphify` maps your whole codebase into a knowledge graph—one note per file/function, wikilinked by who-calls-what. The agent uses this to answer "where is X" without burning tokens, and outputs an **Obsidian vault** so you can fly around your architecture visually. [Learn more below.](#see-your-codebase-as-a-graph-obsidian)
 
 ---
 
@@ -155,12 +165,48 @@ your-project/
 - **Death-defense workflow.** Per-edit commits with `wip(phase):` prefixes, an auto-push hook, and a session-resume protocol mean a crashed or rate-limited session loses ~nothing. `/resume` picks up exactly where it stopped.
 - **Test-before-commit gate.** No "I think it works." Typecheck **and** build (they catch different bugs), tests, file-size check — all green before commit.
 - **File-size budgets.** Soft warning + hard CI failure per file type, so god-files get split *before* they metastasize.
-- **Methodology baked in.** Spec-driven (Zod contracts) + test-driven for new code, characterization tests before refactoring legacy code.
+- **Methodology baked in.** A hybrid **SDD + TDD + Characterization** strategy — the agent picks the right one per task. [See below.](#methodology--baked-in-not-bolted-on)
 - **Token-aware autonomy.** `/autonomous` loops through phases and bails gracefully at a safe checkpoint when the context budget gets tight.
-- **Knowledge graph.** Optional `graphify` integration maps the codebase so agents navigate by structure instead of burning tokens grepping.
+- **Knowledge graph you can *see*.** `graphify` maps the codebase so agents navigate by structure instead of grepping — and writes an **Obsidian vault** you can explore visually. [See below.](#see-your-codebase-as-a-graph-obsidian)
 - **Plain-language docs.** Generators for HANDOVER / ARCHITECTURE / FINDINGS docs aimed at non-coder project owners.
 
 Also included: [`VIBE_CODING_PROMPT.md`](VIBE_CODING_PROMPT.md) — a standalone "senior engineer" system prompt you can paste as a `CLAUDE.md` if you want the philosophy without the full scaffold.
+
+---
+
+## Methodology — baked in, not bolted on
+
+New code and legacy code need different testing strategies, so the template encodes a **hybrid** approach and the agent picks the right layer automatically (full detail + code examples in [`.claude/rules/methodology.md`](template/.claude/rules/methodology.md)):
+
+| You're building… | Layer | What the agent does |
+|---|---|---|
+| A new API route | **SDD** (spec-driven) | Writes a Zod contract *before* the handler — the schema is the docs **and** the inferred TS type the frontend imports |
+| New service / business logic | **TDD** (test-driven) | Red → green → refactor: failing test first, minimum code to pass, then clean up |
+| A new UI component | Component test | Render + interaction (Testing Library) |
+| Refactoring legacy code | **Characterization** | Locks current behavior in a test *before* the move; the same test must pass after |
+| A bug fix | **TDD regression** | A test that fails before the fix and passes after |
+
+E2E (Playwright) ships as a runnable scaffold for `web` / `fullstack`. Backend tests hit a **real** test database — mocking the DB is forbidden (mocks invent behavior; real bindings catch SQL bugs). Coverage floor and a test-before-commit gate are enforced in CI.
+
+> **Not included by design: BDD** (Gherkin / Cucumber). The SDD + TDD + Characterization stack covers contracts, logic, and regressions without a separate spec language. Add a BDD layer per-project if your team relies on Given-When-Then.
+
+---
+
+## See your codebase as a graph (Obsidian)
+
+`graphify` maps your whole codebase into a knowledge graph — one note per file/function, wikilinked by who-calls-what, grouped into communities. It's already wired into the template: a `/graphify` command, a `graphify-bootstrap.mjs` script, and a `graph-navigator` subagent. Two payoffs:
+
+- **Agents navigate by structure, not grep.** Once `graphify-out/GRAPH_REPORT.md` exists, the agent reads the graph to answer "where is X / what calls Y" instead of burning tokens on repo-wide `grep` (cuts exploration ~60–80%).
+- **You explore it visually in Obsidian.** `graphify` writes its output *as an Obsidian vault* — `graphify-out/` ships with an `.obsidian/` config and a markdown note per symbol. Open that folder as a vault and use Obsidian's **Graph View** to fly around your architecture.
+
+```bash
+# generate / refresh the graph (auto-installs graphify if Python is present)
+node scripts/graphify-bootstrap.mjs        # or the /graphify slash command in Claude Code
+
+# then in Obsidian:  "Open folder as vault"  →  <your-project>/graphify-out
+```
+
+`graphify-out/` is gitignored (it's regenerated, not committed), so it never bloats your repo. Re-run `/graphify` after big structural changes to keep the graph fresh.
 
 ---
 
