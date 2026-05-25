@@ -75,7 +75,7 @@ It's MIT. Use it, fork it, ship it. No import, no dependency, no lock-in.
 
 ## 🌌 See your codebase as a graph (Obsidian)
 
-> **📸 Tip for you:** *Drop a screenshot or GIF of your Obsidian graph view here! E.g. `![Graphify in Obsidian](assets/graph-preview.png)`*
+![Graphify in Obsidian](assets/graph-preview.png)
 
 Agents navigate by structure, not grep. `graphify` maps your whole codebase into a knowledge graph—one note per file/function, wikilinked by who-calls-what. The agent uses this to answer "where is X" without burning tokens, and outputs an **Obsidian vault** so you can fly around your architecture visually. [Learn more below.](#see-your-codebase-as-a-graph-obsidian)
 
