@@ -22,10 +22,16 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Render with VHS
-        uses: charmbracelet/vhs-action@v2
-        with:
-          path: demo/demo.tape
+      - name: Install VHS + ffmpeg + ttyd
+        run: |
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+          sudo apt-get update
+          sudo apt-get install -y vhs ffmpeg ttyd
+
+      - name: Render demo GIF
+        run: vhs demo/demo.tape
 
       - name: Commit the regenerated GIF
         uses: stefanzweifel/git-auto-commit-action@v5
