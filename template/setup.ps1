@@ -1,11 +1,12 @@
 #!/usr/bin/env pwsh
 # VibeCoding Template Setup Script — Windows / PowerShell
-# Usage: .\setup.ps1 [-Preset web|mobile|desktop|fullstack]
-#   (asks interactively if -Preset omitted)
+# Usage: .\setup.ps1 [preset]            # positional, e.g. setup.ps1 web
+#        .\setup.ps1 -Preset web         # named
+#   preset: web | mobile | desktop | fullstack (asks interactively if omitted)
 
 param(
-    [string]$TemplateDir = $PSScriptRoot,
-    [string]$Preset = ""
+    [Parameter(Position = 0)][string]$Preset = "",
+    [string]$TemplateDir = $PSScriptRoot
 )
 
 $ProjectDir = (Get-Location).Path
