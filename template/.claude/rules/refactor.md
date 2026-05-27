@@ -14,7 +14,7 @@ CI fails on hard breach. Post-edit hook warns on soft breach.
 Touch a file already > hard limit?
 1. STOP. Do not add lines.
 2. Extract the section you wanted to edit into a new file (no-behavior-change move).
-3. Run typecheck + build to prove the move is safe.
+3. Run typecheck + build to prove the move COMPILES. For a frontend component, ALSO run the page's Playwright e2e smoke — compile ≠ renders (see `rules/testing.md` → "E2E Smoke + Flow"). A behaviour-preserving split that white-screens the page passes tsc + build but fails the smoke.
 4. Commit the extraction with `refactor(<scope>): extract X into Y`.
 5. Now edit the new (smaller) file.
 
@@ -34,6 +34,7 @@ Touch a file already > hard limit?
 | `process.env.X` outside config bootstrap | Untracked dependency | Centralised `config.ts` |
 | `.skip` on tests w/o linked TODO + date | Silent test loss | Fix the test or delete it |
 | Module-level mutable state | Hard to test, race conditions | Pass via constructor / scope |
+| Deferring UI verification to the human ("owner will click through") when Playwright is scaffolded | Hides white-screen / broken-render regressions a refactor can introduce | Run the e2e smoke yourself (`rules/testing.md`) |
 
 ## Component-Split Triggers (Frontend)
 
@@ -49,7 +50,7 @@ See `rules/services.md` for full table. Extract BEFORE adding feature.
 2. Identify edit range. Note line numbers.
 3. If edit will grow file past current LOC → STOP. Extract first.
 4. Search before adding a helper — duplicates ruin maintainability.
-5. typecheck + build must both pass after every edit.
+5. typecheck + build must both pass after every edit. For frontend files, ALSO run the page's Playwright e2e smoke — typecheck + build don't prove the UI still renders.
 6. Commit with `wip(phase-id):` prefix if PROGRESS.md has an active phase.
 
 ## Refactor Commit Discipline

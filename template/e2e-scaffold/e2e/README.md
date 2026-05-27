@@ -7,6 +7,27 @@ once and saves `storageState`, so every spec starts authenticated.
 This scaffold is **policy made runnable** — `testing.md` prescribes Playwright;
 this is the working skeleton. It does NOT run until you fill in your app's login.
 
+## The bar for any UI change (mandatory)
+
+Per AGENTS.md rule #5, every frontend change / component refactor gets an e2e run —
+and the AGENT runs it, not the human:
+
+- **Smoke** (always): load the page, assert key regions render, assert **zero uncaught
+  page errors** (`page.on('pageerror', …)` → `toHaveLength(0)`). A behaviour-preserving
+  refactor can white-screen the page while typecheck + build stay green — only a browser
+  catches it. `example.spec.ts` shows the shape.
+- **Flow** (where logic exists): exercise validation / auth gates / dup-guard banners /
+  confirm dialogs — not just rendering.
+
+Run it: `npx playwright test <spec> --project=chromium`, paste the pass line, commit
+`test(<scope>): e2e smoke + flow for <page>`.
+
+**Gotchas:**
+- Seed fixtures must satisfy your API's id / validation guards (e.g. a route that rejects
+  non-UUID ids → a `foo-1` seed id silently fails the fetch and the page renders empty).
+- Playwright has NO `getByDisplayValue` — assert input values with
+  `expect(page.locator('input[name="…"]')).toHaveValue('…')`.
+
 ## One-time fill-in
 
 1. Install (once per project):

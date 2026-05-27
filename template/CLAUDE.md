@@ -48,6 +48,8 @@ npm run typecheck # TypeScript check (must be zero errors)
 - Unit tests: all utility functions, all API handlers
 - Integration tests: critical user flows
 - E2E tests (Playwright): [list your critical paths, e.g., "signup → dashboard → create invoice"]
+- **Frontend change / component refactor → e2e smoke is MANDATORY** (AGENTS.md rule #5): load the page, assert key regions render, assert ZERO uncaught page errors (`page.on('pageerror', …)` → `toHaveLength(0)`). typecheck + build prove it compiles, NOT that it renders. Add a **flow test** where the page has real logic (validation, auth/role gates, dup-guard banners, confirm dialogs).
+- **You CAN drive a browser** — Playwright + Chromium are scaffolded (`e2e/`, `playwright.config.ts`). Run the e2e yourself (`npx playwright test <spec> --project=chromium`); do NOT defer UI verification to the human. Pattern + gotchas: `.claude/rules/testing.md` → "E2E Smoke + Flow".
 - Minimum coverage: 80% on changed files per PR
 - Every bug fix includes a regression test
 
