@@ -15,12 +15,13 @@ See `CLAUDE.md` §1–§2 for the active preset's stack + commands.
 2. **Scope lock** — state which files will change BEFORE editing. Do not touch anything else.
 3. **Types first** — define interfaces before implementation. Zero `any`.
 4. **Test before commit** — typecheck + lint + test + build all green. No exceptions.
-5. **Per-edit commit** — see `PROGRESS.md` death-defense protocol. `wip(phase-id):` prefix.
-6. **No secrets in code or transcript** — keep secrets in `.env` / `.dev.vars` (gitignored). Never read or print a secret file (`cat`/`type`/`Get-Content` a `.env`); the runtime loads them itself. Claude Code enforces this via hook + Read deny-list; other agents must self-enforce.
-7. **Backwards-compatible APIs** — add fields, never remove.
-8. **No silent catches** — every `catch` must log or rethrow.
-9. **Ask before installing packages** — state name + version + why + bundle impact.
-10. **Read `PROGRESS.md` on session start** — if a phase is `🟡 in-progress`, resume per protocol.
+5. **Verify UI in a real browser** — ANY frontend change or component refactor MUST be checked with a Playwright **e2e smoke** (load the page, assert key regions render, assert ZERO uncaught page errors). typecheck + build prove it compiles, NOT that it renders. Add a **flow test** where the page has real logic (validation, auth/role gates, dup-guard banners, confirm dialogs). The Playwright scaffold (`e2e/`, `playwright.config.ts`) ships ready to run — **run it yourself; never defer UI verification to the human.** See `.claude/rules/testing.md` → "E2E Smoke + Flow".
+6. **Per-edit commit** — see `PROGRESS.md` death-defense protocol. `wip(phase-id):` prefix.
+7. **No secrets in code or transcript** — keep secrets in `.env` / `.dev.vars` (gitignored). Never read or print a secret file (`cat`/`type`/`Get-Content` a `.env`); the runtime loads them itself. Claude Code enforces this via hook + Read deny-list; other agents must self-enforce.
+8. **Backwards-compatible APIs** — add fields, never remove.
+9. **No silent catches** — every `catch` must log or rethrow.
+10. **Ask before installing packages** — state name + version + why + bundle impact.
+11. **Read `PROGRESS.md` on session start** — if a phase is `🟡 in-progress`, resume per protocol.
 
 ---
 

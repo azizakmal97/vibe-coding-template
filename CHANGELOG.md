@@ -4,6 +4,20 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Mandatory browser verification for UI work.** New non-negotiable rule
+  (`AGENTS.md` #5, mirrored to all agent shims): any frontend change or component
+  refactor MUST be verified with a Playwright **e2e smoke** (renders + zero uncaught
+  page errors) — typecheck + build prove it compiles, not that it renders — plus a
+  **flow test** where the page carries real logic. Agents run the e2e themselves;
+  deferring UI verification to the human is now a forbidden anti-pattern
+  (`rules/refactor.md`).
+- `rules/testing.md` gains an "E2E Smoke + Flow" section (pattern + gotchas:
+  fixture ids must satisfy API guards; use `toHaveValue` not `getByDisplayValue`),
+  and the e2e scaffold's `example.spec.ts` now demonstrates the `pageerror` guard.
+
 ## [1.0.0] - 2026-05-25
 
 First public release.

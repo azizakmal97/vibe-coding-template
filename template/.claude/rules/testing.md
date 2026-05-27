@@ -97,8 +97,57 @@ Pick one convention per project. Document in CLAUDE.md §3.
 
 Every NEW route: auth gate + happy path + one failure case.
 Every NEW service method: happy + boundary + error.
+Every NEW page / screen: e2e smoke (renders + zero uncaught errors) + a flow test for its primary journey.
 Every BUG fix: regression test that fails before fix, passes after.
 Every REFACTOR of legacy code: characterization test before the move, same test after.
+Every REFACTOR / SPLIT of a frontend component: e2e smoke proving it STILL renders + zero uncaught errors. typecheck + build do NOT prove a component renders — only a browser does.
+
+## E2E Smoke + Flow (Mandatory for UI Work)
+
+A behaviour-preserving component split can still white-screen the page — a broken prop
+wire, a changed hook order, a dead render branch — while `tsc` + build stay green. Only
+a real browser catches that. So every frontend change / refactor gets a Playwright run.
+This is non-negotiable (AGENTS.md rule #5) and it is YOUR job, not the human's — the
+scaffold ships installed.
+
+**Smoke** (always): load the page as the relevant role, assert every key region /
+extracted panel renders, assert **zero uncaught page errors**:
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test('<page> renders for an authenticated user with no uncaught errors', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+
+  await page.goto('/path');
+
+  await expect(page.getByRole('heading', { name: '…' })).toBeVisible();
+  // …assert each extracted region/panel…
+
+  expect(pageErrors, `uncaught page errors: ${pageErrors.join(' | ')}`).toHaveLength(0);
+});
+```
+
+**Flow** (where logic risk exists): exercise the actual logic — validation gating,
+auth/role branches, dup-guard banners, confirm dialogs — not just rendering. A smoke
+proves it mounts; a flow proves it still *works*.
+
+**Run it, then commit:** `npx playwright test <spec> --project=chromium`, paste the pass
+line, commit `test(<scope>): e2e smoke + flow for <page>`. "Owner will verify in the
+browser" is NOT acceptable when the harness is installed.
+
+**Gotchas (learned the hard way):**
+- Seed e2e fixtures so they satisfy your API's id / validation guards. If a route
+  rejects non-UUID ids, a `foo-1` seed id silently fails the fetch and the page renders
+  empty — match the real id format.
+- Playwright has NO `getByDisplayValue` (that's Testing Library). Assert input values
+  with `expect(page.locator('input[name="…"]')).toHaveValue('…')`.
+- The local seed command (`npm run seed:e2e`) may trip a permission/guardrail because it
+  touches the DB. It's local-only and safe — run it or get it approved; don't skip the
+  e2e because of it.
+- `console.warn`/`console.error` are warnings, not `pageerror`. The smoke fails only on
+  uncaught exceptions; pre-existing benign warnings won't (and shouldn't) block it.
 
 ## Coverage Targets
 
