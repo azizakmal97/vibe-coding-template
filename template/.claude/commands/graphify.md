@@ -15,6 +15,7 @@ Wrap the graphify skill. Run on initial project setup AND after every structural
 3. If installation fails, fall back to skill invocation: `/graphify . --update`.
 4. After generation, read `graphify-out/GRAPH_REPORT.md` header — report node count, edge count, community count to user.
 5. Suggest: "use the `graph-navigator` agent for file-lookup tasks from here on; cuts exploration tokens ~60%."
+6. Tell the user the output is an **Obsidian vault**: "open the `graphify-out/` folder as a vault in Obsidian (`Open folder as vault`) to explore the codebase graph visually in Graph View."
 
 ## When to Auto-Trigger
 

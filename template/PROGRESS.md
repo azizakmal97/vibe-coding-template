@@ -4,6 +4,7 @@
 **Last update:** _YYYY-MM-DD by Agent_
 **Last commit:** _hash_
 **Plan reference:** `AUDIT_AND_ROADMAP.md` (if exists) OR project README roadmap section.
+**Model strategy:** see `AGENTS.md` → "Model & Tool Selection per Task" and `CLAUDE.md` §22. Every phase below MUST carry an explicit `Model:` line.
 
 ---
 
@@ -172,11 +173,12 @@ Every Friday:
 **Started:** _YYYY-MM-DD_
 **Completed:** _YYYY-MM-DD_
 **Commits:** _hash → hash_
+**Model:** _Sonnet | Opus | Haiku | DeepSeek Pro | DeepSeek Flash | Gemini Pro | Gemini Flash — see AGENTS.md "Model & Tool Selection per Task"_
 
 **Plan for this phase:**
-- [ ] Edit file A
-- [ ] Add file B
-- [ ] Test C
+- [ ] Edit file A *(Model: ...)*
+- [ ] Add file B *(Model: ...)*
+- [ ] Test C *(Model: ...)*
 
 **Delivered:**
 - _list what shipped_
