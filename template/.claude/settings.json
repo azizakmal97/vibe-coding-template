@@ -85,6 +85,10 @@
           {
             "type": "command",
             "command": "node .claude/hooks/session-start-resume.js"
+          },
+          {
+            "type": "command",
+            "command": "node scripts/graphify-bootstrap.mjs"
           }
         ]
       }

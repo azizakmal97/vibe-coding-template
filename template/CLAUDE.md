@@ -188,7 +188,7 @@ After structural changes (file add/rename/move/delete), run `/graphify` to updat
 
 For "where is X" / "what calls Y" / "list uses of Z" questions, prefer the `graph-navigator` subagent — its output is caveman-compressed so main-thread context lasts longer.
 
-If codebase > 50 source files and no graph exists, run `node scripts/graphify-bootstrap.mjs`.
+`scripts/graphify-bootstrap.mjs` runs automatically on every SessionStart (wired in `.claude/settings.json`). It self-skips when source files < 50 OR when the existing graph is < 7 days old, so it's cheap when nothing needs doing. First session after the codebase crosses 50 files: graph generates without you asking. If `graphify` (the Python tool) isn't installed, the bootstrap prints the install hint and exits cleanly — surface that to the user so they can `pip install graphifyy`.
 
 ## 18. Test-Before-Commit Gate
 
@@ -248,3 +248,51 @@ See `rules/methodology.md` for concrete examples.
 
 Run `/audit` to generate / refresh AUDIT_AND_ROADMAP.md at project-maturity milestones.
 Run `/handover` to generate / refresh the 4 plain-language docs.
+
+## 22. Model Selection per Task
+
+Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task model assignment. Full vendor-neutral matrix + tradeoff explanation lives in `AGENTS.md` → "Model & Tool Selection per Task". This section adds Claude-Code-specific operational details.
+
+### Project pin
+
+`.claude/settings.json` carries `"model": "claude-sonnet-4-6"` (or current Sonnet) as the project default. Every fresh session in this repo opens on that model unless the user overrides with `/model`.
+
+### Switching Claude models
+
+- `/model opus` / `/model haiku` — swaps within the current session if the harness supports mid-session swap.
+- If mid-session swap is not supported (current Claude Code behavior), close the session, open a new one, then `/model <target>` → `/resume`.
+- **Never switch mid-task "just to try"** — costs the cache for no upside.
+
+### Leaving Claude Code (DeepSeek / Gemini paths)
+
+Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
+
+1. `/checkpoint` — runs verification + commits current state in Claude Code so hooks fire.
+2. Confirm push succeeded (`git status` shows "up to date with origin").
+3. Open the alternate tool. Do the bulk / multimodal / translation work.
+4. Return to Claude Code for verification: `bunx tsc --noEmit && <preset's lint/test/build commands>` so post-edit and file-budget hooks fire on the merged state.
+
+### Per-phase assignment lives in `PROGRESS.md`
+
+Every phase block carries a `Model:` line plus per-bullet annotation. Open the right model BEFORE marking the phase 🟡 in-progress.
+
+### Concrete model lineup at template authorship (2026)
+
+| Slot | Current name | Notes |
+|---|---|---|
+| Anthropic flagship | Opus 4.7 | Architecture, complex debug, copy, legal, security review |
+| Anthropic workhorse | Sonnet 4.6 | Default project pin |
+| Anthropic small | Haiku 4.5 | Status checks, mechanical edits |
+| DeepSeek heavy | V4 Pro | Bulk codegen, mass test scaffolding |
+| DeepSeek small | V4 Flash | Format / lint auto-fix |
+| Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context |
+| Google small | Gemini 3 Flash | Spell-check, screenshot smoke |
+
+**Review at project adoption.** These names will go stale. Update both this section and `AGENTS.md` matrix when starting a new project from this template.
+
+### Anti-patterns
+
+- Opus for status checks, build runs, log inspection — burn for no upside.
+- Sonnet for novel copywriting, brand voice, or architectural calls — output reads thin; you'll redo it.
+- Leaving Claude Code without committing first — non-Claude tools don't fire `.claude/` hooks; you lose the safety net AND lose recovery if work is lost.
+- Inheriting this lineup unchanged six months from now without checking what shipped since.
