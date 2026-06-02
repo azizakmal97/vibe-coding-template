@@ -47,7 +47,9 @@
       "Bash(pip install graphify*)",
       "Bash(ls *)",
       "Bash(dir *)",
-      "Bash(type *)"
+      "Bash(type *)",
+      "WebSearch",
+      "WebFetch"
     ],
     "deny": [
       "Read(.env)",
@@ -132,6 +134,10 @@
           {
             "type": "command",
             "command": "node .claude/hooks/post-commit-push.js"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/post-commit-update-progress.js"
           }
         ]
       }

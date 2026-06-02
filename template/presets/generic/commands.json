@@ -1,0 +1,10 @@
+{
+  "_preset": "generic",
+  "_note": "Fill in actual commands for your project. Remove unused entries.",
+  "build": "[your build command]",
+  "test": "[your test command]",
+  "lint": "[your lint command]",
+  "typecheck": "[your type checker]",
+  "checkpoint": "echo 'Define your checkpoint command in commands.json'",
+  "filesize": "node scripts/check-file-sizes.mjs"
+}
