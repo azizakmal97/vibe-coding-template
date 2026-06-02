@@ -1,0 +1,6 @@
+{
+  "_comment": "Set by init script. Auto-detected on scaffold, edit manually if wrong.",
+  "packageManager": "npm",
+  "_options": ["npm", "yarn", "pnpm", "bun"],
+  "_why": "Claude reads this before running install/build commands, so it always uses the right package manager for this project."
+}
