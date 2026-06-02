@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(python *)",
+      "Bash(pip *)",
+      "Bash(curl *)",
+      "Bash(docker *)",
+      "Bash(ls *)",
+      "Bash(dir *)",
+      "Bash(mkdir *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(cat *)",
+      "Bash(type *)",
+      "Bash(echo *)",
+      "Bash(which *)",
+      "Bash(where *)",
+      "Bash(pytest *)",
+      "Bash(unzip *)",
+      "Bash(zip *)",
+      "Bash(tar *)",
+      "Bash(chmod *)",
+      "PowerShell(*)",
+      "Read(//d/Programming/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/post-commit-push.js"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/post-commit-update-progress.js"
+          }
+        ]
+      }
+    ]
+  }
+}

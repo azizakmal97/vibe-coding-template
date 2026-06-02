@@ -1,6 +1,6 @@
-# Local AI-tool settings — never publish (may contain machine paths / personal allowlists)
-**/settings.local.json
-.claude/settings.local.json
+# NOTE: settings.local.json is NOT gitignored — this repo IS the template.
+# The template/ folder ships settings.json as the distributed config;
+# the root .claude/settings.local.json is the template project's own config.
 
 # Personal working notes (not part of the template)
 NEXT_SESSION.md
