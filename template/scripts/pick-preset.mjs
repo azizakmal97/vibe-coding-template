@@ -26,12 +26,13 @@ const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_ROOT = resolve(SCRIPT_DIR, '..');
 const PROJECT_ROOT = process.cwd();
 
-const PRESETS = ['web', 'mobile', 'desktop', 'fullstack'];
+const PRESETS = ['web', 'mobile', 'desktop', 'fullstack', 'generic'];
 const PRESET_DESC = {
   web: 'React + Vite + TypeScript + Tailwind + Vitest + Playwright',
   mobile: 'Flutter (Dart) — iOS/Android cross-platform',
   desktop: 'Tauri (Rust + React) — Windows/macOS/Linux native',
   fullstack: 'Next.js + Prisma + PostgreSQL + Vitest',
+  generic: 'No stack assumptions — docs, guides, hardware, research, automation, or anything else',
 };
 
 const CI_MAP = {
@@ -39,6 +40,7 @@ const CI_MAP = {
   mobile: 'ci-flutter.yml',
   desktop: 'ci-tauri.yml',
   fullstack: 'ci-fullstack.yml',
+  // generic: no CI workflow — project defines its own if needed
 };
 
 // Presets that get the standard Playwright scaffold (chromium + `npm run dev`).
@@ -82,8 +84,10 @@ copyIfExists(join(presetDir, 'CLAUDE.md'), join(PROJECT_ROOT, 'CLAUDE.md'));
 copyIfExists(join(presetDir, 'file-budgets.json'), join(PROJECT_ROOT, 'file-budgets.json'));
 copyIfExists(join(presetDir, 'commands.json'), join(PROJECT_ROOT, '.claude', 'commands.json'));
 
-const ciSrc = join(TEMPLATE_ROOT, '.github', 'workflows', CI_MAP[choice]);
-copyIfExists(ciSrc, join(PROJECT_ROOT, '.github', 'workflows', 'ci.yml'));
+const ciSrc = CI_MAP[choice] ? join(TEMPLATE_ROOT, '.github', 'workflows', CI_MAP[choice]) : null;
+if (ciSrc) {
+  copyIfExists(ciSrc, join(PROJECT_ROOT, '.github', 'workflows', 'ci.yml'));
+}
 
 // Playwright E2E scaffold (web / fullstack / desktop only). auth.setup.ts ships
 // as a .template — the project fills in its login before the suite can run.

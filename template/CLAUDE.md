@@ -5,52 +5,58 @@
 
 ## What This Is
 
-[One sentence: what does this app do and who uses it.]
+[One sentence: what does this project do and who uses it.]
 
-Example: "A SaaS dashboard for freelancers to track invoices and client payments."
+Examples: "A SaaS dashboard for freelancers." / "Portable AI USB drive for offline chat." / "Personal research notes on quant trading." / "A CLI tool to batch-rename files."
 
 ## Stack
 
+> Leave blank or delete rows that don't apply to your project.
+
 | Layer | Choice |
 |-------|--------|
-| Frontend | [Next.js 15 / React 19 / Vue 3] |
-| Backend | [Next.js API Routes / Node Express / Python FastAPI] |
-| Database | [PostgreSQL via Prisma / Supabase / MongoDB] |
-| Auth | [Clerk / NextAuth v5 / Supabase Auth] |
+| Language / Runtime | [Python / Node / Rust / Dart / none] |
+| Framework | [Next.js / Vite+React / Flutter / Jupyter / none] |
+| Backend | [FastAPI / Express / Tauri / Ollama / none] |
+| Database | [PostgreSQL / SQLite / JSON files / none] |
+| Auth | [Clerk / Supabase Auth / none] |
 | State | [Zustand / Jotai / none — server state only] |
-| Styling | [Tailwind CSS + shadcn/ui] |
-| Testing | [Vitest + Playwright] |
-| Deployment | [Vercel / Railway / Fly.io] |
+| Styling | [Tailwind + shadcn/ui / none] |
+| Testing | [Vitest + Playwright / pytest / cargo test / none] |
+| Deployment | [Vercel / USB drive / GitHub Releases / none] |
 
 ## Commands
 
+> Fill from `commands.json` for your preset. Delete unused entries.
+
 ```bash
-npm run dev       # Start dev server at localhost:3000
-npm run build     # Production build
-npm test          # Run unit + integration tests
-npm run test:e2e  # Run Playwright E2E tests
-npm run lint      # ESLint check
-npm run typecheck # TypeScript check (must be zero errors)
+[dev command]     # Start dev server
+[build command]   # Production build
+[test command]    # Run tests
+[lint command]    # Lint check
+[typecheck cmd]   # Type check (must be zero errors)
 ```
 
 ## Conventions
 
-- TypeScript strict mode — zero `any` types, ever
-- Component naming: PascalCase files, one component per file
-- Hook naming: `useHookName.ts` in `/hooks` or `/lib/hooks`
-- API response shape: `{ data: T }` success, `{ error: string, code: string }` failure
+> Delete or edit rows that don't apply. See `.claude/rules/naming.md` for detailed naming conventions.
+
+- File naming: [snake_case / camelCase / PascalCase / kebab-case — pick one]
+- Language rules: [TypeScript strict / Python mypy / Rust clippy — zero warnings]
 - Error handling: [describe your pattern — try/catch? Result type? Error boundary?]
-- State: useState for UI-only, Zustand for shared/global, React Query for server state
-- Imports: absolute paths via `@/` alias — no relative `../../` beyond 1 level
+- Imports: [absolute paths via alias?] — no relative `../../` beyond 1 level
+- API response shape (if backend): `{ data: T }` success, `{ error: string, code: string }` failure
 
 ## Testing Requirements
 
-- Unit tests: all utility functions, all API handlers
+> Adapt to your project type. Not all projects have a UI or E2E suite.
+
+- Unit tests: all utility functions, all handlers/endpoints
 - Integration tests: critical user flows
-- E2E tests (Playwright): [list your critical paths, e.g., "signup → dashboard → create invoice"]
-- **Frontend change / component refactor → e2e smoke is MANDATORY** (AGENTS.md rule #5): load the page, assert key regions render, assert ZERO uncaught page errors (`page.on('pageerror', …)` → `toHaveLength(0)`). typecheck + build prove it compiles, NOT that it renders. Add a **flow test** where the page has real logic (validation, auth/role gates, dup-guard banners, confirm dialogs).
-- **You CAN drive a browser** — Playwright + Chromium are scaffolded (`e2e/`, `playwright.config.ts`). Run the e2e yourself (`npx playwright test <spec> --project=chromium`); do NOT defer UI verification to the human. Pattern + gotchas: `.claude/rules/testing.md` → "E2E Smoke + Flow".
-- Minimum coverage: 80% on changed files per PR
+- E2E tests (if UI project): [list critical paths, e.g., "signup → dashboard → create invoice"]
+- **UI change → e2e smoke is MANDATORY** (if Playwright is scaffolded): load the page, assert key regions render, assert ZERO uncaught page errors. typecheck + build prove it compiles, NOT that it renders.
+- **You CAN drive a browser** — if Playwright + Chromium are scaffolded (web/fullstack presets), run the e2e yourself; do NOT defer UI verification to the human. See `.claude/rules/testing.md` → "E2E Smoke + Flow".
+- Minimum coverage: 80% on changed files per PR (where coverage tooling exists)
 - Every bug fix includes a regression test
 
 ## Security Rules
@@ -63,6 +69,8 @@ npm run typecheck # TypeScript check (must be zero errors)
 
 ## Design System
 
+> Skip this section if your project has no UI.
+
 Colors, spacing, typography, and component patterns in:
 `.claude/skills/design-system/SKILL.md`
 
@@ -72,8 +80,8 @@ Always read this before building any UI. Never hardcode color hex values in comp
 
 [Document decisions that aren't obvious from the code.]
 
-Example:
-- "We use Zustand over Redux because the app state is simple and we wanted minimal boilerplate."
+Examples:
+- "We store chat logs as JSON files, not a database — simpler for USB portability."
 - "All DB queries go through the `/lib/db` layer — never query from components directly."
 - "We use server components by default, client components only when interactive."
 
@@ -105,17 +113,17 @@ Example:
 
 Project-wide. Add project-specific entries as you discover them.
 
-- `any` TypeScript type — use `unknown` + narrow, or a proper type.
-- `// @ts-ignore` / `@ts-expect-error` without linked issue number.
+- `any` TypeScript type — use `unknown` + narrow, or a proper type. (TS projects only)
+- `// @ts-ignore` / `@ts-expect-error` without linked issue number. (TS projects only)
 - `.catch(() => {})` silent failures — log + rethrow or handle explicitly.
-- Inline auth checks (`if (!jwt) return 401`) — use middleware.
-- Raw DB queries inside route handlers — use service layer (`rules/services.md`).
 - Hardcoded secrets / API keys — env vars only.
 - `eval()` / `Function(...)` — never.
-- `dangerouslySetInnerHTML` without DOMPurify-style sanitization.
-- Audit-log actor from request body — use verified `jwt.sub` / session user.
-- Untyped JSON body — Zod-validate first, then destructure.
-- New routes in any file already over hard LOC budget — extract first (see §19).
+- `dangerouslySetInnerHTML` without DOMPurify-style sanitization. (UI projects only)
+- Reading secret files (`.env`, `*.pem`, `*.key`, `secrets/`) via shell — blocked by hook.
+- Untyped user input — validate (Zod / Pydantic / etc.) before processing.
+- New code in any file already over hard LOC budget — extract first (see §19).
+- Inline auth checks in routes (if backend) — use middleware.
+- Raw DB queries inside route handlers (if backend) — use service layer.
 
 ## 12. File-Size Budgets
 
@@ -144,31 +152,35 @@ If `PROGRESS.md` has a `🟡 in-progress` phase:
 
 **Every commit auto-pushes.** `post-commit-push.js` hook runs after each successful `git commit`. Work survives disk death, machine swap, OS reinstall. Configure a git remote on day 1 OR work is local-only-safe (commit only protects from session death, not disk death).
 
-## 14. When to Extract a Service
+## 14. When to Extract a Service / Module
 
-Extract logic into a service when ANY trigger fires:
+> Applies mainly to backend / library projects. Skip if your project has no service layer.
+
+Extract logic into a service/module when ANY trigger fires:
 
 | Trigger | Reason |
 |---|---|
-| Same DB query in 3+ routes | Single source of truth |
-| Mutation requires 2+ statements | Centralise + transaction |
+| Same DB query in 3+ places | Single source of truth |
+| Mutation requires 2+ steps | Centralize + transaction |
 | Business rule appears > 1 place | Avoid drift |
-| Route handler > 80 LOC of business logic | Readability |
+| Handler / function > 80 LOC of logic | Readability |
 
 See `rules/services.md` for service-class signature.
 
-## 15. When to Split a Component
+## 15. When to Split a Component / File
 
-Split a frontend component BEFORE adding any new feature when ANY trigger fires:
+> For UI projects: split components. For all projects: split files before they hit hard budget.
+
+Split a component (UI) or file (any project) BEFORE adding any new feature when ANY trigger fires:
 
 | Trigger | Threshold |
 |---|---|
-| File LOC | > hard budget |
-| `useState` calls | > 5 in one component |
-| Dialogs / sheets / modals | > 2 in one component |
+| File LOC | > hard budget (`file-budgets.json`) |
+| State variables | > 5 in one function/component |
+| Dialogs / modals | > 2 in one component (UI only) |
 | Domain concerns | > 3 unrelated responsibilities |
 
-See `rules/frontend.md` for split pattern.
+See `rules/frontend.md` for UI split pattern; `rules/refactor.md` for general split pattern.
 
 ## 16. Communication Style (caveman default)
 
@@ -192,17 +204,17 @@ For "where is X" / "what calls Y" / "list uses of Z" questions, prefer the `grap
 
 ## 18. Test-Before-Commit Gate
 
-Every commit passes ALL before commit. Paste actual terminal output in commit body if non-trivial:
+Every commit passes ALL before commit. Paste actual terminal output in commit body if non-trivial.
 
-| Check | Command (web preset) |
+The checklist varies by preset — see `commands.json` for your project's commands:
+
+| Check | See commands.json key |
 |---|---|
-| Typecheck | `npx tsc --noEmit` |
-| Lint | `npm run lint` |
-| Tests | `npm test -- --run` |
-| Build | `npm run build` |
-| File-size | `node scripts/check-file-sizes.mjs` |
-
-Other presets: see `commands.json`.
+| Typecheck | `typecheck` |
+| Lint | `lint` |
+| Tests | `test` |
+| Build | `build` |
+| File-size | `filesize` |
 
 No "I think it passes." No `.skip` without linked TODO + date.
 
@@ -223,11 +235,13 @@ Before touching any file > soft budget OR any file > 400 LOC:
 
 ## 20. Hybrid SDD + TDD + Characterization Methodology
 
+> Adapt to your project type. Not all projects have APIs or UIs.
+
 | Building | Layer | Reason |
 |---|---|---|
-| New API route | SDD (Zod contract) + TDD (test first) | Contract first, then test, then implement |
-| New service method | TDD | Pure logic; no external interface |
-| New frontend component | Component test (Testing Library) | Render + interaction |
+| New API route / endpoint | SDD (schema first) + TDD | Contract first, then test, then implement |
+| New function / method | TDD (test → code → refactor) | Pure logic; no external interface |
+| New UI component | Component test (Testing Library) | Render + interaction |
 | Refactoring legacy code | Characterization → move → re-run | Behavior preservation |
 | Bug fix | TDD (failing test → fix → green) | Regression prevention |
 
@@ -243,7 +257,7 @@ See `rules/methodology.md` for concrete examples.
 | `docs/HANDOVER.md` | Plain-language owner doc (for non-coder maintainer). |
 | `docs/ARCHITECTURE_PLAIN.md` | Plain-language architecture (for non-coder). |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Plain-language audit (for non-coder). |
-| `docs/LEARN_FULLSTACK.md` | Curated learning path tied to this codebase. |
+| `docs/LEARN_FULLSTACK.md` or `docs/LEARN.md` | Curated learning path tied to this codebase. |
 | `git log` | Commit hashes per phase. |
 
 Run `/audit` to generate / refresh AUDIT_AND_ROADMAP.md at project-maturity milestones.

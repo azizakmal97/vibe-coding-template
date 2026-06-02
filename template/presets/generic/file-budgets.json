@@ -1,0 +1,20 @@
+{
+  "_preset": "generic",
+  "_note": "Tune these for your project. CI fails on hard breach.",
+  "soft": {
+    "**/*": 400
+  },
+  "hard": {
+    "**/*": 800
+  },
+  "whitelist": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/__pycache__/**",
+    "**/.venv/**",
+    "**/.git/**",
+    "**/*.gguf",
+    "**/*.bin",
+    "**/*.pth"
+  ]
+}
