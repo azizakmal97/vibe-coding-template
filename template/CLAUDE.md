@@ -22,6 +22,7 @@ Examples: "A SaaS dashboard for freelancers." / "Portable AI USB drive for offli
 | Auth | [Clerk / Supabase Auth / none] |
 | State | [Zustand / Jotai / none — server state only] |
 | Styling | [Tailwind + shadcn/ui / none] |
+| Package Manager | Read `.claude/package-manager.json` — auto-detected on scaffold |
 | Testing | [Vitest + Playwright / pytest / cargo test / none] |
 | Deployment | [Vercel / USB drive / GitHub Releases / none] |
 
@@ -185,6 +186,7 @@ See `rules/frontend.md` for UI split pattern; `rules/refactor.md` for general sp
 ## 16. Communication Style (caveman default)
 
 Default response style is caveman-lite (see `.claude/skills/caveman-default/SKILL.md`).
+Adjust via `.claude/identity.json` (`technicalLevel`, `verbosity`).
 
 Cuts narration tokens ~40% without losing readability for a non-coder maintainer.
 

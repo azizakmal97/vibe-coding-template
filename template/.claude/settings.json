@@ -88,6 +88,15 @@
     ],
     "PreToolUse": [
       {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/config-protection.js"
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {

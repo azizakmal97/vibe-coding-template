@@ -1,0 +1,15 @@
+{
+  "_comment": "Set how Claude behaves in this project. Delete or adjust any field.",
+  "technicalLevel": "technical",
+  "preferredStyle": {
+    "verbosity": "minimal",
+    "codeComments": true,
+    "explanations": true
+  },
+  "domains": [],
+  "_examples": {
+    "technicalLevel": "beginner | intermediate | technical | expert",
+    "verbosity": "minimal | concise | thorough | exhaustive",
+    "domains": "[\"typescript\", \"react\", \"python\", \"rust\", \"flutter\", \"devops\", \"ml\", ...]"
+  }
+}
