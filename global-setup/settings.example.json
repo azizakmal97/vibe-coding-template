@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/YOUR_USERNAME/.claude/hooks/post-commit-push.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}
