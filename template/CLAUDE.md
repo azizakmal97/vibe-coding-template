@@ -40,7 +40,9 @@ Examples: "A SaaS dashboard for freelancers." / "Portable AI USB drive for offli
 
 ## Conventions
 
-> Delete or edit rows that don't apply. See `.claude/rules/naming.md` for detailed naming conventions.
+> Delete or edit rows that don't apply. See `.claude/rules/naming.md` for naming,
+> `.claude/rules/simplicity.md` for the simplicity / anti-over-engineering / "one coherent animal" standard,
+> and `.claude/rules/command-guide.md` for the plain-English command permission guide (explains what each shell command does before running it).
 
 - File naming: [snake_case / camelCase / PascalCase / kebab-case — pick one]
 - Language rules: [TypeScript strict / Python mypy / Rust clippy — zero warnings]
@@ -267,36 +269,69 @@ Run `/handover` to generate / refresh the 4 plain-language docs.
 
 ## 22. Model Selection per Task
 
-Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task model assignment. Full vendor-neutral matrix + tradeoff explanation lives in `AGENTS.md` → "Model & Tool Selection per Task". This section adds Claude-Code-specific operational details.
+Full vendor-neutral matrix + tradeoff explanation lives in `AGENTS.md` → "Model & Tool Selection per Task". This section adds Claude-Code-specific operational rules.
+
+### Rule 1 — Declare model at the START of every task, in plans AND in live prompts
+
+Whenever the user gives any instruction — whether inside a formal plan phase OR as a
+direct one-off prompt — the FIRST sentence must declare which model owns this task
+and whether the current session matches. Format:
+
+> `Model for this task: **Sonnet 4.6** (current session ✓)` — then proceed.
+> `Model for this task: **Opus 4.8** (current session is Sonnet — switch first)` — then stop.
+
+This applies to EVERY task: feature work, bug fix, a single file edit, a question
+that leads to code, a refactor, a review, anything. The declaration comes before the
+first tool call or line of output. No exceptions.
+
+### Rule 2 — In plans, every entry carries a model line
+
+Every phase block in `PROGRESS.md` carries a `Model:` line plus per-bullet
+annotation. Open the right model BEFORE marking the phase 🟡 in-progress. A plan
+bullet with no model annotation is incomplete.
+
+### Rule 3 — End every turn by naming the model for the NEXT step
+
+Explicitly, every time, even if it's already written in the plan. The user opens a
+fresh session per step and needs the next-model called out so they pick the cheapest
+capable session without re-reading the plan.
+
+### Rule 4 — Only execute tasks matching the CURRENT session's model (both directions)
+
+Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned work
+on an Opus session. Check the assignment BEFORE the first edit. On a mismatch: stop,
+state which model to switch to, wait for the user to swap. Planning across the
+boundary is fine; executing is not, unless the user explicitly says "run it on this
+model anyway."
 
 ### Project pin
 
-`.claude/settings.json` carries `"model": "claude-sonnet-4-6"` (or current Sonnet) as the project default. Every fresh session in this repo opens on that model unless the user overrides with `/model`.
+`.claude/settings.json` carries `"model": "claude-sonnet-4-6"` (or current Sonnet)
+as the project default. Every fresh session in this repo opens on that model unless
+the user overrides with `/model`.
 
 ### Switching Claude models
 
-- `/model opus` / `/model haiku` — swaps within the current session if the harness supports mid-session swap.
-- If mid-session swap is not supported (current Claude Code behavior), close the session, open a new one, then `/model <target>` → `/resume`.
+- `/model opus` / `/model haiku` — swaps within the current session if supported.
+- If mid-session swap is not supported: checkpoint → new session → `/model <target>`
+  → `/resume`.
 - **Never switch mid-task "just to try"** — costs the cache for no upside.
 
 ### Leaving Claude Code (DeepSeek / Gemini paths)
 
 Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
 
-1. `/checkpoint` — runs verification + commits current state in Claude Code so hooks fire.
+1. `/checkpoint` — runs verification + commits current state so hooks fire.
 2. Confirm push succeeded (`git status` shows "up to date with origin").
 3. Open the alternate tool. Do the bulk / multimodal / translation work.
-4. Return to Claude Code for verification: `bunx tsc --noEmit && <preset's lint/test/build commands>` so post-edit and file-budget hooks fire on the merged state.
-
-### Per-phase assignment lives in `PROGRESS.md`
-
-Every phase block carries a `Model:` line plus per-bullet annotation. Open the right model BEFORE marking the phase 🟡 in-progress.
+4. Return to Claude Code for verification: `bunx tsc --noEmit && <lint/test/build>`
+   so post-edit and file-budget hooks fire on the merged state.
 
 ### Concrete model lineup at template authorship (2026)
 
 | Slot | Current name | Notes |
 |---|---|---|
-| Anthropic flagship | Opus 4.7 | Architecture, complex debug, copy, legal, security review |
+| Anthropic flagship | Opus 4.8 | Architecture, complex debug, copy, legal, security review |
 | Anthropic workhorse | Sonnet 4.6 | Default project pin |
 | Anthropic small | Haiku 4.5 | Status checks, mechanical edits |
 | DeepSeek heavy | V4 Pro | Bulk codegen, mass test scaffolding |
@@ -304,11 +339,12 @@ Every phase block carries a `Model:` line plus per-bullet annotation. Open the r
 | Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context |
 | Google small | Gemini 3 Flash | Spell-check, screenshot smoke |
 
-**Review at project adoption.** These names will go stale. Update both this section and `AGENTS.md` matrix when starting a new project from this template.
+**Review at project adoption.** These names will go stale. Update both this section
+and `AGENTS.md` matrix when starting a new project from this template.
 
 ### Anti-patterns
 
 - Opus for status checks, build runs, log inspection — burn for no upside.
-- Sonnet for novel copywriting, brand voice, or architectural calls — output reads thin; you'll redo it.
-- Leaving Claude Code without committing first — non-Claude tools don't fire `.claude/` hooks; you lose the safety net AND lose recovery if work is lost.
-- Inheriting this lineup unchanged six months from now without checking what shipped since.
+- Sonnet for novel copywriting, brand voice, or architectural calls — output reads thin.
+- Leaving Claude Code without committing first — non-Claude tools don't fire `.claude/` hooks.
+- Inheriting this lineup unchanged six months from now without checking what shipped.
