@@ -93,7 +93,36 @@ Agents navigate by structure, not grep. `graphify` maps your whole codebase into
 
 ## Quick start
 
-There are two ways to use it. Pick one.
+### New machine? Do this first (global setup)
+
+Before setting up any project, wire Claude Code itself. One command installs your global brain, auto-push hook, and settings:
+
+```powershell
+# Windows (PowerShell) — run from the cloned repo root
+git clone https://github.com/azizakmal97/vibe-coding-template.git
+cd vibe-coding-template
+.\setup.ps1
+```
+
+Or just clone it and tell your AI agent: **"implement this template"** — the repo's `CLAUDE.md` tells the agent exactly what to run.
+
+**What gets installed globally:**
+
+| File | Destination | What it does |
+|---|---|---|
+| `global-setup/CLAUDE.md` | `~/.claude/CLAUDE.md` | Coding rules + model selection — loads in every project, every session |
+| `global-setup/hooks/post-commit-push.mjs` | `~/.claude/hooks/post-commit-push.mjs` | Auto-pushes to GitHub after every `git commit` |
+| (generated) | `~/.claude/settings.json` | Enables auto-approve mode + wires the auto-push hook |
+
+Safe to re-run — if `settings.json` already exists it's preserved. All existing files are backed up as `.bak`.
+
+Then restart Claude Code and sign in with `claude login`.
+
+---
+
+### Per-project setup: two options
+
+There are two ways to apply the template to a project. Pick one.
 
 ### Option A — Tell your AI agent to set it up (works for new *or* existing projects)
 
