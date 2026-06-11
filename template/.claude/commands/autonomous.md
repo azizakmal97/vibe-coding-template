@@ -24,16 +24,18 @@ LOOP:
        /next-phase           # auto-pick next ⬜ pending phase
   3. Execute ONE plan bullet from the active phase:
         - Edit target file(s) (one focused change).
-        - /checkpoint        # typecheck + build + test + commit wip(phase-id)
+        - /checkpoint        # typecheck + build + test + commit wip(phase-id) [skip ci]
   4. IF all plan bullets done:
         - Run full verification.
         - Edit PROGRESS.md → mark phase ✅ done + hash.
-        - git commit -m "done(<phase-id>): <summary>"
+        - git commit -m "done(<phase-id>): <summary>"   # NO [skip ci] — this run CI-verifies the phase
+        - Verify a CI run triggered (docs-only done commit → paths-ignore skips it;
+          then: gh workflow run "<CI workflow name>" --ref main, watch green).
         - Goto step 2.
   5. IF token-budget > 70%:
         - Commit current edit as wip if not yet committed.
         - Edit PROGRESS.md → add "Resume note: continue from bullet N" to active phase.
-        - git commit -m "pause(<phase-id>): token budget low"
+        - git commit -m "pause(<phase-id>): token budget low [skip ci]"
         - Exit loop with summary report.
   6. IF hook blocked OR test failed OR build failed:
         - Do NOT auto-fix repeatedly. Report to user + exit loop.

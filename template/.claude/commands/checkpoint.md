@@ -14,7 +14,10 @@ Per-edit commit ritual. Use after EVERY focused change.
 4. `git status` — list files changed.
 5. `git add <specific files>` — never `git add -A` (avoids accidentally staging secrets / build output).
 6. Generate commit message:
-   - Subject: `wip(<phase-id>): <imperative verb> <what>` — ≤ 50 chars.
+   - Subject: `wip(<phase-id>): <imperative verb> <what> [skip ci]` — ≤ 50 chars
+     before the marker. The ` [skip ci]` suffix is MANDATORY on every wip commit:
+     it still auto-pushes (death defense intact) but triggers NO Actions run, so
+     per-edit commits cost zero CI minutes (private repos get 2,000 free/month).
    - Body (only if needed): why this change, not how.
 7. `git commit -m "<message>"`.
 8. `post-commit-push.js` hook auto-pushes to remote (non-blocking; commit stays local if push fails).
@@ -39,4 +42,10 @@ If this checkpoint completes the LAST bullet of the active phase:
 1. Edit `PROGRESS.md` — mark phase `✅ done` + summary + this commit hash.
 2. Run full verification one more time.
 3. `git add PROGRESS.md && git commit -m "done(<phase-id>): <one-line summary>"`.
-4. Ask user: "phase done. Start next phase or pause?"
+   NO `[skip ci]` on done commits — this is the one run that CI-verifies the
+   whole phase.
+4. Verify a CI run actually triggered: `gh run list --limit 1`. A docs-only done
+   commit is skipped by the CI workflow's `paths-ignore` — then trigger manually
+   (`gh workflow run "<CI workflow name>" --ref main`) and watch it green,
+   otherwise the phase's wip code is never CI-verified.
+5. Ask user: "phase done. Start next phase or pause?"

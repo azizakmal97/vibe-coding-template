@@ -45,6 +45,9 @@ Prefer one expensive tool call to many small ones:
 ### 6. Commit Often (Layer 2 Death Defense)
 Per-edit commits cost ~50 tokens (git output) BUT save you the entire phase's work if session dies.
 Always cheaper than re-doing work next session.
+`wip(...)` / `pause(...)` subjects append ` [skip ci]` — the commit still auto-pushes
+(death defense intact) but triggers NO Actions run, so per-edit commits cost zero
+CI minutes. `done(...)` commits NEVER carry the marker (one CI run per phase).
 
 ### 7. Skip the Recap
 After a successful tool call, do NOT restate what the tool returned. Move to next action.
@@ -80,8 +83,9 @@ Instead: spawn a subagent, narrow the scope, or bail and tell the user.
 2. /checkpoint                        # commits wip + auto-pushes
 3. Edit PROGRESS.md → add resume note to active phase:
      "Resume note: continue from bullet N. Last touched: <file>:<line>."
-4. git commit -m "pause(<phase-id>): token budget"
-   # post-commit-push hook fires, pushes to remote.
+4. git commit -m "pause(<phase-id>): token budget [skip ci]"
+   # post-commit-push hook fires, pushes to remote. [skip ci] = no Actions run;
+   # the work gets CI-verified by the eventual done(...) commit.
 5. Verify push succeeded (check hook stderr line). If push failed, retry once:
    git push   # then continue with bail regardless of result
 6. Report to user (one short paragraph).

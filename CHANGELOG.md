@@ -17,6 +17,25 @@ All notable changes to this project are documented here. The format is based on
 - `rules/testing.md` gains an "E2E Smoke + Flow" section (pattern + gotchas:
   fixture ids must satisfy API guards; use `toHaveValue` not `getByDisplayValue`),
   and the e2e scaffold's `example.spec.ts` now demonstrates the `pageerror` guard.
+- **CI-minute discipline for autonomous loops.** `wip(...)`/`pause(...)` commits
+  now append ` [skip ci]` (in `/checkpoint`, `/autonomous`, `rules/token-budget.md`):
+  every commit still auto-pushes (death defense intact) but burns zero Actions
+  minutes — a whole phase costs ONE CI run (the `done` commit). Private repos get
+  only 2,000 free minutes/month; per-edit auto-push could burn that mid-cycle.
+  Gotcha covered: a docs-only `done` commit is also skipped by `paths-ignore`, so
+  the commands instruct the agent to verify a run exists and `gh workflow run`
+  manually when it doesn't.
+
+### Changed
+- **All preset CI workflows hardened** (`ci-web/fullstack/flutter/tauri.yml`):
+  cancel-in-progress concurrency (rapid pushes cancel stale runs), `paths-ignore`
+  so docs-only pushes skip CI, `workflow_dispatch` for manual runs, and
+  least-privilege `permissions: contents: read`.
+- **Every action SHA-pinned** with a `# vX.Y.Z` comment (mutable `@vN` tags can be
+  repointed — the 2025 tj-actions supply-chain attack class). `dtolnay/rust-toolchain`
+  gets an explicit `with: toolchain: stable` (a SHA ref no longer selects the
+  channel). The repo's own `demo.yml` is pinned too, including the
+  write-permission `git-auto-commit-action`.
 
 ## [1.0.0] - 2026-05-25
 
