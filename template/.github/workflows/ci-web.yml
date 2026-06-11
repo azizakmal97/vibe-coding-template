@@ -7,8 +7,30 @@ name: CI (web)
 on:
   push:
     branches: [main, master]
+    # Docs-only commits don't change what CI verifies — skip the run for them.
+    # GOTCHA: a docs-only `done(...)` push is also skipped; if the phase touched
+    # code, trigger CI manually: gh workflow run "<this workflow name>" --ref main
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "graphify-out/**"
   pull_request:
     branches: [main, master]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "graphify-out/**"
+  workflow_dispatch: # manual run (e.g. when paths-ignore skipped a done commit)
+
+# A newer push supersedes the in-flight run — cancel the stale one. Saves
+# Actions minutes (private repos only get 2,000 free min/month).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least-privilege token: CI only reads the repo.
+permissions:
+  contents: read
 
 jobs:
   ci:
@@ -17,10 +39,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Setup Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -52,10 +74,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Setup Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -84,7 +106,7 @@ jobs:
 
       - name: Upload report on failure
         if: ${{ failure() && steps.e2e.outputs.ready == 'true' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: playwright-report
           path: playwright-report/
