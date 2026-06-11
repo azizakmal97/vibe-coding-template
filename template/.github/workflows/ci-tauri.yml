@@ -7,16 +7,38 @@ name: CI (Tauri)
 on:
   push:
     branches: [main, master]
+    # Docs-only commits don't change what CI verifies — skip the run for them.
+    # GOTCHA: a docs-only `done(...)` push is also skipped; if the phase touched
+    # code, trigger CI manually: gh workflow run "<this workflow name>" --ref main
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "graphify-out/**"
   pull_request:
     branches: [main, master]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "graphify-out/**"
+  workflow_dispatch: # manual run (e.g. when paths-ignore skipped a done commit)
+
+# A newer push supersedes the in-flight run — cancel the stale one. Saves
+# Actions minutes (private repos only get 2,000 free min/month).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least-privilege token: CI only reads the repo.
+permissions:
+  contents: read
 
 jobs:
   frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -33,15 +55,18 @@ jobs:
       run:
         working-directory: src-tauri
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Install Linux Tauri build deps
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - uses: dtolnay/rust-toolchain@stable
+      # SHA-pinned: this action normally selects the toolchain via its ref
+      # (@stable), so with a SHA ref the toolchain must be named explicitly.
+      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master 2026-05
         with:
+          toolchain: stable
           components: clippy, rustfmt
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
         with:
           workspaces: src-tauri
       - name: Format check
