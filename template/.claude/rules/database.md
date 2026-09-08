@@ -204,7 +204,7 @@ npx wrangler d1 execute MY_DB --remote --command "SELECT 1"
 supabase db --linked execute "SELECT 1"
 ```
 
-Hooks in `.claude/hooks/pre-db-migrate.js` block migrations against URLs that look like production. Do NOT bypass.
+Hooks in `.claude/hooks/pre-db-migrate.cjs` block migrations against URLs that look like production. Do NOT bypass.
 
 ## Schema Conventions
 
