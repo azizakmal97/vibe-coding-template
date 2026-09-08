@@ -6,6 +6,7 @@
   "test:rust": "cd src-tauri && cargo test",
   "lint": "npm run lint && cd src-tauri && cargo clippy -- -D warnings",
   "typecheck": "npx tsc --noEmit",
+  "_typecheck_note": "If tsconfig.json is a solution file (references only, no top-level `include`), `tsc --noEmit` silently checks NOTHING. Point it at each real project instead, e.g. `tsc -p tsconfig.app.json && tsc -p tsconfig.node.json`.",
   "checkpoint": "npx tsc --noEmit && npm test -- --run && cd src-tauri && cargo test && cargo clippy -- -D warnings",
   "filesize": "node scripts/check-file-sizes.mjs"
 }
