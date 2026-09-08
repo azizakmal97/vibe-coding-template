@@ -6,5 +6,6 @@
   "lint": "[your lint command]",
   "typecheck": "[your type checker]",
   "checkpoint": "echo 'Define your checkpoint command in commands.json'",
-  "filesize": "node scripts/check-file-sizes.mjs"
+  "filesize": "node scripts/check-file-sizes.mjs",
+  "audit": "node scripts/audit-gate.mjs"
 }

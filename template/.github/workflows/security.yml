@@ -1,0 +1,165 @@
+# Security scanning — SAST + dependency + secret scanning.
+#
+# Read-only: every job scans SOURCE CODE or git history. None of them touch a
+# running service or a database, so they are safe against production.
+#
+# On a PRIVATE repo the GitHub "Security" tab (SARIF upload) needs paid Advanced
+# Security. Every job here works WITHOUT it: findings print to the Actions log
+# and upload as downloadable artifacts. CodeQL is a commented block at the
+# bottom — enable it if the repo is public or you buy GHAS.
+#
+# All three jobs are BLOCKING gates, each with an explicit, reviewable
+# suppression list, so the run is green when — and only when — nothing new has
+# appeared:
+#   - Semgrep     to ERROR severity only; false positives in .semgrepignore
+#   - Gitleaks    to .gitleaks.toml allowlists, by secret regex not file path
+#   - Dependency  to .audit-accepted.json, by advisory id with a review date
+#
+# THE RULE THAT MATTERS: a permanently-red blocking gate is worse than no gate.
+# Once a gate is red for a reason nobody intends to fix, a genuine finding
+# becomes indistinguishable from the standing noise. Each suppression list
+# exists so the gate can be green truthfully. If this workflow is red, treat it
+# as a real finding — that should be the only reason it ever is.
+name: Security Scan
+
+on:
+  # Deliberately NOT on every push. Semgrep + Gitleaks + npm audit on each
+  # direct commit is the bulk of an Actions-minute bill, and the ci workflow
+  # already runs lint/typecheck/build/test on every push. Coverage here comes
+  # from PRs, the weekly cron (newly-disclosed CVEs, plus drift from commits
+  # that skipped a PR), and manual dispatch.
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "graphify-out/**"
+  schedule:
+    - cron: "0 1 * * 1" # Mondays 01:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  # gitleaks-action calls the PR commits API to scope a PR scan. Without this it
+  # dies with 403 "Resource not accessible by integration" on PR runs — notably
+  # every Dependabot PR, whose token grants only what the workflow declares.
+  # That is a crash, not a finding, and it would keep the gate red for a
+  # non-security reason.
+  pull-requests: read
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Dependency vulnerabilities. Skipped automatically on non-npm projects.
+  # ---------------------------------------------------------------------------
+  dependencies:
+    name: Dependency audit
+    if: ${{ hashFiles('package-lock.json') != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+      - run: npm ci
+
+      # Full report, for the record. Non-blocking: the gate below decides
+      # pass/fail and needs this log beside it to be readable during triage.
+      - name: npm audit (full report)
+        continue-on-error: true
+        run: npm audit
+
+      # Blocking gate. Fails on any advisory NOT in .audit-accepted.json and on
+      # any acceptance past its reviewBy date. See that file for why this is not
+      # a plain "npm audit --audit-level=high".
+      - name: Dependency audit gate (accepted-advisory allowlist)
+        run: node scripts/audit-gate.mjs
+
+  # ---------------------------------------------------------------------------
+  # 2. Semgrep — SAST. Free, no GHAS needed.
+  # ---------------------------------------------------------------------------
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      # Digest-pinned. Dependabot's github-actions ecosystem does NOT update
+      # container images, so bump this version+digest by hand every few months
+      # (docker.io/semgrep/semgrep tags) to keep the rules fresh.
+      image: semgrep/semgrep:1.165.0@sha256:f4791a54c891eabe1188248135574e6e03dfc31dfd3f3b747c7bec7079bfed1b
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Drop p/typescript and p/react on a non-JS stack; they match nothing
+      # otherwise, so leaving them is harmless but noisy in the log.
+      - name: Semgrep scan (report)
+        continue-on-error: true
+        env:
+          SEMGREP_SEND_METRICS: "off"
+        run: semgrep scan --config=p/default --config=p/typescript --config=p/react --config=p/owasp-top-ten --text --sarif-output=semgrep.sarif --json-output=semgrep.json
+
+      - name: Upload Semgrep report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: semgrep-report
+          path: |
+            semgrep.sarif
+            semgrep.json
+          if-no-files-found: ignore
+          # Short-lived so reports don't accumulate against the free artifact
+          # storage cap. A week is plenty to inspect a run.
+          retention-days: 7
+
+      # Blocking gate: ERROR severity only. WARNING/INFO still appear in the
+      # report above but don't block, which keeps false-positive friction low.
+      - name: Semgrep gate (block on ERROR severity)
+        env:
+          SEMGREP_SEND_METRICS: "off"
+        run: semgrep scan --config=p/default --config=p/typescript --config=p/react --config=p/owasp-top-ten --severity=ERROR --error --quiet
+
+  # ---------------------------------------------------------------------------
+  # 3. Gitleaks — hardcoded secrets in code + full git history.
+  #    Free for personal-account repos; org repos need a license key.
+  # ---------------------------------------------------------------------------
+  gitleaks:
+    name: Gitleaks (secret scan)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history, so past commits are scanned too
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+          # PIN REQUIRED — do not drop this. The action's own default is 8.24.3,
+          # and gitleaks below 8.25 SILENTLY IGNORES top-level allowlists: the
+          # scan runs, the config loads, and every triaged false positive is
+          # reported anyway, so the gate looks broken rather than misconfigured.
+          GITLEAKS_VERSION: "8.30.1"
+
+  # ---------------------------------------------------------------------------
+  # CodeQL (deep dataflow SAST) needs GHAS on a private repo. To enable:
+  #
+  #   codeql:
+  #     runs-on: ubuntu-latest
+  #     permissions: { contents: read, security-events: write }
+  #     steps:
+  #       - uses: actions/checkout@v5
+  #       - uses: github/codeql-action/init@v3
+  #         with: { languages: javascript-typescript, queries: security-extended }
+  #       - uses: github/codeql-action/autobuild@v3
+  #       - uses: github/codeql-action/analyze@v3
+  # ---------------------------------------------------------------------------

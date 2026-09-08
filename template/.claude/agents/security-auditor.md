@@ -36,7 +36,7 @@ git log --all --full-history -p | grep -i "secret\|password\|api_key" | head -20
 - [ ] No secrets in source code
 - [ ] No secrets in git history
 - [ ] `.env` and `.env.*` in `.gitignore`
-- [ ] `npm audit` shows zero critical vulnerabilities
+- [ ] `node scripts/audit-gate.mjs` passes (see Dependency Audit below)
 
 ### Injection Attacks
 - [ ] ORM used for all DB queries (Prisma, Drizzle, etc.)
@@ -59,10 +59,31 @@ git log --all --full-history -p | grep -i "secret\|password\|api_key" | head -20
 - [ ] Auth failures return same message whether user exists or not ("Invalid credentials" not "User not found")
 
 ### Dependency Audit
+
 ```bash
-npm audit --audit-level=high
+node scripts/audit-gate.mjs     # the gate CI runs
+npm audit                       # full context when triaging a failure
 ```
-- [ ] Zero high/critical dependency vulnerabilities
+
+The gate fails on any advisory NOT listed in `.audit-accepted.json`, and on any
+acceptance past its `reviewBy` date. Prefer it over a raw `npm audit
+--audit-level=high`: every real project carries advisories it cannot fix today,
+a raw audit fails on those forever, and **a permanently-red blocking gate is
+worse than no gate** — a genuine finding becomes indistinguishable from the
+standing noise.
+
+- [ ] `audit-gate` passes
+- [ ] Every entry in `.audit-accepted.json` still has a defensible reason and an
+      in-date `reviewBy` (an acceptance that never expires is a blind spot)
+
+**Never run a blanket `npm audit fix`, forced or not.** It resolves transitive
+deps outside their declared ranges and can introduce more advisories than it
+removes. Fix packages by name (`npm install <pkg>@<range>`) or with a scoped
+`overrides` entry, then diff the lockfile and revert if the changed-package set
+is not what you expected to touch.
+
+When overriding for a CVE, check the fix version is ABOVE the advisory range,
+not merely at its top.
 
 ## Output Format
 

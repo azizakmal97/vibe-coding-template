@@ -89,6 +89,13 @@ if (ciSrc) {
   copyIfExists(ciSrc, join(PROJECT_ROOT, '.github', 'workflows', 'ci.yml'));
 }
 
+// Security scan is preset-independent: the dependency job skips itself when
+// there is no package-lock.json, and Semgrep/Gitleaks are stack-agnostic.
+copyIfExists(
+  join(TEMPLATE_ROOT, '.github', 'workflows', 'security.yml'),
+  join(PROJECT_ROOT, '.github', 'workflows', 'security.yml'),
+);
+
 // Playwright E2E scaffold (web / fullstack / desktop only). auth.setup.ts ships
 // as a .template — the project fills in its login before the suite can run.
 if (PLAYWRIGHT_PRESETS.has(choice)) {

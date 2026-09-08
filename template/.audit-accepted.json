@@ -1,0 +1,32 @@
+{
+  "$comment": [
+    "Advisories deliberately NOT fixed, each with a reason and a review date.",
+    "",
+    "Read by scripts/audit-gate.mjs: anything in the tree that is NOT listed",
+    "here fails the Security Scan, and any entry past its reviewBy also fails.",
+    "An acceptance that never expires is a permanent blind spot.",
+    "",
+    "WHY THIS FILE EXISTS instead of a plain `npm audit --audit-level=high`:",
+    "every real project accumulates advisories it cannot fix today (dev-only",
+    "tooling needing a semver-major bump, a transitive pin three levels down).",
+    "A raw audit fails on those forever, and a permanently-red blocking gate is",
+    "worse than no gate -- a genuine finding becomes indistinguishable from the",
+    "standing noise. Carving accepted ids out explicitly restores the property",
+    "that matters: a NEW vulnerability fails the run.",
+    "",
+    "Adding an entry is a security DECISION, not a way to quiet the build.",
+    "Justify why the vulnerable code path is unreachable in this product.",
+    "NEVER blanket `npm audit fix` (forced or not) to clear a finding -- it",
+    "resolves transitive deps outside their declared ranges and can introduce",
+    "more advisories than it removes. Diff the lockfile after any audit fix and",
+    "revert if the changed-package set is not what you expected to touch.",
+    "",
+    "An empty list is the goal state, not a missing file.",
+    "",
+    "Entry shape:",
+    "  { \"id\": \"GHSA-xxxx-xxxx-xxxx\", \"package\": \"name\",",
+    "    \"reason\": \"why this path is unreachable here\",",
+    "    \"reviewBy\": \"YYYY-MM-DD\" }"
+  ],
+  "accepted": []
+}
