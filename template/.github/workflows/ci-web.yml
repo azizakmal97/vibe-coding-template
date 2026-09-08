@@ -39,10 +39,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js 22
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -54,7 +54,15 @@ jobs:
         run: npm run lint
 
       - name: Typecheck
-        run: npx tsc --noEmit
+        # Prefer the project's own script. A bare `tsc --noEmit` checks NOTHING
+        # when the root tsconfig.json is a solution file (references only, no
+        # top-level `include`) -- CI goes green while type errors ship.
+        run: |
+          if node -e "process.exit(require('./package.json').scripts?.typecheck ? 0 : 1)"; then
+            npm run typecheck
+          else
+            npx tsc --noEmit
+          fi
 
       - name: Unit + integration tests
         run: npm test -- --run
@@ -63,7 +71,10 @@ jobs:
         run: npm run build
 
       - name: File-size budget check
-        run: node scripts/check-file-sizes.mjs
+        # exit 1 = soft warning (tolerate), exit 2 = hard breach (fail). A bare
+        # `run:` fails on any non-zero, which turned every soft warning into a
+        # blocked PR -- the opposite of the script's documented contract.
+        run: node scripts/check-file-sizes.mjs || [ "$?" -eq 1 ]
 
   # Real-browser E2E. Separate job so the fast unit gate above isn't slowed by
   # the browser install. Auto-skips until the Playwright scaffold is filled in
@@ -74,10 +85,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js 22
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -106,7 +117,7 @@ jobs:
 
       - name: Upload report on failure
         if: ${{ failure() && steps.e2e.outputs.ready == 'true' }}
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright-report
           path: playwright-report/
