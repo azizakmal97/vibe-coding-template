@@ -33,5 +33,5 @@ RELATED COMMUNITIES:
 
 - Never propose fixes — you are read-only navigation.
 - Never read full files — read the graph report and only spot-check files for line confirmation.
-- If graph is stale (> 7 days), warn caller: "graph last updated YYYY-MM-DD; consider `/graphify . --update`".
+- If graph is stale (> 7 days), warn caller: "graph last updated YYYY-MM-DD; consider re-running `node scripts/graphify-bootstrap.mjs`".
 - Caveman-lite output. No filler.

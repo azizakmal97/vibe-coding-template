@@ -3,8 +3,15 @@
  * Graphify bootstrap.
  *
  * Counts source files under common roots (src, lib, app, worker, packages).
- * If >= 50 files and `graphify` Python package is available, runs:
- *   graphify generate . --output graphify-out
+ * If >= 50 files and the `graphifyy` Python package is importable, runs the
+ * scoped rebuild:
+ *
+ *   python scripts/graphify-rebuild.py
+ *
+ * NOT `graphify generate` -- the CLI has no such command, and it exits 0 while
+ * printing "unknown command", so the old bootstrap reported success over an
+ * empty directory. Success is therefore verified by checking that
+ * GRAPH_REPORT.md was actually (re)written, never by the exit code alone.
  *
  * Idempotent: skips if graphify-out/GRAPH_REPORT.md is < 7 days old.
  *
@@ -12,7 +19,8 @@
  */
 
 import { existsSync, readdirSync, statSync } from 'node:fs';
-import { join, sep } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
 const ROOT = process.cwd();
@@ -53,9 +61,9 @@ if (sourceFileCount < MIN_FILES) {
 }
 
 const report = join(ROOT, 'graphify-out', 'GRAPH_REPORT.md');
-if (existsSync(report)) {
-  const ageMs = Date.now() - statSync(report).mtimeMs;
-  const ageDays = ageMs / 86400000;
+const before = existsSync(report) ? statSync(report).mtimeMs : 0;
+if (before) {
+  const ageDays = (Date.now() - before) / 86400000;
   if (ageDays < STALE_DAYS) {
     console.log(`[graphify-bootstrap] Graph fresh (${ageDays.toFixed(1)}d old). Skipping.`);
     process.exit(0);
@@ -63,19 +71,41 @@ if (existsSync(report)) {
   console.log(`[graphify-bootstrap] Graph stale (${ageDays.toFixed(1)}d). Regenerating.`);
 }
 
-const check = spawnSync('graphify', ['--version'], { encoding: 'utf8' });
-if (check.error || check.status !== 0) {
-  console.log('[graphify-bootstrap] `graphify` not installed. Install via: pip install graphifyy');
+// Prefer the project's own copy; fall back to the one sitting next to this
+// script, since setup.ps1 invokes the bootstrap by absolute path from the
+// template directory while the cwd is the target project.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const rebuild = [join(ROOT, 'scripts', 'graphify-rebuild.py'), join(HERE, 'graphify-rebuild.py')]
+  .find((p) => existsSync(p));
+if (!rebuild) {
+  console.log('[graphify-bootstrap] scripts/graphify-rebuild.py not found. Skipping graph.');
+  process.exit(0);
+}
+
+// Find an interpreter that can import the package. `python3` on most Unix
+// installs, `python` on Windows; the package is named graphifyy, the import
+// name is graphify.
+const python = ['python', 'python3'].find((bin) => {
+  const probe = spawnSync(bin, ['-c', 'import graphify'], { encoding: 'utf8' });
+  return !probe.error && probe.status === 0;
+});
+
+if (!python) {
+  console.log('[graphify-bootstrap] graphify not importable by python. Install: pip install graphifyy');
   console.log('[graphify-bootstrap] Or use the Claude Code skill: /graphify');
   process.exit(0);
 }
 
-console.log(`[graphify-bootstrap] ${sourceFileCount} source files. Running graphify...`);
-const run = spawnSync('graphify', ['generate', '.', '--output', 'graphify-out'], { stdio: 'inherit' });
-if (run.status !== 0) {
-  console.error('[graphify-bootstrap] graphify failed; continuing setup.');
+console.log(`[graphify-bootstrap] ${sourceFileCount} source files. Running scoped rebuild...`);
+const run = spawnSync(python, [rebuild], { stdio: 'inherit' });
+
+const after = existsSync(report) ? statSync(report).mtimeMs : 0;
+if (run.status !== 0 || after === before) {
+  console.error('[graphify-bootstrap] rebuild did not produce a graph; continuing setup.');
 } else {
-  console.log('[graphify-bootstrap] Done. Output is an Obsidian vault:');
-  console.log('[graphify-bootstrap]   Obsidian → "Open folder as vault" → graphify-out  (use Graph View)');
+  console.log('[graphify-bootstrap] Done. GRAPH_REPORT.md written.');
+  if (existsSync(join(ROOT, 'graphify-out', 'obsidian'))) {
+    console.log('[graphify-bootstrap]   Obsidian -> "Open folder as vault" -> graphify-out/obsidian');
+  }
 }
 process.exit(0);

@@ -87,12 +87,17 @@ spawn a subagent, or bail.
 
 - If `graphify-out/GRAPH_REPORT.md` exists, read it FIRST before any full-repo
   Grep/Glob — it cuts exploration 60-80%.
-- After any structural change (file add / rename / move / delete), run `/graphify`
-  to update the graph.
+- After any structural change (file add / rename / move / delete), rebuild the
+  graph. The ONLY supported rebuild is `python scripts/graphify-rebuild.py`
+  (the `/graphify` command wraps it) — it is scoped to source dirs and finishes
+  in seconds.
+- Do NOT run `graphify generate ...`. The CLI has no `generate` command, and it
+  exits 0 while printing `unknown command`, so anything trusting the exit code
+  reports success over an empty directory.
 - For "where is X" / "what calls Y" questions, prefer the `graph-navigator`
   subagent — its output is compressed so main-thread context lasts longer.
-- If the `graphify` tool isn't installed, surface the install hint
-  (`pip install graphifyy`) rather than failing silently.
+- If the package isn't installed, surface the install hint
+  (`pip install graphifyy` — note the double y) rather than failing silently.
 
 ## 4. Push After Every Commit (Automated)
 
