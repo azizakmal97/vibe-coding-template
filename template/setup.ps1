@@ -68,6 +68,8 @@ $fileMappings = [ordered]@{
     "PROGRESS.md"                                     = "PROGRESS.md"
     # .claude root
     ".claude\settings.json"                           = ".claude\settings.json"
+    ".claude\identity.json"                           = ".claude\identity.json"
+    ".claude\package-manager.json"                    = ".claude\package-manager.json"
     # agents
     ".claude\agents\code-reviewer.md"                 = ".claude\agents\code-reviewer.md"
     ".claude\agents\debugger.md"                      = ".claude\agents\debugger.md"
@@ -94,12 +96,14 @@ $fileMappings = [ordered]@{
     ".claude\commands\deploy.md"                      = ".claude\commands\deploy.md"
     # hooks
     ".claude\hooks\validate-command.js"               = ".claude\hooks\validate-command.js"
-    ".claude\hooks\post-edit-check.js"                = ".claude\hooks\post-edit-check.js"
-    ".claude\hooks\pre-db-migrate.js"                 = ".claude\hooks\pre-db-migrate.js"
+    ".claude\hooks\post-edit-check.cjs"                = ".claude\hooks\post-edit-check.cjs"
+    ".claude\hooks\pre-db-migrate.cjs"                 = ".claude\hooks\pre-db-migrate.cjs"
     ".claude\hooks\session-start-resume.js"           = ".claude\hooks\session-start-resume.js"
     ".claude\hooks\pre-commit-checkpoint.js"          = ".claude\hooks\pre-commit-checkpoint.js"
     ".claude\hooks\check-file-size.js"                = ".claude\hooks\check-file-size.js"
     ".claude\hooks\post-commit-push.js"               = ".claude\hooks\post-commit-push.js"
+    ".claude\hooks\config-protection.cjs"             = ".claude\hooks\config-protection.cjs"
+    ".claude\hooks\post-commit-update-progress.js"    = ".claude\hooks\post-commit-update-progress.js"
     # rules
     ".claude\rules\frontend.md"                       = ".claude\rules\frontend.md"
     ".claude\rules\backend.md"                        = ".claude\rules\backend.md"
@@ -112,6 +116,9 @@ $fileMappings = [ordered]@{
     ".claude\rules\legacy-files.md"                   = ".claude\rules\legacy-files.md"
     ".claude\rules\naming.md"                         = ".claude\rules\naming.md"
     ".claude\rules\token-budget.md"                   = ".claude\rules\token-budget.md"
+    ".claude\rules\caveman.md"                        = ".claude\rules\caveman.md"
+    ".claude\rules\command-guide.md"                  = ".claude\rules\command-guide.md"
+    ".claude\rules\simplicity.md"                     = ".claude\rules\simplicity.md"
     # skills
     ".claude\skills\design-system\SKILL.md"           = ".claude\skills\design-system\SKILL.md"
     ".claude\skills\caveman-default\SKILL.md"         = ".claude\skills\caveman-default\SKILL.md"

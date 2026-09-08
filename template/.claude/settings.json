@@ -92,7 +92,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/config-protection.js"
+            "command": "node .claude/hooks/config-protection.cjs"
           }
         ]
       },
@@ -105,7 +105,7 @@
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/pre-db-migrate.js"
+            "command": "node .claude/hooks/pre-db-migrate.cjs"
           },
           {
             "type": "command",
@@ -120,7 +120,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/post-edit-check.js"
+            "command": "node .claude/hooks/post-edit-check.cjs"
           },
           {
             "type": "command",
