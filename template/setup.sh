@@ -122,6 +122,7 @@ declare -A FILES=(
   # scripts
   ["scripts/check-file-sizes.mjs"]="scripts/check-file-sizes.mjs"
   ["scripts/graphify-bootstrap.mjs"]="scripts/graphify-bootstrap.mjs"
+  ["scripts/graphify-rebuild.py"]="scripts/graphify-rebuild.py"
   ["scripts/init-progress.mjs"]="scripts/init-progress.mjs"
   ["scripts/pick-preset.mjs"]="scripts/pick-preset.mjs"
   ["scripts/sync-agent-rules.mjs"]="scripts/sync-agent-rules.mjs"

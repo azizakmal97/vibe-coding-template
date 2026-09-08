@@ -226,14 +226,21 @@ E2E (Playwright) ships as a runnable scaffold for `web` / `fullstack`. Backend t
 `graphify` maps your whole codebase into a knowledge graph — one note per file/function, wikilinked by who-calls-what, grouped into communities. It's already wired into the template: a `/graphify` command, a `graphify-bootstrap.mjs` script, and a `graph-navigator` subagent. Two payoffs:
 
 - **Agents navigate by structure, not grep.** Once `graphify-out/GRAPH_REPORT.md` exists, the agent reads the graph to answer "where is X / what calls Y" instead of burning tokens on repo-wide `grep` (cuts exploration ~60–80%).
-- **You explore it visually in Obsidian.** `graphify` writes its output *as an Obsidian vault* — `graphify-out/` ships with an `.obsidian/` config and a markdown note per symbol. Open that folder as a vault and use Obsidian's **Graph View** to fly around your architecture.
+- **You explore it visually in Obsidian.** The rebuild writes `graphify-out/obsidian/` — a markdown note per symbol, wikilinked. Open that folder as a vault and use Obsidian's **Graph View** to fly around your architecture. (Obsidian creates its own `.obsidian/` config on first open; nothing is shipped.)
 
 ```bash
-# generate / refresh the graph (auto-installs graphify if Python is present)
+pip install graphifyy                      # one-time; the bootstrap does NOT install for you
+
+# generate / refresh the graph
 node scripts/graphify-bootstrap.mjs        # or the /graphify slash command in Claude Code
 
-# then in Obsidian:  "Open folder as vault"  →  <your-project>/graphify-out
+# then in Obsidian:  "Open folder as vault"  →  <your-project>/graphify-out/obsidian
 ```
+
+Under the hood the bootstrap runs `python scripts/graphify-rebuild.py`, a scoped
+rebuild that skips `node_modules/` and `dist/`. Don't reach for `graphify generate`
+— the CLI has no such command, and it exits 0 while printing `unknown command`,
+so a wrapper that trusts the exit code reports success over an empty directory.
 
 `graphify-out/` is gitignored (it's regenerated, not committed), so it never bloats your repo. Re-run `/graphify` after big structural changes to keep the graph fresh.
 
