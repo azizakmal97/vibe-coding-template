@@ -1,0 +1,35 @@
+# Gitleaks config.
+#
+# Extends the default ruleset. Add an allowlist entry only for a triaged FALSE
+# POSITIVE — a documentation example, a code identifier, or a test fixture
+# whose plaintext is public.
+#
+# Allowlist by the specific secret REGEX, not by blanket file path, so a
+# genuinely new secret added to the same file is still caught. A `paths`-only
+# allowlist turns that file into a permanent blind spot.
+#
+# VERSION FLOOR: top-level [[allowlists]] are SILENTLY IGNORED by gitleaks
+# below 8.25 — the scan runs, the config loads, and every suppressed finding is
+# reported anyway, so the gate looks broken rather than misconfigured.
+# gitleaks-action still defaults to 8.24.3, which is why the workflow pins
+# GITLEAKS_VERSION explicitly. Do not remove that pin.
+
+[extend]
+useDefault = true
+
+# Example of the shape an entry should take. Delete it and add your own.
+#
+# [[allowlists]]
+# description = "Textbook JWT in the architecture doc — signature is literally 'signature_here', not a real token."
+# regexes = [
+#   '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9._-]*''',
+# ]
+#
+# Narrow it further with a path condition when the same string is only ever
+# legitimate in one file:
+#
+# [[allowlists]]
+# description = "README setup instructions — the 'private key' match is prose showing the paste format, not a key."
+# condition = "AND"
+# paths = ['''README\.md''']
+# regexes = ['''PRIVATE KEY-----`''']

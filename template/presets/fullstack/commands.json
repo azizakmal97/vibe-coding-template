@@ -10,5 +10,6 @@
   "db:migrate": "npx prisma migrate dev",
   "db:studio": "npx prisma studio",
   "checkpoint": "npx tsc --noEmit && npm run lint && npm test -- --run && npm run build",
-  "filesize": "node scripts/check-file-sizes.mjs"
+  "filesize": "node scripts/check-file-sizes.mjs",
+  "audit": "node scripts/audit-gate.mjs"
 }

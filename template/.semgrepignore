@@ -1,0 +1,30 @@
+# Paths excluded from Semgrep SAST. Shipped application code stays scanned.
+#
+# Rule: exclude a path only when you have TRIAGED its findings and they are
+# false positives, non-shipped tooling, or documentation examples. Write down
+# which finding each entry silences — an unexplained exclusion is how a real
+# vulnerability hides.
+#
+# Prefer a GLOB over a fixed path. A path-pinned entry fails open the moment
+# the file moves, and it does so silently: the exclusion simply stops matching
+# and the gate goes red for a reason nobody connects to the move.
+
+# Local agent tooling — hooks, agents, commands. Not shipped.
+# (Typical source of path-join traversal findings in the migration hook.)
+.claude/
+
+# Generated knowledge-graph output — not source.
+graphify-out/
+
+# Build / CI / migration scripts — not shipped to the runtime.
+# (Typical source of non-literal-regexp findings in the budget checker.)
+scripts/
+
+# Documentation — example tokens and hashes are illustrative, not secrets.
+*.md
+docs/*.py
+docs/**/*.py
+
+# Test fixtures — example hashes used as test data.
+*.test.ts
+*.test.tsx

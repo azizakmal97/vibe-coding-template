@@ -7,5 +7,6 @@
   "lint": "flutter analyze",
   "typecheck": "flutter analyze",
   "checkpoint": "flutter analyze && flutter test && flutter build apk --debug",
-  "filesize": "node scripts/check-file-sizes.mjs"
+  "filesize": "node scripts/check-file-sizes.mjs",
+  "audit": "node scripts/audit-gate.mjs"
 }

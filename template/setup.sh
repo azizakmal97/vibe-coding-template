@@ -62,6 +62,10 @@ declare -A FILES=(
   [".cursor/rules/project.mdc"]=".cursor/rules/project.mdc"
   [".windsurfrules"]=".windsurfrules"
   [".github/copilot-instructions.md"]=".github/copilot-instructions.md"
+  # security gate config
+  [".audit-accepted.json"]=".audit-accepted.json"
+  [".semgrepignore"]=".semgrepignore"
+  [".gitleaks.toml"]=".gitleaks.toml"
   ["PROGRESS.md"]="PROGRESS.md"
   # .claude root
   [".claude/settings.json"]=".claude/settings.json"
@@ -125,6 +129,8 @@ declare -A FILES=(
   ["scripts/graphify-rebuild.py"]="scripts/graphify-rebuild.py"
   ["scripts/init-progress.mjs"]="scripts/init-progress.mjs"
   ["scripts/pick-preset.mjs"]="scripts/pick-preset.mjs"
+  ["scripts/audit-gate.mjs"]="scripts/audit-gate.mjs"
+  ["scripts/audit-gate-lib.mjs"]="scripts/audit-gate-lib.mjs"
   ["scripts/sync-agent-rules.mjs"]="scripts/sync-agent-rules.mjs"
   ["scripts/auto-checkpoint.sh"]="scripts/auto-checkpoint.sh"
   ["scripts/auto-checkpoint.ps1"]="scripts/auto-checkpoint.ps1"
