@@ -50,9 +50,10 @@ mkdir -p \
   .cursor/rules \
   .github/workflows \
   scripts \
-  docs
+  docs \
+  memory
 echo "  + .claude/{agents,commands,hooks,rules,skills/*}"
-echo "  + .github/workflows, scripts, docs"
+echo "  + .github/workflows, scripts, docs, memory"
 
 # Files to copy (universal, non-preset)
 declare -A FILES=(
@@ -120,6 +121,8 @@ declare -A FILES=(
   [".claude/rules/caveman.md"]=".claude/rules/caveman.md"
   [".claude/rules/command-guide.md"]=".claude/rules/command-guide.md"
   [".claude/rules/simplicity.md"]=".claude/rules/simplicity.md"
+  [".claude/rules/memory.md"]=".claude/rules/memory.md"
+  ["memory/MEMORY.md"]="memory/MEMORY.md"
   # skills
   [".claude/skills/design-system/SKILL.md"]=".claude/skills/design-system/SKILL.md"
   [".claude/skills/caveman-default/SKILL.md"]=".claude/skills/caveman-default/SKILL.md"
