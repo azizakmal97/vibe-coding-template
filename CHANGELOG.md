@@ -6,6 +6,73 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Fixed
+- **Auto-push silently never fired on the two most common commit forms.** The
+  hook matched only a standalone `git commit ...`, so `git add . && git commit`
+  — the form the docs themselves teach — was ignored; and it confirmed success
+  by regexing stdout for markers that `git commit -q` suppresses. Commit
+  detection is now the ahead-of-upstream count. Applies to both the project hook
+  and the global one installed by `setup.ps1`.
+- **The knowledge graph never generated.** `graphify generate` is not a real
+  command, and the CLI exits 0 while printing `unknown command`, so the bootstrap
+  reported "Done. Output is an Obsidian vault" over an empty directory. Replaced
+  with `scripts/graphify-rebuild.py`, a scoped rebuild that skips `node_modules/`
+  and `dist/` (the library's own file collector does not, which costs ~13 minutes
+  of pinned CPU) and keeps the `__main__` guard that stops Windows worker
+  processes from re-running the whole rebuild and producing a partial graph.
+  Success is now verified by checking the report was rewritten. The Obsidian
+  vault the README promises is actually written for the first time.
+- **Three hooks crashed in any ESM project.** `config-protection`,
+  `post-edit-check` and `pre-db-migrate` are CommonJS but shipped as `.js`; the
+  web and fullstack presets scaffold Vite, which sets `"type": "module"`, so all
+  three threw `require is not defined`. Renamed to `.cjs`.
+- **Seven files were in neither setup map**, including two hooks that
+  `settings.json` references — a fresh project got hooks pointing at files that
+  were never copied. Both maps now cover every file under `.claude/`, `scripts/`
+  and `memory/`.
+- **The file-size budget checker skipped top-level files.** `**/` compiled to a
+  pattern that required a slash, so `src/**/*.ts` never matched `src/a.ts`. The
+  gate looked green because it was not looking. The glob placeholders were also
+  raw NUL bytes, which made git treat the script as binary.
+- **A soft budget warning failed CI.** All four workflows invoked the checker
+  bare, so exit 1 (warn, tolerate) blocked the PR just like exit 2 (hard breach).
+- **`npx tsc --noEmit` checks nothing** under a solution-style `tsconfig.json`.
+  CI now prefers the project's own `typecheck` script.
+- **The generated agent shims had drifted.** `.cursorrules`, `.windsurfrules`,
+  `.cursor/rules/project.mdc` and `.github/copilot-instructions.md` were 79 lines
+  against `AGENTS.md`'s 140 — the missing section was the whole model-routing
+  doctrine, so Cursor, Windsurf and Copilot users never received it.
+- `rules/frontend.md` mandated `next/image` for the Vite-based web preset, where
+  it does not exist.
+
+### Added
+- **Security Scan workflow** with three blocking gates, each with a reviewable
+  suppression list: a dependency gate (`scripts/audit-gate.mjs` +
+  `.audit-accepted.json`, failing on any advisory not accepted and on any
+  acceptance past its review date), Semgrep at ERROR severity, and Gitleaks over
+  full history with `GITLEAKS_VERSION` pinned — versions below 8.25 silently
+  ignore top-level allowlists. The dependency job skips itself on non-npm
+  projects. The governing idea: a permanently-red gate is worse than no gate.
+- **Capture & recall doctrine** — `rules/memory.md`, a seeded `memory/MEMORY.md`,
+  and `AGENTS.md` rule 13. Write symptom / root cause / fix / how-to-apply the
+  same turn you solve it, and only what you verified.
+- **`AGENTS.md` rule 12 — a push is not a deploy.** Work is not live until the
+  CI run is green; watch it and distinguish a failed build from a failed deploy.
+- `rules/simplicity.md` gains the half of the quality charter it lacked:
+  correctness with no silent failure, secured-by-default, and leave-it-cleaner.
+
+### Changed
+- **Model lineup refreshed to the Claude 5 family** (Opus 5 / Sonnet 5; Haiku 4.5
+  unchanged), with model ids spelled out and a "last reviewed" date. The repo had
+  disagreed with itself — `AGENTS.md` said Opus 4.7 while the two brains said 4.8.
+- `actions/checkout`, `setup-node` and `upload-artifact` pins bumped v5 → v7
+  across all four preset workflows.
+
+---
+
+_Earlier unreleased work, from the previous cycle:_
+
+
 ### Added
 - **Mandatory browser verification for UI work.** New non-negotiable rule
   (`AGENTS.md` #5, mirrored to all agent shims): any frontend change or component
