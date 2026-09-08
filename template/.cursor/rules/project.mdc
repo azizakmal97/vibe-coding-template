@@ -30,6 +30,8 @@ See `CLAUDE.md` §1–§2 for the active preset's stack + commands.
 9. **No silent catches** — every `catch` must log or rethrow.
 10. **Ask before installing packages** — state name + version + why + bundle impact.
 11. **Read `PROGRESS.md` on session start** — if a phase is `🟡 in-progress`, resume per protocol.
+12. **A push is not a deploy** — if pushing triggers CI/CD, the work is NOT live until that run is green. Watch it (`gh run list --branch main --limit 1`, then `gh run watch <id>`). A failed build job means the deploy never ran; a failed deploy job means the code is not live. Read the real error, fix the root cause, push again, re-verify. Only say "done" or "live" once every job is green — otherwise say plainly that it is pushed but NOT live.
+13. **Capture the lesson, same turn** — when a bug took real digging, write symptom / root cause / fix / how-to-apply into `memory/` and index it in `memory/MEMORY.md` before moving on, and check that index before re-debugging anything. Only write what you VERIFIED; a confidently-wrong note is worse than none. See `.claude/rules/memory.md`.
 
 ---
 

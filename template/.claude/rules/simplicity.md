@@ -52,7 +52,40 @@ style WINS over personal default — even if you'd do it differently.
 - Comments explain WHY, never WHAT the code already says.
 - No clever one-liners that need a PhD to parse. Boring, obvious, linear wins.
 
-## §4 — Self-review before "done"
+## §4 — Correct, with no silent failure
+
+Simple is not the same as optimistic. Before "done":
+
+- Handle the unhappy path: null, empty, zero / one / many, network failure, bad
+  input. A function that only works on the happy path is not finished.
+- Validate input at trust boundaries — anything crossing a process, a network,
+  or a user. Inside the boundary you may trust your own types.
+- Never swallow an error. Fail loud, with enough context to act on (see
+  `AGENTS.md` rule 9). A `catch` that logs nothing is a bug you cannot find later.
+- No off-by-one, no unawaited promise, no leaked handle. Close what you open.
+- Test the logic that matters: the happy path AND the nastiest edge. Run
+  typecheck, build, lint and tests and SEE them pass. "Should work" is not done.
+
+## §5 — Secured by default
+
+- Never hardcode a secret, key or token. Env vars or a secrets manager. Never
+  log a secret or personal data.
+- Parameterize every query — no string-built SQL. Escape or encode output — no
+  raw HTML from user input.
+- Deny by default. Enforce authn/authz on every protected path. Don't leak
+  stack traces or internal errors to a client.
+- Keep dependencies current and pinned; no obvious OWASP Top 10 hole. If you
+  are unsure whether something is exploitable, flag it rather than assume.
+
+## §6 — Leave it cleaner, no leftovers
+
+- Remove dead code, unused imports and variables, commented-out blocks, debug
+  prints and scaffolding before you finish.
+- No orphaned TODO without an owner or an issue behind it.
+- Formatting comes from the project's formatter/linter. Don't fight it, and
+  don't reformat lines your change did not touch — it buries the real diff.
+
+## §7 — Self-review before "done"
 
 Re-read the full diff as a hostile senior reviewer who didn't write it:
 
