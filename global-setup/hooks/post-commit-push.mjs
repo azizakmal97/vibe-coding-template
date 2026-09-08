@@ -40,13 +40,18 @@ const exitCode = data.tool_response?.exit_code ?? data.tool_response?.exitCode ?
 const stdout = data.tool_response?.stdout || '';
 
 // Only act on `git commit ...` that succeeded.
-if (!/^\s*git\s+commit\b/.test(command)) process.exit(0);
+// Matches: standalone `git commit ...` AND chained forms like
+// `git add . && git commit -m "..."`, `git status; git commit ...`.
+if (!/(?:^|[\s;&|]+)git\s+commit\b/.test(command)) process.exit(0);
 if (exitCode !== 0) process.exit(0);
 
-// Confirm commit actually happened (avoids no-op runs like --dry-run).
-const looksCommitted = /\[\w+[\s-]*\(?[\w./-]*\)?\s+[a-f0-9]{7,}\]/.test(stdout)
-  || /\d+\s+files?\s+changed/.test(stdout);
-if (!looksCommitted) process.exit(0);
+// Skip commands that never produce a commit (previews).
+// NOTE: do NOT gate on stdout markers — `git commit -q/--quiet` suppresses the
+// `[branch hash]` / "N files changed" lines, which previously made this hook
+// silently skip the push. Whether a commit actually landed is decided below via
+// the ahead-of-upstream count, which is correct regardless of -q.
+if (/--dry-run\b/.test(command)) process.exit(0);
+void stdout;
 
 // Check remote configured.
 let hasRemote = false;
@@ -74,6 +79,23 @@ try {
   execSync(`git rev-parse --abbrev-ref ${branch}@{upstream}`, { stdio: 'ignore' });
 } catch {
   upstreamSet = false;
+}
+
+// If upstream is set, only push when HEAD is actually ahead. This replaces the
+// old stdout heuristic: it pushes correctly after `-q` commits AND skips no-op
+// runs (commands that matched `git commit` but created nothing). When no upstream
+// exists yet (first push), always proceed to establish it.
+if (upstreamSet) {
+  let ahead = 0;
+  try {
+    ahead = parseInt(
+      execSync(`git rev-list --count ${branch}@{upstream}..HEAD`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(),
+      10,
+    ) || 0;
+  } catch {
+    ahead = 1; // can't determine → err toward pushing (safe; push no-ops if nothing to send)
+  }
+  if (ahead === 0) process.exit(0);
 }
 
 const args = upstreamSet ? ['push'] : ['push', '-u', 'origin', branch];
