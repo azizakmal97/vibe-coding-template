@@ -9,12 +9,12 @@
 Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task
 model assignment. Never run a whole project on one model by default.
 
-### Current lineup (review periodically — names go stale)
+### Current lineup (last reviewed 2026-09-08 — names go stale, re-check every 6 months)
 
 | Slot | Current name | Use for |
 |---|---|---|
-| Anthropic flagship | **Opus 4.8** (`claude-opus-4-8`) | Architecture, hard debugging, security review, novel copy/brand voice, tricky refactors |
-| Anthropic workhorse | **Sonnet 4.6** (`claude-sonnet-4-6`) | Default for normal feature work and edits |
+| Anthropic flagship | **Opus 5** (`claude-opus-5`) | Architecture, hard debugging, security review, novel copy/brand voice, tricky refactors |
+| Anthropic workhorse | **Sonnet 5** (`claude-sonnet-5`) | Default for normal feature work and edits |
 | Anthropic small | **Haiku 4.5** (`claude-haiku-4-5-20251001`) | Status checks, log inspection, mechanical edits, build runs |
 | DeepSeek heavy | V-series Pro | Bulk codegen, mass test scaffolding |
 | DeepSeek small | V-series Flash | Format / lint auto-fix |
@@ -27,8 +27,8 @@ model assignment. Never run a whole project on one model by default.
 Whenever the user gives you any instruction — whether inside a formal plan phase OR
 as a direct one-off prompt — your FIRST sentence must declare which model owns this
 task and whether the current session matches. Format:
-> `Model for this task: **Sonnet 4.6** (current session ✓)` — then proceed.
-> `Model for this task: **Opus 4.8** (current session is Sonnet — switch first)` — then stop.
+> `Model for this task: **Sonnet 5** (current session ✓)` — then proceed.
+> `Model for this task: **Opus 5** (current session is Sonnet — switch first)` — then stop.
 
 This applies to EVERY task: feature work, bug fix, a single file edit, a question
 that leads to code, a refactor, a review, anything. No exceptions. The declaration

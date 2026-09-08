@@ -82,12 +82,12 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 
 | Task type | Model | Tool | Reason |
 |---|---|---|---|
-| Implementation of a defined feature | **Sonnet** (current: 4.6) | Claude Code | Spec exists; hooks fire |
+| Implementation of a defined feature | **Sonnet** (current: Sonnet 5) | Claude Code | Spec exists; hooks fire |
 | Tests (TDD red→green, one feature) | **Sonnet** | Claude Code | Pattern; hooks fire |
 | Scaffolding (component, route, schema stub) | **Sonnet** | Claude Code | Repeatable |
 | Bug fix with known root cause | **Sonnet** | Claude Code | Surgical |
 | Docs polish, README updates | **Sonnet** | Claude Code | Low-stakes prose |
-| Architecture / structural decision | **Opus** (current: 4.7) | Claude Code | Trade-offs matter |
+| Architecture / structural decision | **Opus** (current: Opus 5) | Claude Code | Trade-offs matter |
 | Complex debugging (root cause unclear) | **Opus** | Claude Code | Reasoning across layers |
 | Security review / `/code-review high+` | **Opus** | Claude Code | Subtle issues |
 | Cross-cutting refactor (5+ files) | **Opus** | Claude Code | Many edges held in mind |

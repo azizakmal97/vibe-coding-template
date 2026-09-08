@@ -76,11 +76,25 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 ## Images
 
-```typescript
-// Always next/image — never <img>
+Follow the framework the project actually uses. This rule file loads for Vite
+and Next trees alike, so there is no single correct import.
+
+**Next.js** — always `next/image`, never a bare `<img>`:
+
+```tsx
 import Image from 'next/image'
 <Image src="/path" alt="descriptive text" width={400} height={300} />
 ```
+
+**Vite / plain React** — `next/image` does not exist. Use `<img>` and carry the
+properties that component would have given you for free:
+
+```tsx
+<img src="/path" alt="descriptive text" width={400} height={300} loading="lazy" decoding="async" />
+```
+
+Either way: a real `alt` (empty `alt=""` only when the image is decorative), and
+explicit `width`/`height` so the layout does not shift while it loads.
 
 ## Accessibility
 
