@@ -36,9 +36,11 @@ const SUPPORTED_EVENTS = new Set([
 ]);
 
 /**
- * ZCode's shell tool name is not pinned in its docs the way `Write` and `Edit` are,
- * so a Bash matcher is widened to the plausible names. A ZCode matcher of bare
- * names joined by `|` is an exact name list, so the extra names cost nothing.
+ * Tool names are passed to the adapter as `--tools`, never as a ZCode `matcher`: a
+ * hook registered with matcher `Bash|Shell|Terminal|RunCommand` never fired for a
+ * `Bash` call on v3.11.x, while the same hook with no matcher did. Registering with
+ * no matcher always fires, and the adapter filters. The Bash entry stays widened
+ * because ZCode's shell tool name is not pinned in its docs.
  */
 const TOOL_ALIASES = { Bash: 'Bash|Shell|Terminal|RunCommand' };
 
@@ -154,14 +156,18 @@ function toZcodeGroup(group, notes) {
   }
   if (scripts.length === 0) return null;
 
-  const matcher = group.matcher && group.matcher !== '*' ? TOOL_ALIASES[group.matcher] || group.matcher : '';
+  const tools = group.matcher && group.matcher !== '*' ? TOOL_ALIASES[group.matcher] || group.matcher : '';
   return {
-    ...(matcher ? { matcher } : {}),
+    // No `matcher` on purpose — see TOOL_ALIASES above.
     hooks: [
       {
         type: 'process',
         command: 'node',
-        args: ['${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs', ...scripts],
+        args: [
+          '${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs',
+          ...(tools ? ['--tools', tools] : []),
+          ...scripts,
+        ],
         enabled: true,
       },
     ],

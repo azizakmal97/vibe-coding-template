@@ -164,12 +164,19 @@ the caveat below.
 - **Workspace hook config is ignored.** ZCode drops any `hooks` block in
   `<workspace>/.zcode/config.json` or `<workspace>/zcode.json` regardless of
   `hooks.enabled`. Hooks must come from `~/.zcode/cli/config.json` or a plugin.
-- **Native-agent hooks have been reported not to fire at all.**
-  [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32) reports hooks
-  configured in `~/.zcode/cli/config.json` never running for the native ZCode Agent,
-  while firing normally for external agent CLIs. It was closed as a duplicate, so the
-  behaviour may differ by version — run the verification above on your build instead
-  of assuming. If nothing fires, use Mode A.
+- **ZCode's own `matcher` cannot be trusted — this template does not use it.**
+  Its docs say a `|`-joined list of bare names is an exact name-list match, but on
+  v3.11.x a hook registered as `Bash|Shell|Terminal|RunCommand` never fired for a
+  `Bash` tool call, while the identical hook with a blank matcher fired every time
+  (confirmed by logging the raw payload). So every generated entry registers with
+  **no matcher** and passes `--tools` to the adapter, which filters on `tool_name`
+  itself. If you add a hook by hand through Settings -> Hooks, leave Matcher blank
+  for the same reason.
+- **Hooks do fire otherwise.** [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32)
+  reported hooks never running for the native agent; on v3.11.x that is not what
+  happens — SessionStart, UserPromptSubmit, PreToolUse and PostToolUse all fire, and
+  the payload carries `tool_name`, `tool_input.command` and `cwd` exactly as the
+  adapter expects. Verify on your own build rather than trusting either report.
 - **No allow / deny permission list.** ZCode has four confirmation modes
   (Ask before changes / Edit automatically / Plan / Full access, cycled with
   `Shift + Tab`) but no equivalent of `.claude/settings.json` → `permissions`. The
