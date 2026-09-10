@@ -314,7 +314,7 @@ ZCode's hook support has rough edges — workspace hook config is ignored by des
 for the native agent on some versions. So check, don't assume. Ask the agent to run:
 
 ```
-psql -c "DROP TABLE users"
+echo "DROP TABLE probe_table"
 ```
 
 A working install answers `🛑 BLOCKED: DROP TABLE blocked — write a migration file

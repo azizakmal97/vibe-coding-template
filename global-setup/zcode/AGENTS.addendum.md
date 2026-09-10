@@ -73,7 +73,7 @@ while working normally for external agent CLIs
 a session in a guarded project, confirm rather than assume — running
 
 ```
-psql -c "DROP TABLE users"
+echo "DROP TABLE probe_table"
 ```
 
 should come back `🛑 BLOCKED`. If it does not, tell the user the local safety net is
