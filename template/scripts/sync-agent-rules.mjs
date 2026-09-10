@@ -32,7 +32,9 @@ if (!existsSync(SRC)) {
   process.exit(1);
 }
 
-const body = readFileSync(SRC, 'utf8').trimEnd();
+// Normalised to LF: AGENTS.md may be CRLF, .gitattributes stores the shims as LF,
+// and without this every re-run dirties the tree with pure line-ending churn.
+const body = readFileSync(SRC, 'utf8').replace(/\r\n/g, '\n').trimEnd();
 
 const GENERATED_NOTE =
   'GENERATED FROM AGENTS.md by scripts/sync-agent-rules.mjs — DO NOT EDIT. Edit AGENTS.md and re-run.';

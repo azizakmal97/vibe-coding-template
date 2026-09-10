@@ -188,7 +188,9 @@ function splitFrontmatter(text) {
 
 function render(frontmatter, body) {
   const head = frontmatter.length > 0 ? `---\n${frontmatter.join('\n')}\n---\n\n` : '';
-  return `${head}<!-- ${GENERATED_NOTE} -->\n\n${body}\n`;
+  // Sources may be CRLF; .gitattributes stores these as LF. Normalising here keeps
+  // a re-run from dirtying the tree with pure line-ending churn.
+  return `${head}<!-- ${GENERATED_NOTE} -->\n\n${body}\n`.replace(/\r\n/g, '\n');
 }
 
 /** Generated dirs are rebuilt, not merged — a deleted source must not linger here. */
