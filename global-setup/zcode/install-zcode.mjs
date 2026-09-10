@@ -81,7 +81,7 @@ function main() {
 
   console.log('\nDone. Restart ZCode, then:');
   console.log('  1. Settings -> Model Providers      # connect your GLM Coding Plan');
-  console.log('  2. Open a project and ask the agent to run: psql -c "DROP TABLE users"');
+  console.log('  2. Open a project and ask the agent to run: echo "DROP TABLE probe_table"');
   console.log('     A working install answers with 🛑 BLOCKED, not with the command.');
   console.log('  3. If nothing blocks, see template/.zcode/README.md -> Known caveats.\n');
 }

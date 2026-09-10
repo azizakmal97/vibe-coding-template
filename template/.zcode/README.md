@@ -134,12 +134,18 @@ project on the machine gets the guardrails without a per-project plugin install.
 Do not assume. In a ZCode session, ask the agent to run a command the guard blocks:
 
 ```
-run: psql -c "DROP TABLE users"
+run: echo "DROP TABLE probe_table"
 ```
 
 A working hook returns `🛑 BLOCKED: DROP TABLE blocked — write a migration file instead`.
 Nothing at all means the hooks are not wired — recheck the plugin install, and see
 the caveat below.
+
+> **Why `echo` and not a real `psql`?** The guard matches the command *string*, so
+> the wrapped form trips exactly the same rule — but if the hook turns out to be
+> dead, all that runs is `echo`, which prints the text and touches nothing. Never
+> probe a destructive-command guard with an actually destructive command: the case
+> you are testing for is the one where nothing stops it.
 
 ---
 
