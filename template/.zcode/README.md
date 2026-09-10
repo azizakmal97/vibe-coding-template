@@ -82,6 +82,16 @@ want the guardrails to actually fire.**
 > and redistributes their proprietary runtime — judge that for yourself before giving
 > it an API key. The supported terminal path is the one above.
 
+> **Mode A costs you Claude Code's Remote Control.** Claude Code can be driven from
+> a phone (`claude remote-control`, then claude.ai/code or the Claude mobile app) —
+> but [its docs](https://code.claude.com/docs/en/remote-control) rule it out whenever
+> `ANTHROPIC_BASE_URL` points at anything other than `api.anthropic.com`, which is
+> exactly what pointing Claude Code at Z.AI does. It also needs a Pro/Max/Team
+> subscription login rather than an API key, and is disabled by
+> `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`. So: **to drive a GLM session from your
+> phone, use the ZCode app's own Remote Control — Mode B, or Mode A inside the ZCode
+> window.** A bare terminal on GLM is desk-only.
+
 ### Mode B — the native ZCode Agent (rules always, hooks via the plugin)
 
 ZCode's own agent reads `AGENTS.md` at the project root on its own — no wiring, no
