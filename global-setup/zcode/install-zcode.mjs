@@ -20,7 +20,7 @@
  * Safe to re-run. Existing files are backed up as `.bak`; unrelated keys in
  * config.json are preserved.
  */
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,6 +30,7 @@ const ZCODE_DIR = join(homedir(), '.zcode');
 const HOOKS_DIR = join(ZCODE_DIR, 'hooks');
 const CONFIG_PATH = join(ZCODE_DIR, 'cli', 'config.json');
 const ADAPTER_PATH = join(HOOKS_DIR, 'zcode-hook.mjs');
+const GUARDS_DIR = join(HOOKS_DIR, 'guards');
 
 /**
  * Project-relative script paths, resolved per session against the workspace the
@@ -82,6 +83,7 @@ function main() {
 
   writeGlobalBrain();
   install(join(SOURCE_DIR, 'hooks', 'zcode-hook.mjs'), ADAPTER_PATH, '~/.zcode/hooks/zcode-hook.mjs');
+  installGuards();
   mergeHookConfig(config);
 
   console.log('\nDone. Restart ZCode, then:');
@@ -121,6 +123,30 @@ function writeGlobalBrain() {
   }
   writeFileSync(dest, composed, 'utf8');
   console.log('  [OK] ~/.zcode/AGENTS.md (global brain + ZCode addendum)');
+}
+
+/**
+ * Copies the template's hook scripts next to the adapter as fallbacks. Without these
+ * a project that never had the template applied gets no guard at all — the adapter
+ * looks for `.claude/hooks/validate-command.js`, finds nothing, and skips silently.
+ * Each script already no-ops when its project inputs (PROGRESS.md, file-budgets.json)
+ * are absent, so shipping the whole set is safe.
+ */
+function installGuards() {
+  const src = resolve(SOURCE_DIR, '..', '..', 'template', '.claude', 'hooks');
+  if (!existsSync(src)) {
+    console.log('  [SKIP] ~/.zcode/hooks/guards — template/.claude/hooks not found');
+    return;
+  }
+
+  mkdirSync(GUARDS_DIR, { recursive: true });
+  let count = 0;
+  for (const file of readdirSync(src)) {
+    if (!/\.(js|cjs|mjs)$/.test(file)) continue;
+    copyFileSync(join(src, file), join(GUARDS_DIR, file));
+    count += 1;
+  }
+  console.log(`  [OK] ~/.zcode/hooks/guards (${count} fallback guards for unscaffolded projects)`);
 }
 
 function install(src, dest, label) {

@@ -164,19 +164,26 @@ the caveat below.
 - **Workspace hook config is ignored.** ZCode drops any `hooks` block in
   `<workspace>/.zcode/config.json` or `<workspace>/zcode.json` regardless of
   `hooks.enabled`. Hooks must come from `~/.zcode/cli/config.json` or a plugin.
-- **ZCode's own `matcher` cannot be trusted — this template does not use it.**
-  Its docs say a `|`-joined list of bare names is an exact name-list match, but on
-  v3.11.x a hook registered as `Bash|Shell|Terminal|RunCommand` never fired for a
-  `Bash` tool call, while the identical hook with a blank matcher fired every time
-  (confirmed by logging the raw payload). So every generated entry registers with
-  **no matcher** and passes `--tools` to the adapter, which filters on `tool_name`
-  itself. If you add a hook by hand through Settings -> Hooks, leave Matcher blank
-  for the same reason.
-- **Hooks do fire otherwise.** [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32)
-  reported hooks never running for the native agent; on v3.11.x that is not what
-  happens — SessionStart, UserPromptSubmit, PreToolUse and PostToolUse all fire, and
-  the payload carries `tool_name`, `tool_input.command` and `cwd` exactly as the
-  adapter expects. Verify on your own build rather than trusting either report.
+- **A hook that "does nothing" is usually a missing script, not a broken event.**
+  The adapter resolves `.claude/hooks/validate-command.js` against the workspace and
+  skips what is not there — so a project that never had this template applied gets no
+  guard, silently. `install-zcode.mjs` therefore also copies the whole hook set to
+  `~/.zcode/hooks/guards/`, which the adapter falls back to when the project has no
+  copy of its own. Blocking `rm -rf /` is not project-specific.
+- **Hooks do fire.** [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32)
+  reported hooks never running for the native agent; that is not what v3.11.x does.
+  `SessionStart`, `UserPromptSubmit`, `PreToolUse` and `PostToolUse` all fire, and the
+  payload carries `tool_name`, `tool_input.command` and `cwd` exactly as the adapter
+  expects. Verify on your own build rather than trusting either report.
+- **This template does not use ZCode's `matcher`.** Every generated entry registers
+  with no matcher — which always fires — and passes `--tools` to the adapter, which
+  filters on `tool_name` itself. That sidesteps any question about how ZCode
+  evaluates a `|`-joined name list. If you add a hook by hand through
+  Settings → Hooks, leaving Matcher blank is the safe default.
+- **Debugging one of these:** register a throwaway hook with a blank matcher that
+  appends its raw stdin to a file, run one command, then read the file. Nothing
+  logged means the event never fired; a logged payload means it fired and the problem
+  is downstream — and it shows you the real field names.
 - **No allow / deny permission list.** ZCode has four confirmation modes
   (Ask before changes / Edit automatically / Plan / Full access, cycled with
   `Shift + Tab`) but no equivalent of `.claude/settings.json` → `permissions`. The
