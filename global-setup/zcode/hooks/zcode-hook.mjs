@@ -32,9 +32,18 @@
 
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { isAbsolute, resolve } from 'node:path';
+import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const BLOCK = 2;
+
+/**
+ * Guards installed next to this adapter, used for any project that does not carry
+ * its own copy. Blocking `rm -rf /` or `DROP TABLE` is not project-specific, so a
+ * repo that never had the template applied should still get the net rather than
+ * silently getting nothing.
+ */
+const GLOBAL_GUARDS = join(dirname(fileURLToPath(import.meta.url)), 'guards');
 
 const { tools, scripts } = parseArgs(process.argv.slice(2));
 if (scripts.length === 0) {
@@ -56,8 +65,8 @@ const forwarded = JSON.stringify(normalise(payload));
 const contextChunks = [];
 
 for (const script of scripts) {
-  const scriptPath = isAbsolute(script) ? script : resolve(projectRoot, script);
-  if (!existsSync(scriptPath)) continue;
+  const scriptPath = resolveScript(script);
+  if (!scriptPath) continue;
 
   const result = spawnSync(process.execPath, [scriptPath], {
     input: forwarded,
@@ -88,6 +97,21 @@ for (const script of scripts) {
 emit(contextChunks);
 
 // ── helpers ─────────────────────────────────────────────────────────────────
+
+/**
+ * The project's own copy wins, so a repo can customise a guard. Falling back to the
+ * globally installed copy means an unscaffolded project is still protected. Returns
+ * null when neither exists — the caller skips it.
+ */
+function resolveScript(script) {
+  if (isAbsolute(script)) return existsSync(script) ? script : null;
+
+  const local = resolve(projectRoot, script);
+  if (existsSync(local)) return local;
+
+  const fallback = join(GLOBAL_GUARDS, basename(script));
+  return existsSync(fallback) ? fallback : null;
+}
 
 /** `--tools Bash|Shell script.js ...` -> { tools: ['Bash','Shell'], scripts: [...] } */
 function parseArgs(argv) {
