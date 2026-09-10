@@ -40,6 +40,13 @@ All notable changes to this project are documented here. The format is based on
   - `AGENTS.md` gained GLM rows in the model matrix, with an explicit note that
     substituting GLM for an Opus-assigned row is a trade to declare, not a free
     swap.
+  - The terminal path now uses Z.AI's official `@z_ai/coding-helper` wizard
+    (`chelper init`) instead of hand-set environment variables, with the manual
+    form kept as a fallback. The docs also record what the search cost to
+    establish: **there is no official ZCode agent CLI** — ZCode ships as a
+    desktop app, `chelper` configures *other* CLIs rather than being one, and the
+    third-party `zcode-app-cli` states outright that it is unaffiliated with Z.AI
+    and redistributes their proprietary runtime.
 
 ### Changed
 - **The repo's own instructions moved to `AGENTS.md`**, with `CLAUDE.md` reduced to
