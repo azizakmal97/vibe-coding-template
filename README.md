@@ -15,7 +15,7 @@
   <strong>This stops it.</strong>
 </p>
 
-<p align="center"><em>Go ahead, code purely on vibes. The CI gate and safety hooks will catch you if you fall.<br/>A drop-in rule set + hooks that make Claude Code, Cursor, Windsurf, and Copilot behave like a disciplined senior engineer — not a reckless speed demon.</em></p>
+<p align="center"><em>Go ahead, code purely on vibes. The CI gate and safety hooks will catch you if you fall.<br/>A drop-in rule set + hooks that make Claude Code, ZCode, Cursor, Windsurf, and Copilot behave like a disciplined senior engineer — not a reckless speed demon.</em></p>
 
 <p align="center">
   <a href="#quick-start">⚡ Setup: 2 minutes</a> • 
@@ -83,11 +83,11 @@ Agents navigate by structure, not grep. `graphify` maps your whole codebase into
 
 ## Works with
 
-- **Agents:** Claude Code, Cursor, Windsurf, GitHub Copilot, Google Antigravity, Aider, and any agent that reads `AGENTS.md`.
+- **Agents:** Claude Code, **ZCode** (Z.AI's GLM agent), Cursor, Windsurf, GitHub Copilot, Google Antigravity, Aider, and any agent that reads `AGENTS.md`.
 - **OS:** Windows (PowerShell), macOS, Linux (bash). Hooks and scripts are Node.js — cross-platform.
 - **Stacks (presets):** `web` (React/Vite), `fullstack` (Next.js + Prisma), `mobile` (Flutter), `desktop` (Tauri). Easy to add more.
 
-**One honest caveat:** *local* automated enforcement (hooks + permission deny-list) runs only under **Claude Code**. Every other agent reads the same rules as guidance and relies on self-discipline — plus the **CI gate**, which re-checks everything on push regardless of which agent made the edit.
+**One honest caveat:** *local* automated enforcement runs under **Claude Code** (hooks + permission deny-list, out of the box) and **ZCode** (the same hooks, after a one-time plugin install; no deny-list — [details](#zcode-glm-with-the-same-guardrails)). Every other agent reads the same rules as guidance and relies on self-discipline — plus the **CI gate**, which re-checks everything on push regardless of which agent made the edit.
 
 ---
 
@@ -95,28 +95,37 @@ Agents navigate by structure, not grep. `graphify` maps your whole codebase into
 
 ### New machine? Do this first (global setup)
 
-Before setting up any project, wire Claude Code itself. One command installs your global brain, auto-push hook, and settings:
+Before setting up any project, wire the agent itself. One command installs your global brain, auto-push hook, and settings:
 
 ```powershell
 # Windows (PowerShell) — run from the cloned repo root
 git clone https://github.com/azizakmal97/vibe-coding-template.git
 cd vibe-coding-template
-.\setup.ps1
+.\setup.ps1                 # Claude Code + ZCode
+.\setup.ps1 -Agent claude   # or just one of them
 ```
 
-Or just clone it and tell your AI agent: **"implement this template"** — the repo's `CLAUDE.md` tells the agent exactly what to run.
+```bash
+# macOS / Linux — the ZCode half runs standalone
+node global-setup/zcode/install-zcode.mjs
+```
+
+Or just clone it and tell your AI agent: **"implement this template"** — the repo's `AGENTS.md` tells the agent exactly what to run.
 
 **What gets installed globally:**
 
 | File | Destination | What it does |
 |---|---|---|
-| `global-setup/CLAUDE.md` | `~/.claude/CLAUDE.md` | Coding rules + model selection — loads in every project, every session |
+| `global-setup/CLAUDE.md` | `~/.claude/CLAUDE.md` | Coding rules + model/effort selection — loads in every project, every session |
 | `global-setup/hooks/post-commit-push.mjs` | `~/.claude/hooks/post-commit-push.mjs` | Auto-pushes to GitHub after every `git commit` |
 | (generated) | `~/.claude/settings.json` | Enables auto-approve mode + wires the auto-push hook |
+| (composed) | `~/.zcode/AGENTS.md` | The same global brain + a ZCode addendum — one source, no drift |
+| `global-setup/zcode/hooks/zcode-hook.mjs` | `~/.zcode/hooks/zcode-hook.mjs` | Adapter that runs your project's `.claude/hooks/*` under ZCode |
+| (merged) | `~/.zcode/cli/config.json` | Registers those hooks — ZCode ignores workspace hook config, so this has to be machine-wide |
 
-Safe to re-run — if `settings.json` already exists it's preserved. All existing files are backed up as `.bak`.
+Safe to re-run — if `settings.json` already exists it's preserved, `config.json` keeps every key you added, and all existing files are backed up as `.bak`.
 
-Then restart Claude Code and sign in with `claude login`.
+Then restart your agent (and `claude login` if you use Claude Code).
 
 ---
 
@@ -180,6 +189,11 @@ your-project/
 │  ├─ commands/                   # Slash commands (/resume, /checkpoint, /next-phase, /autonomous, …)
 │  ├─ agents/                     # Subagents (code-reviewer, debugger, security-auditor, …)
 │  └─ skills/                     # caveman-default (token-saving), design-system
+├─ .zcode/                        # Same thing for ZCode — generated from .claude/
+│  ├─ README.md                   # Setup + the caveats worth knowing before you trust it
+│  ├─ config.json                 # The one hand-edited file: MCP servers
+│  ├─ hooks/                      # hooks.json + the ZCode↔Claude adapter
+│  └─ commands/ agents/ skills/   # Generated mirrors
 ├─ e2e/                           # Playwright scaffold (web/fullstack) — auth setup + example spec
 ├─ scripts/                       # check-file-sizes, sync-agent-rules, graphify-bootstrap, …
 ├─ docs/                          # Plain-language templates for non-coder maintainers
@@ -189,8 +203,8 @@ your-project/
 
 ### The headline features
 
-- **Single-source rules.** Edit `AGENTS.md`; run `node scripts/sync-agent-rules.mjs`; every agent's config regenerates. No drift.
-- **Safety hooks (Claude Code).** Block `rm -rf /`, `DROP TABLE`, `DELETE` without `WHERE`, `git reset --hard HEAD~N`, and reading/printing secret files (`.env`, `.dev.vars`, `*.key`…). Warn on risky migrations.
+- **Single-source rules.** Edit `AGENTS.md`; run `node scripts/sync-agent-rules.mjs`; every agent's config regenerates — Cursor, Windsurf, Copilot shims *and* the whole `.zcode/` layout. No drift.
+- **Safety hooks (Claude Code + ZCode).** Block `rm -rf /`, `DROP TABLE`, `DELETE` without `WHERE`, `git reset --hard HEAD~N`, and reading/printing secret files (`.env`, `.dev.vars`, `*.key`…). Warn on risky migrations. One set of hook scripts serves both agents — [how](#zcode-glm-with-the-same-guardrails).
 - **Death-defense workflow.** Per-edit commits with `wip(phase):` prefixes, an auto-push hook, and a session-resume protocol mean a crashed or rate-limited session loses ~nothing. `/resume` picks up exactly where it stopped.
 - **Test-before-commit gate.** No "I think it works." Typecheck **and** build (they catch different bugs), tests, file-size check — all green before commit.
 - **File-size budgets.** Soft warning + hard CI failure per file type, so god-files get split *before* they metastasize.
@@ -246,16 +260,74 @@ so a wrapper that trusts the exit code reports success over an empty directory.
 
 ---
 
-## Updating the rules
+## ZCode: GLM with the same guardrails
 
-`AGENTS.md` is the **only** file you edit by hand. The per-agent configs are generated:
+[ZCode](https://zcode.z.ai) is Z.AI's desktop agent for the GLM models — a flat-rate
+GLM Coding Plan instead of per-token billing. The template ships a full `.zcode/`
+layout so a project behaves the same there as it does under Claude Code. How much of
+the safety net actually runs depends on which of two modes you pick.
+
+### Mode A — ZCode driving Claude Code (everything works)
+
+In ZCode's chat box: settings icon → **Agent CLI** → **Claude Code**. ZCode is the
+front end, Claude Code is the engine, and the project's entire `.claude/` layer applies
+unchanged — permissions, all nine hooks, `CLAUDE.md` + `.claude/rules/*`, commands,
+subagents. Same thing without the app: point the Claude Code CLI at Z.AI's
+Anthropic-compatible endpoint.
 
 ```bash
-# after editing AGENTS.md
+export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
+export ANTHROPIC_AUTH_TOKEN="<your z.ai api key>"   # z.ai/manage-apikey/apikey-list
+```
+
+Then map the model slots in `~/.claude/settings.json`: `glm-5.3` for Opus and Sonnet,
+`glm-5.3-flash` for Haiku. **This is the closest thing to "Claude Code, but on GLM."**
+
+### Mode B — the native ZCode Agent
+
+ZCode's own agent reads `AGENTS.md` at the project root automatically — rules, scope
+lock, test-before-commit gate, model matrix, no wiring at all. For the hooks, install
+`.zcode/` as a plugin: **Settings → Plugins → Create → Add marketplace**, point it at
+`<project>/.zcode`, install, restart.
+
+| | Claude Code | ZCode (native) |
+|---|---|---|
+| Rules | `CLAUDE.md` + `.claude/rules/*` | `AGENTS.md` (root only — no nested merge) |
+| Hooks | `.claude/settings.json` | `.zcode/` installed as a plugin, or `~/.zcode/cli/config.json` |
+| Permission deny-list | Yes | **No** — hooks are the only local block |
+| Commands / subagents / skills | `.claude/` | `.zcode/` (generated) |
+
+**One set of hook scripts serves both.** `.zcode/hooks/zcode-hook.mjs` is a small
+adapter: ZCode locates the project from the hook payload rather than the config file,
+reads stdout only when it's JSON, and doesn't guarantee the same tool-input keys. The
+adapter absorbs all three, so `.claude/hooks/*` stays agent-agnostic.
+
+### Verify before you trust it
+
+ZCode's hook support has rough edges — workspace hook config is ignored by design, and
+[hooks have been reported](https://github.com/zai-org/feedback/issues/32) not to fire
+for the native agent on some versions. So check, don't assume. Ask the agent to run:
+
+```
+psql -c "DROP TABLE users"
+```
+
+A working install answers `🛑 BLOCKED: DROP TABLE blocked — write a migration file
+instead`. If nothing blocks, use Mode A. Full details and caveats:
+[`template/.zcode/README.md`](template/.zcode/README.md).
+
+---
+
+## Updating the rules
+
+`AGENTS.md` is the **only** rule file you edit by hand. The per-agent configs are generated:
+
+```bash
+# after editing AGENTS.md — or anything in .claude/{commands,agents,skills} or its hooks
 node template/scripts/sync-agent-rules.mjs
 ```
 
-This rewrites `.cursorrules`, `.cursor/rules/project.mdc`, `.windsurfrules`, and `.github/copilot-instructions.md`. Never hand-edit those — your changes get overwritten.
+This rewrites `.cursorrules`, `.cursor/rules/project.mdc`, `.windsurfrules`, `.github/copilot-instructions.md`, and the whole `.zcode/` layout (`commands/`, `agents/`, `skills/`, `hooks/hooks.json`). Never hand-edit those — your changes get overwritten. `.zcode/config.json` is the exception: it's yours, for MCP servers.
 
 ---
 
@@ -274,7 +346,9 @@ Each preset ships its own `CLAUDE.md`, `commands.json`, `file-budgets.json`, and
 
 ## FAQ
 
-**Do I have to use Claude Code?** No. The rules work with any agent. Claude Code just gets the extra *automated* enforcement layer (hooks). Everyone gets the rules + CI.
+**Do I have to use Claude Code?** No. The rules work with any agent. Claude Code and ZCode get the extra *automated* enforcement layer (hooks); Claude Code alone also gets the permission deny-list. Everyone gets the rules + CI.
+
+**Can I run this on a GLM Coding Plan instead of paying Anthropic per token?** Yes — see [ZCode](#zcode-glm-with-the-same-guardrails). Point Claude Code at Z.AI's Anthropic endpoint and every hook still fires. Just don't silently swap GLM in for the Opus-assigned rows in the model matrix (auth, money, security review, brand voice) — state the substitution in the plan instead.
 
 **Will it touch my existing code?** Setup never overwrites existing files (it skips them). The agent-driven path is instructed to show diffs before changing anything you already have.
 

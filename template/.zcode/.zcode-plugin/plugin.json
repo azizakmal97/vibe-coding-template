@@ -1,0 +1,10 @@
+{
+  "name": "vibe-coding-template",
+  "version": "1.0.0",
+  "description": "Safety hooks, subagents, commands and skills for this project — the ZCode half of the Vibe Coding Template.",
+  "keywords": ["safety", "hooks", "guardrails", "vibe-coding-template"],
+  "commands": "./commands",
+  "agents": "./agents",
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json"
+}

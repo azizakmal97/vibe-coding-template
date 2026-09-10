@@ -1,0 +1,89 @@
+{
+  "_comment": "Example ~/.zcode/cli/config.json. Prefer `node global-setup/zcode/install-zcode.mjs` — it merges these events into an existing config instead of replacing it. Replace YOUR_USERNAME with your real home path. Script paths after the adapter are project-relative: the adapter resolves them against the workspace the hook payload reports, and silently skips ones a project does not have.",
+  "hooks": {
+    "enabled": true,
+    "timeoutMs": 60000,
+    "events": {
+      "SessionStart": [
+        {
+          "hooks": [
+            {
+              "type": "process",
+              "command": "node",
+              "args": [
+                "C:/Users/YOUR_USERNAME/.zcode/hooks/zcode-hook.mjs",
+                ".claude/hooks/session-start-resume.js",
+                "scripts/graphify-bootstrap.mjs"
+              ],
+              "enabled": true
+            }
+          ]
+        }
+      ],
+      "PreToolUse": [
+        {
+          "matcher": "Edit|Write|MultiEdit",
+          "hooks": [
+            {
+              "type": "process",
+              "command": "node",
+              "args": [
+                "C:/Users/YOUR_USERNAME/.zcode/hooks/zcode-hook.mjs",
+                ".claude/hooks/config-protection.cjs"
+              ],
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "matcher": "Bash|Shell|Terminal|RunCommand",
+          "hooks": [
+            {
+              "type": "process",
+              "command": "node",
+              "args": [
+                "C:/Users/YOUR_USERNAME/.zcode/hooks/zcode-hook.mjs",
+                ".claude/hooks/validate-command.js",
+                ".claude/hooks/pre-db-migrate.cjs",
+                ".claude/hooks/pre-commit-checkpoint.js"
+              ],
+              "enabled": true
+            }
+          ]
+        }
+      ],
+      "PostToolUse": [
+        {
+          "matcher": "Edit|Write",
+          "hooks": [
+            {
+              "type": "process",
+              "command": "node",
+              "args": [
+                "C:/Users/YOUR_USERNAME/.zcode/hooks/zcode-hook.mjs",
+                ".claude/hooks/post-edit-check.cjs",
+                ".claude/hooks/check-file-size.js"
+              ],
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "matcher": "Bash|Shell|Terminal|RunCommand",
+          "hooks": [
+            {
+              "type": "process",
+              "command": "node",
+              "args": [
+                "C:/Users/YOUR_USERNAME/.zcode/hooks/zcode-hook.mjs",
+                ".claude/hooks/post-commit-push.js",
+                ".claude/hooks/post-commit-update-progress.js"
+              ],
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

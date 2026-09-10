@@ -45,6 +45,8 @@ $dirs = @(
     ".claude\rules",
     ".claude\skills\design-system",
     ".claude\skills\caveman-default",
+    ".zcode\hooks",
+    ".zcode\.zcode-plugin",
     ".cursor\rules",
     ".github\workflows",
     "scripts",
@@ -129,6 +131,12 @@ $fileMappings = [ordered]@{
     # skills
     ".claude\skills\design-system\SKILL.md"           = ".claude\skills\design-system\SKILL.md"
     ".claude\skills\caveman-default\SKILL.md"         = ".claude\skills\caveman-default\SKILL.md"
+    # zcode — static half; commands/agents/skills/hooks.json are generated below
+    ".zcode\README.md"                                = ".zcode\README.md"
+    ".zcode\config.json"                              = ".zcode\config.json"
+    ".zcode\marketplace.json"                         = ".zcode\marketplace.json"
+    ".zcode\.zcode-plugin\plugin.json"                = ".zcode\.zcode-plugin\plugin.json"
+    ".zcode\hooks\zcode-hook.mjs"                     = ".zcode\hooks\zcode-hook.mjs"
     # scripts
     "scripts\check-file-sizes.mjs"                    = "scripts\check-file-sizes.mjs"
     "scripts\graphify-bootstrap.mjs"                  = "scripts\graphify-bootstrap.mjs"
@@ -138,6 +146,7 @@ $fileMappings = [ordered]@{
     "scripts\audit-gate.mjs"                          = "scripts\audit-gate.mjs"
     "scripts\audit-gate-lib.mjs"                      = "scripts\audit-gate-lib.mjs"
     "scripts\sync-agent-rules.mjs"                    = "scripts\sync-agent-rules.mjs"
+    "scripts\sync-zcode.mjs"                          = "scripts\sync-zcode.mjs"
     "scripts\auto-checkpoint.sh"                      = "scripts\auto-checkpoint.sh"
     "scripts\auto-checkpoint.ps1"                     = "scripts\auto-checkpoint.ps1"
     "AUDIT_AND_ROADMAP.template.md"                   = "AUDIT_AND_ROADMAP.template.md"
@@ -180,6 +189,14 @@ if ($Preset) { $presetArgs += $Preset }
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: preset picker failed" -ForegroundColor Red
     exit 1
+}
+
+# Generate the ZCode layout from whatever .claude/ this project ended up with.
+Write-Host ""
+Write-Host "Generating .zcode/ from .claude/..." -ForegroundColor Yellow
+& node (Join-Path $ProjectDir "scripts\sync-zcode.mjs")
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "  ! sync-zcode failed - run 'node scripts\sync-zcode.mjs' by hand" -ForegroundColor Red
 }
 
 # Init PROGRESS.md
@@ -266,7 +283,8 @@ Write-Host "  1. Edit CLAUDE.md — fill in [BRACKETED] sections" -ForegroundCol
 Write-Host "  2. Edit .claude\skills\design-system\SKILL.md — set colors and fonts" -ForegroundColor White
 Write-Host "  3. Read PROGRESS.md — understand the session-resume protocol" -ForegroundColor White
 Write-Host "  4. Read AGENTS.md — single source of truth for all AI tools" -ForegroundColor White
-Write-Host "  5. git init; git add -A; git commit -m 'chore: initialize project'" -ForegroundColor White
+Write-Host "  5. Using ZCode? Read .zcode\README.md — its hooks need a plugin install" -ForegroundColor White
+Write-Host "  6. git init; git add -A; git commit -m 'chore: initialize project'" -ForegroundColor White
 Write-Host ""
 Write-Host "Start coding:" -ForegroundColor Yellow
 Write-Host "  /new-feature [feature name] — [description]" -ForegroundColor Yellow
