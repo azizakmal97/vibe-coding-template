@@ -36,6 +36,34 @@ Touch a file already > hard limit?
 | Module-level mutable state | Hard to test, race conditions | Pass via constructor / scope |
 | Deferring UI verification to the human ("owner will click through") when Playwright is scaffolded | Hides white-screen / broken-render regressions a refactor can introduce | Run the e2e smoke yourself (`rules/testing.md`) |
 
+## A warning must count exactly what the action destroys
+
+When code warns before doing something destructive, the warning and the action must be
+derived from the SAME predicate. The classic bug is a warning that ENUMERATES the states it
+knows about while the action takes everything:
+
+```sql
+-- the warning: counts the states someone remembered
+SELECT COUNT(*) ... WHERE status IN ('pending', 'accepted')
+-- the action: takes the lot
+DELETE FROM ... WHERE parent_id = ?
+```
+
+A status added later — `pending_manager`, `awaiting_review`, whatever the next workflow step
+is called — is silently outside the count and silently inside the delete. The user is told
+"0 will be removed" and seven things are removed.
+
+**Invert the predicate: subtract the terminal states instead of listing the live ones.**
+
+```sql
+SELECT COUNT(*) ... WHERE status NOT IN ('rejected', 'cancelled', 'expired')
+```
+
+Now the count is the mirror image of the delete, and whatever anyone adds next is counted by
+default. Same rule for "N files will be overwritten", "N rows will be archived", any
+confirmation carrying a number: derive the number from the operation, never from a parallel
+list that has to be kept in step by hand.
+
 ## Component-Split Triggers (Frontend)
 
 See `rules/frontend.md` for full table. Split BEFORE adding feature.

@@ -7,6 +7,26 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Three rules earned from a live incident**, where a scheduling feature lost a
+  user's work twice in one afternoon and a full green test suite reported nothing.
+  - `rules/testing.md` — **a green gate proves it compiles, not that it renders.**
+    For any change a user looks at, open the page and read it. Lists three real
+    defects that passed every assertion and were obvious in one look: a list
+    clipping at 6 of 31 rows with no scroll affordance, an editor resolving
+    against the stored document while the engine used defaults, a card losing
+    its top padding on desktop only.
+  - `rules/testing.md` — **when an existing test contradicts your new rule, read
+    it first.** Tests routinely encode a workflow nobody wrote down: the order
+    steps happen in, the intermediate state allowed to be wrong because a later
+    step fixes it. The recurring shape is a new guard that refuses something
+    invalid at that instant and breaks a flow where the next step resolved it —
+    usually the real defect was that nobody was TOLD, not that the state could
+    exist. Prefer reporting to forbidding.
+  - `rules/refactor.md` — **a warning must count exactly what the action
+    destroys.** A confirmation that enumerates live states (`status IN
+    ('pending','accepted')`) while the action takes everything will miss the next
+    status someone adds; the user is told "0 will be removed" and seven are.
+    Invert the predicate: subtract the terminal states.
 - **ZCode support — the same rules and the same hooks, on Z.AI's GLM agent.**
   Previously the only agent with automated local enforcement was Claude Code;
   every other tool got the rules as guidance. ZCode now gets both, and shares one
