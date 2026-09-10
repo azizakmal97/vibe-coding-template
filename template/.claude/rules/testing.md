@@ -55,6 +55,23 @@ node scripts/check-file-sizes.mjs  # no hard breach
 
 No "I think it passes." Paste the terminal output in the commit message body if needed.
 
+## A green gate proves it COMPILES, not that it RENDERS
+
+The gate above says the code type-checks, bundles and passes its assertions. It says nothing
+about whether a human can use the screen. For any change a user looks at — a new component, a
+reshaped layout, a control that appears conditionally — **open it and read it** before calling
+it done: the dev server plus a screenshot, or a browser-driven e2e that walks the real page.
+
+This is not belt-and-braces. Defects that a full green suite happily reports as passing:
+
+- A list that clips at 6 of 31 rows with nothing to say it scrolls.
+- An editor resolving against the stored document while the engine resolves against defaults,
+  so every row reads "not set" while a rule is quietly in force.
+- A card rendering flush against its top edge on desktop only, because a responsive variant
+  beat the padding you passed.
+
+Each of those had passing tests. Each was obvious in one look at the rendered page.
+
 ## Why typecheck AND build (Both Required)
 
 `tsc --noEmit` and the bundler (esbuild / Vite / webpack) catch DIFFERENT classes of errors. Running typecheck alone is NOT sufficient.
@@ -154,6 +171,33 @@ browser" is NOT acceptable when the harness is installed.
 - Min 80% line coverage on changed files per PR (web/fullstack).
 - Min 70% for mobile (Flutter tooling).
 - Coverage report in CI artifacts. Drop > 5% fails the build.
+
+## When an existing test contradicts your new rule, READ it first
+
+A red test after a deliberate change is a claim, not a verdict — but the claim usually
+deserves more credit than the change. Existing tests routinely encode a WORKFLOW that nobody
+wrote down anywhere else: the order steps happen in, the intermediate state that is allowed to
+be wrong because a later step fixes it, the escape hatch someone needs on a bad day.
+
+Before you edit a test to match new behaviour, answer: **what did whoever wrote this believe,
+and are they still right?** If the answer is "they were describing how the feature is actually
+used", the new rule is wrong, not the test.
+
+The common shape: a new guard REFUSES something that is genuinely invalid at that instant, and
+breaks a flow where the next step would have resolved it. Usually the real defect was not that
+the bad state could be created — it was that nobody was TOLD about it. Prefer reporting the
+problem to forbidding the action:
+
+```ts
+// Refuses a clashing write, and makes the documented "do X then fix it with Y" flow impossible
+if (clash) throw new Error('...');
+
+// Allows it, hands the caller the problem, and lets the UI ask for the fixing step
+if (clash) clashes.push({ date, reason });
+return { ...result, clashes };
+```
+
+Record the decision next to the code, so the next person does not "tighten" it back.
 
 ## Forbidden in Tests
 
