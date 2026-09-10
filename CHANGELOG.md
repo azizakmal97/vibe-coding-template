@@ -68,7 +68,29 @@ All notable changes to this project are documented here. The format is based on
     third-party `zcode-app-cli` states outright that it is unaffiliated with Z.AI
     and redistributes their proprietary runtime.
 
+  - Verified against ZCode v3.11.x rather than assumed: `SessionStart`,
+    `UserPromptSubmit`, `PreToolUse` and `PostToolUse` all fire, and the payload
+    carries `tool_name`, `tool_input.command` and `cwd` as the adapter expects —
+    so [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32) does
+    not describe this version. Hooks register with **no matcher** and pass
+    `--tools` to the adapter, which filters on `tool_name` itself; whether
+    ZCode's own `|`-joined matcher works was never cleanly tested, and the docs
+    say so rather than asserting a cause.
+  - The hook set also installs to `~/.zcode/hooks/guards/` as a fallback, because
+    the adapter resolves scripts against the workspace and silently skips what is
+    not there — so a project that never had the template applied got no guard at
+    all. Blocking `rm -rf /` is not project-specific.
+  - Documented that Mode A rules out Claude Code's Remote Control: it refuses to
+    start when `ANTHROPIC_BASE_URL` points away from `api.anthropic.com`, needs a
+    subscription login rather than an API key, and is disabled by
+    `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`. Driving a GLM session from a
+    phone is therefore a ZCode-app capability, not a Claude Code one.
+
 ### Changed
+- **The generators now normalise line endings to LF.** `sync-agent-rules.mjs` and
+  `sync-zcode.mjs` copied CRLF from their sources while `.gitattributes` stores the
+  output as LF, so every re-run dirtied the working tree with pure line-ending
+  churn and made a clean sync look like pending changes.
 - **The repo's own instructions moved to `AGENTS.md`**, with `CLAUDE.md` reduced to
   a pointer plus Claude-only notes. Claude Code auto-loads one file and ZCode the
   other; keeping the content in a single file is the same discipline the template
