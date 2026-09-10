@@ -19,13 +19,14 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "process",
             "command": "node",
             "args": [
               "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              "--tools",
+              "Edit|Write|MultiEdit",
               ".claude/hooks/config-protection.cjs"
             ],
             "enabled": true
@@ -33,13 +34,14 @@
         ]
       },
       {
-        "matcher": "Bash|Shell|Terminal|RunCommand",
         "hooks": [
           {
             "type": "process",
             "command": "node",
             "args": [
               "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              "--tools",
+              "Bash|Shell|Terminal|RunCommand",
               ".claude/hooks/validate-command.js",
               ".claude/hooks/pre-db-migrate.cjs",
               ".claude/hooks/pre-commit-checkpoint.js"
@@ -51,13 +53,14 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "process",
             "command": "node",
             "args": [
               "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              "--tools",
+              "Edit|Write",
               ".claude/hooks/post-edit-check.cjs",
               ".claude/hooks/check-file-size.js"
             ],
@@ -66,13 +69,14 @@
         ]
       },
       {
-        "matcher": "Bash|Shell|Terminal|RunCommand",
         "hooks": [
           {
             "type": "process",
             "command": "node",
             "args": [
               "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              "--tools",
+              "Bash|Shell|Terminal|RunCommand",
               ".claude/hooks/post-commit-push.js",
               ".claude/hooks/post-commit-update-progress.js"
             ],

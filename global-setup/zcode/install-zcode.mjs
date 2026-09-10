@@ -34,15 +34,20 @@ const ADAPTER_PATH = join(HOOKS_DIR, 'zcode-hook.mjs');
 /**
  * Project-relative script paths, resolved per session against the workspace the
  * hook payload reports. Mirrors `.claude/settings.json` in the template.
+ *
+ * `tools` is passed to the adapter rather than written as a ZCode `matcher`: a hook
+ * registered with matcher `Bash|Shell|Terminal|RunCommand` never fired for a `Bash`
+ * call on v3.11.x, while the same hook with no matcher did. Registering with no
+ * matcher always fires, and the adapter does the filtering.
  */
 const HOOK_EVENTS = {
   SessionStart: [
     { scripts: ['.claude/hooks/session-start-resume.js', 'scripts/graphify-bootstrap.mjs'] },
   ],
   PreToolUse: [
-    { matcher: 'Edit|Write|MultiEdit', scripts: ['.claude/hooks/config-protection.cjs'] },
+    { tools: 'Edit|Write|MultiEdit', scripts: ['.claude/hooks/config-protection.cjs'] },
     {
-      matcher: 'Bash|Shell|Terminal|RunCommand',
+      tools: 'Bash|Shell|Terminal|RunCommand',
       scripts: [
         '.claude/hooks/validate-command.js',
         '.claude/hooks/pre-db-migrate.cjs',
@@ -52,11 +57,11 @@ const HOOK_EVENTS = {
   ],
   PostToolUse: [
     {
-      matcher: 'Edit|Write',
+      tools: 'Edit|Write',
       scripts: ['.claude/hooks/post-edit-check.cjs', '.claude/hooks/check-file-size.js'],
     },
     {
-      matcher: 'Bash|Shell|Terminal|RunCommand',
+      tools: 'Bash|Shell|Terminal|RunCommand',
       scripts: ['.claude/hooks/post-commit-push.js', '.claude/hooks/post-commit-update-progress.js'],
     },
   ],
@@ -163,14 +168,14 @@ function readConfig() {
   }
 }
 
-function toGroup({ matcher, scripts }) {
+function toGroup({ tools, scripts }) {
   return {
-    ...(matcher ? { matcher } : {}),
+    // No `matcher` on purpose — see HOOK_EVENTS above.
     hooks: [
       {
         type: 'process',
         command: 'node',
-        args: [ADAPTER_PATH, ...scripts],
+        args: [ADAPTER_PATH, ...(tools ? ['--tools', tools] : []), ...scripts],
         enabled: true,
       },
     ],
