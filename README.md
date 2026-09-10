@@ -272,16 +272,21 @@ the safety net actually runs depends on which of two modes you pick.
 In ZCode's chat box: settings icon → **Agent CLI** → **Claude Code**. ZCode is the
 front end, Claude Code is the engine, and the project's entire `.claude/` layer applies
 unchanged — permissions, all nine hooks, `CLAUDE.md` + `.claude/rules/*`, commands,
-subagents. Same thing without the app: point the Claude Code CLI at Z.AI's
-Anthropic-compatible endpoint.
+subagents.
+
+Prefer a terminal? Same engine, no app — Z.AI's official wizard points the Claude Code
+CLI at their Anthropic-compatible endpoint:
 
 ```bash
-export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
-export ANTHROPIC_AUTH_TOKEN="<your z.ai api key>"   # z.ai/manage-apikey/apikey-list
+npm install -g @z_ai/coding-helper
+chelper init      # pick plan, paste key (z.ai/manage-apikey/apikey-list), configure Claude Code
+chelper doctor    # verify it took
 ```
 
-Then map the model slots in `~/.claude/settings.json`: `glm-5.3` for Opus and Sonnet,
-`glm-5.3-flash` for Haiku. **This is the closest thing to "Claude Code, but on GLM."**
+**This is the closest thing to "Claude Code, but on GLM."** Note there is *no* official
+ZCode agent CLI — ZCode itself ships as a desktop app, and `chelper` is a setup wizard
+for other CLIs rather than an agent you code with. Manual env-var setup and the
+third-party alternative are covered in [`template/.zcode/README.md`](template/.zcode/README.md).
 
 ### Mode B — the native ZCode Agent
 

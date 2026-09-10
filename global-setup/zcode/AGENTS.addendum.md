@@ -60,6 +60,10 @@ For work the rules above assign to Opus specifically because being wrong is expe
 to Claude Code on an Anthropic key rather than substituting a GLM model silently. If
 that is not available, say so in the plan instead of pretending the assignment was met.
 
+Running Claude Code on the GLM plan from a terminal: `npm i -g @z_ai/coding-helper`,
+then `chelper init`. That is Z.AI's official wizard; there is no official ZCode agent
+CLI, so don't go looking for one.
+
 ## Verifying the guardrails before you trust them
 
 Reported behaviour differs by ZCode version: hooks registered in

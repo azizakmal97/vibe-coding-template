@@ -26,8 +26,21 @@ ZCode becomes the front end; Claude Code is the engine, so the project's whole
 `.claude/` layer applies unchanged: `settings.json` permissions, all nine hooks,
 `CLAUDE.md` + `.claude/rules/*`, slash commands, subagents.
 
-Same idea without the ZCode app — point the Claude Code CLI at Z.AI's
-Anthropic-compatible endpoint and run it in this project:
+Same idea in a terminal, without the ZCode app: run the Claude Code CLI against
+Z.AI's Anthropic-compatible endpoint. Z.AI ships an official wizard that wires this
+up for you:
+
+```bash
+npm install -g @z_ai/coding-helper
+chelper init      # interactive: pick plan, paste key, configure Claude Code
+chelper doctor    # verify: plan configured, key valid, tool detected
+```
+
+Useful afterwards: `chelper enter claude-code` to reconfigure, `chelper auth reload claude`
+to re-apply the plan config, `chelper auth revoke` to remove the key.
+
+<details>
+<summary>Or configure it by hand</summary>
 
 ```powershell
 # Windows (PowerShell) — set once, per user
@@ -41,7 +54,7 @@ export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
 export ANTHROPIC_AUTH_TOKEN="<your z.ai api key>"
 ```
 
-Map the model slots to the GLM lineup in `~/.claude/settings.json`:
+Then map the model slots to the GLM lineup in `~/.claude/settings.json`:
 
 ```json
 {
@@ -53,11 +66,21 @@ Map the model slots to the GLM lineup in `~/.claude/settings.json`:
 }
 ```
 
+</details>
+
 Get the key from <https://z.ai/manage-apikey/apikey-list>. The coding endpoint is
 for coding tools only — it is not interchangeable with the general API endpoint.
 
 **This mode is the closest thing to "Claude Code, but on GLM." Prefer it when you
 want the guardrails to actually fire.**
+
+> **There is no official ZCode CLI.** Z.AI ships ZCode as a desktop app only — its
+> install page lists nothing but `.dmg` / `.exe` / `.AppImage` / `.deb` / `.rpm`
+> builds. `@z_ai/coding-helper` is official but is a *setup wizard* for other CLIs,
+> not an agent you code with. A third-party npm package (`zcode-app-cli`) does put
+> ZCode's agent in a terminal, and states plainly that it is unaffiliated with Z.AI
+> and redistributes their proprietary runtime — judge that for yourself before giving
+> it an API key. The supported terminal path is the one above.
 
 ### Mode B — the native ZCode Agent (rules always, hooks via the plugin)
 
