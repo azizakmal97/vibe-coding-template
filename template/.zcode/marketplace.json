@@ -1,0 +1,12 @@
+{
+  "name": "vibe-coding-template-local",
+  "description": "Local marketplace so ZCode can install this project's guardrail plugin. Settings -> Plugins -> Create -> Add marketplace, then point it at this folder.",
+  "pluginRoot": ".",
+  "plugins": [
+    {
+      "name": "vibe-coding-template",
+      "source": "./",
+      "description": "This project's safety hooks, subagents, commands and skills."
+    }
+  ]
+}

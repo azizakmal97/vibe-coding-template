@@ -20,28 +20,52 @@ model assignment. Never run a whole project on one model by default.
 | DeepSeek small | V-series Flash | Format / lint auto-fix |
 | Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context reads |
 | Google small | Gemini 3 Flash | Spell-check, screenshot smoke |
+| Z.AI heavy | GLM-5.3 (effort `high`/`max`) | Flat-rate substitute for Sonnet/Opus rows — see the caveat below |
+| Z.AI small | GLM-5.3-Flash | Flat-rate substitute for Haiku rows |
+
+**On a GLM Coding Plan**, run it through ZCode with the Agent CLI set to Claude Code
+(or the Claude Code CLI pointed at `https://api.z.ai/api/anthropic`) so the `.claude/`
+hooks still fire. The native ZCode Agent reads `AGENTS.md` and needs a plugin install
+before any hook runs — see `template/.zcode/README.md`. Substituting GLM for an Opus
+row is a real trade: for work assigned to Opus because being wrong is expensive (auth,
+money, patient-data correctness, brand voice), either run it on Anthropic or say in the
+plan that you didn't.
 
 ### Rules
 
-**Rule 1 — Declare model at the start of EVERY task, in plans AND in live prompts.**
+**Rule 1 — Declare model AND effort at the start of EVERY task, in plans AND in live prompts.**
 Whenever the user gives you any instruction — whether inside a formal plan phase OR
 as a direct one-off prompt — your FIRST sentence must declare which model owns this
-task and whether the current session matches. Format:
-> `Model for this task: **Sonnet 5** (current session ✓)` — then proceed.
-> `Model for this task: **Opus 5** (current session is Sonnet — switch first)` — then stop.
+task, at what reasoning effort, and whether the current session matches. Format:
+> `Model: **Sonnet 5** · Effort: **medium** (current session ✓)` — then proceed.
+> `Model: **Opus 5** · Effort: **high** (current session is Sonnet — switch first)` — then stop.
+
+**Effort is a separate axis from model — never infer one from the other.** A big model on
+low effort is the right call for a mechanical edit; a small model on high effort is usually
+the wrong call (buy a bigger model instead). Pick effort from how much *thinking* the task
+needs, not how important it feels:
+
+| Effort | Use when | Examples |
+|---|---|---|
+| **low** | The answer is known; the work is typing. One file, no branching decisions. | Status checks, log reads, build runs, a one-line edit to spec, lint/format fixes, mechanical renames |
+| **medium** | Shape is defined, details need care. Normal feature work. | Implementing an agreed design, adding a route + contract + test, a scoped refactor, writing tests for known behaviour |
+| **high** | The right answer is not yet known, or being wrong is expensive. | Architecture, debugging with unclear root cause, security review, cross-cutting refactor (5+ files), clinical/regulatory or brand copy, anything touching auth, money, or patient data correctness |
+
+**A phase may split its effort.** If half a task is design and half is mechanical, say so
+and give each half its own line — do not average them into one number.
 
 This applies to EVERY task: feature work, bug fix, a single file edit, a question
 that leads to code, a refactor, a review, anything. No exceptions. The declaration
 must come before the first tool call or line of output.
 
-**Rule 2 — In plans, every entry carries a model line.**
-In `PROGRESS.md`, every phase block carries a `Model:` line plus per-bullet
-annotation. A plan bullet with no model annotation is incomplete.
+**Rule 2 — In plans, every entry carries a model AND effort line.**
+In `PROGRESS.md`, every phase block carries a `Model:` + `Effort:` line plus per-bullet
+annotation. A plan bullet with no model AND effort annotation is incomplete.
 
-**Rule 3 — End every turn by naming the model for the NEXT step.**
+**Rule 3 — End every turn by naming the model AND effort for the NEXT step.**
 Explicitly, every time, even if it's already written in the plan. The user opens a
-fresh session per phase/step and needs the next-model called out so they pick the
-cheapest capable session without re-reading the plan.
+fresh session per phase/step and needs the next model *and effort* called out so they pick
+the cheapest capable session without re-reading the plan.
 
 **Rule 4 — Only execute tasks matching the CURRENT session's model — in BOTH directions.**
 Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned

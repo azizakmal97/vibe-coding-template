@@ -47,12 +47,15 @@ mkdir -p \
   .claude/rules \
   .claude/skills/design-system \
   .claude/skills/caveman-default \
+  .zcode/hooks \
+  .zcode/.zcode-plugin \
   .cursor/rules \
   .github/workflows \
   scripts \
   docs \
   memory
 echo "  + .claude/{agents,commands,hooks,rules,skills/*}"
+echo "  + .zcode/{hooks,.zcode-plugin}"
 echo "  + .github/workflows, scripts, docs, memory"
 
 # Files to copy (universal, non-preset)
@@ -126,6 +129,12 @@ declare -A FILES=(
   # skills
   [".claude/skills/design-system/SKILL.md"]=".claude/skills/design-system/SKILL.md"
   [".claude/skills/caveman-default/SKILL.md"]=".claude/skills/caveman-default/SKILL.md"
+  # zcode — static half; commands/agents/skills/hooks.json are generated below
+  [".zcode/README.md"]=".zcode/README.md"
+  [".zcode/config.json"]=".zcode/config.json"
+  [".zcode/marketplace.json"]=".zcode/marketplace.json"
+  [".zcode/.zcode-plugin/plugin.json"]=".zcode/.zcode-plugin/plugin.json"
+  [".zcode/hooks/zcode-hook.mjs"]=".zcode/hooks/zcode-hook.mjs"
   # scripts
   ["scripts/check-file-sizes.mjs"]="scripts/check-file-sizes.mjs"
   ["scripts/graphify-bootstrap.mjs"]="scripts/graphify-bootstrap.mjs"
@@ -135,6 +144,7 @@ declare -A FILES=(
   ["scripts/audit-gate.mjs"]="scripts/audit-gate.mjs"
   ["scripts/audit-gate-lib.mjs"]="scripts/audit-gate-lib.mjs"
   ["scripts/sync-agent-rules.mjs"]="scripts/sync-agent-rules.mjs"
+  ["scripts/sync-zcode.mjs"]="scripts/sync-zcode.mjs"
   ["scripts/auto-checkpoint.sh"]="scripts/auto-checkpoint.sh"
   ["scripts/auto-checkpoint.ps1"]="scripts/auto-checkpoint.ps1"
   # audit + handover + docs templates
@@ -173,6 +183,11 @@ node "$TEMPLATE_DIR/scripts/pick-preset.mjs" "$PRESET" || {
   echo "ERROR: preset picker failed" >&2
   exit 1
 }
+
+# Generate the ZCode layout from whatever .claude/ this project ended up with.
+echo ""
+echo "Generating .zcode/ from .claude/..."
+node scripts/sync-zcode.mjs || echo "  ! sync-zcode failed — run 'node scripts/sync-zcode.mjs' by hand" >&2
 
 # Initialize PROGRESS.md with first phase
 echo ""
@@ -261,7 +276,8 @@ echo "  1. Edit CLAUDE.md — fill in [BRACKETED] sections"
 echo "  2. Edit .claude/skills/design-system/SKILL.md — your colors/fonts"
 echo "  3. Read PROGRESS.md — understand the session-resume protocol"
 echo "  4. Read AGENTS.md — single source of truth for all AI tools"
-echo "  5. git init && git add -A && git commit -m 'chore: initialize project'"
+echo "  5. Using ZCode? Read .zcode/README.md — its hooks need a plugin install"
+echo "  6. git init && git add -A && git commit -m 'chore: initialize project'"
 echo ""
 echo "Start coding:"
 echo "  /new-feature [name] — [description]"

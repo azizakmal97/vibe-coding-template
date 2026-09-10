@@ -6,6 +6,50 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+- **ZCode support — the same rules and the same hooks, on Z.AI's GLM agent.**
+  Previously the only agent with automated local enforcement was Claude Code;
+  every other tool got the rules as guidance. ZCode now gets both, and shares one
+  set of hook scripts with Claude Code rather than a parallel copy that drifts.
+  - `template/.zcode/` is the ZCode half of a project: `commands/`, `agents/`,
+    `skills/` and `hooks/hooks.json`, all generated from `.claude/`, plus a
+    `.zcode-plugin/` manifest and `marketplace.json` so the directory installs as
+    a ZCode plugin. `config.json` (MCP servers) is the only hand-edited file.
+  - `zcode-hook.mjs` is the adapter that lets both agents run one set of hook
+    scripts. It resolves the project from the hook payload (ZCode ignores
+    workspace hook config, so the registration cannot carry the path), wraps
+    plain-text hook stdout in the `hookSpecificOutput.additionalContext` shape
+    ZCode requires, and normalises tool-input keys before handing the payload to
+    the unmodified `.claude/hooks/*` script.
+  - `scripts/sync-zcode.mjs` regenerates all of the above from `.claude/`,
+    including deriving `hooks.json` from `.claude/settings.json` so the two hook
+    lists cannot diverge. `sync-agent-rules.mjs` calls it, so one command still
+    covers every agent.
+  - `global-setup/zcode/install-zcode.mjs` does the machine-wide half: composes
+    `~/.zcode/AGENTS.md` from `global-setup/CLAUDE.md` + a ZCode addendum (one
+    source, no duplicated brain), installs the adapter, and merges the hook
+    registrations into `~/.zcode/cli/config.json` while preserving every other
+    key. `setup.ps1` gained `-Agent claude|zcode|both`.
+  - Docs: `template/.zcode/README.md` covers both ways to run ZCode — with Claude
+    Code as its Agent CLI (full enforcement) or as the native agent (rules always,
+    hooks via the plugin) — the GLM Coding Plan env vars, and the caveats worth
+    knowing before trusting the net: workspace hook config is ignored by design,
+    there is no permission deny-list, and hooks have been reported not to fire for
+    the native agent on some versions. Every path ends in the same instruction:
+    run the `DROP TABLE` probe and confirm it blocks.
+  - `AGENTS.md` gained GLM rows in the model matrix, with an explicit note that
+    substituting GLM for an Opus-assigned row is a trade to declare, not a free
+    swap.
+
+### Changed
+- **The repo's own instructions moved to `AGENTS.md`**, with `CLAUDE.md` reduced to
+  a pointer plus Claude-only notes. Claude Code auto-loads one file and ZCode the
+  other; keeping the content in a single file is the same discipline the template
+  asks projects to follow.
+- **`global-setup/CLAUDE.md` picked up the reasoning-effort axis** it had drifted
+  behind on. Re-running `setup.ps1` would otherwise have overwritten a newer
+  `~/.claude/CLAUDE.md` with the older rules.
+
 ### Fixed
 - **Auto-push silently never fired on the two most common commit forms.** The
   hook matched only a standalone `git commit ...`, so `git add . && git commit`

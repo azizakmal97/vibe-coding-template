@@ -1,0 +1,157 @@
+# `.zcode/` — running this project under ZCode
+
+[ZCode](https://zcode.z.ai) is Z.AI's desktop coding agent for the GLM models. This
+folder is the ZCode half of the Vibe Coding Template: the same rules, hooks,
+subagents, commands and skills the project already gives Claude Code, expressed in
+the layout ZCode looks for.
+
+Everything here except `config.json` is **generated** from `.claude/`. Edit the
+`.claude/` source and re-run:
+
+```bash
+node scripts/sync-zcode.mjs        # or: node scripts/sync-agent-rules.mjs (does both)
+```
+
+---
+
+## Pick a mode first — they enforce very differently
+
+ZCode can drive either its own agent or an external agent CLI, and that choice
+decides how much of the safety net actually runs.
+
+### Mode A — ZCode running Claude Code as the Agent CLI (full enforcement)
+
+In the chat box, open the settings icon → **Agent CLI** → pick **Claude Code**.
+ZCode becomes the front end; Claude Code is the engine, so the project's whole
+`.claude/` layer applies unchanged: `settings.json` permissions, all nine hooks,
+`CLAUDE.md` + `.claude/rules/*`, slash commands, subagents.
+
+Same idea without the ZCode app — point the Claude Code CLI at Z.AI's
+Anthropic-compatible endpoint and run it in this project:
+
+```powershell
+# Windows (PowerShell) — set once, per user
+[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://api.z.ai/api/anthropic', 'User')
+[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', '<your z.ai api key>', 'User')
+```
+
+```bash
+# macOS / Linux
+export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
+export ANTHROPIC_AUTH_TOKEN="<your z.ai api key>"
+```
+
+Map the model slots to the GLM lineup in `~/.claude/settings.json`:
+
+```json
+{
+  "env": {
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.3",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.3",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5.3-flash"
+  }
+}
+```
+
+Get the key from <https://z.ai/manage-apikey/apikey-list>. The coding endpoint is
+for coding tools only — it is not interchangeable with the general API endpoint.
+
+**This mode is the closest thing to "Claude Code, but on GLM." Prefer it when you
+want the guardrails to actually fire.**
+
+### Mode B — the native ZCode Agent (rules always, hooks via the plugin)
+
+ZCode's own agent reads `AGENTS.md` at the project root on its own — no wiring, no
+install. That covers the rules, the scope lock, the test-before-commit gate, the
+model matrix. What it does *not* read is `CLAUDE.md`, `.claude/rules/*`, or any
+`hooks` block in a workspace config. Install the plugin below to get the hooks.
+
+---
+
+## What ZCode reads from this folder
+
+| Component | Path | Picked up how |
+|---|---|---|
+| Rules | `AGENTS.md` (project root) | Automatically, every session |
+| Commands | `.zcode/commands/*.md` | Workspace commands + the plugin |
+| Subagents | `.zcode/agents/*.md` | The plugin (or copy to `~/.zcode/agents/`) |
+| Skills | `.zcode/skills/<name>/SKILL.md` | Workspace skills + the plugin |
+| Hooks | `.zcode/hooks/hooks.json` | **Plugin only** — see below |
+| MCP servers | `.zcode/config.json` → `mcp.servers` | Automatically, per workspace |
+
+`config.json` is the one file here you edit by hand. It is a normal ZCode workspace
+config; add MCP servers under `mcp.servers`. Putting a `hooks` block in it does
+nothing — ZCode ignores workspace hook config as a whole, for security.
+
+---
+
+## Installing the hooks (Mode B)
+
+`.zcode/` doubles as a ZCode plugin, which is the supported way to give a *project*
+its own hooks. One-time setup per machine:
+
+1. ZCode → **Settings → Plugins → Create → Add marketplace**.
+2. Point it at this folder: `<project-root>/.zcode`.
+3. Install **vibe-coding-template** from the **Personal** section.
+4. Start a new session — plugins and subagents do not hot-reload.
+
+The hooks then run the same nine scripts Claude Code uses, through
+`hooks/zcode-hook.mjs`. That adapter exists because the two agents differ in three
+ways: ZCode locates the project from the hook payload rather than the config file,
+reads stdout only when it is JSON, and does not guarantee the same tool-input keys.
+The adapter absorbs all three, so `.claude/hooks/*` stays agent-agnostic — one set of
+scripts, one behaviour, two agents.
+
+Machine-wide alternative: `node global-setup/zcode/install-zcode.mjs` from the
+template repo registers the same adapter in `~/.zcode/cli/config.json`, so every
+project on the machine gets the guardrails without a per-project plugin install.
+
+### Verify it actually fired
+
+Do not assume. In a ZCode session, ask the agent to run a command the guard blocks:
+
+```
+run: psql -c "DROP TABLE users"
+```
+
+A working hook returns `🛑 BLOCKED: DROP TABLE blocked — write a migration file instead`.
+Nothing at all means the hooks are not wired — recheck the plugin install, and see
+the caveat below.
+
+---
+
+## Known caveats — read before you trust the net
+
+- **Workspace hook config is ignored.** ZCode drops any `hooks` block in
+  `<workspace>/.zcode/config.json` or `<workspace>/zcode.json` regardless of
+  `hooks.enabled`. Hooks must come from `~/.zcode/cli/config.json` or a plugin.
+- **Native-agent hooks have been reported not to fire at all.**
+  [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32) reports hooks
+  configured in `~/.zcode/cli/config.json` never running for the native ZCode Agent,
+  while firing normally for external agent CLIs. It was closed as a duplicate, so the
+  behaviour may differ by version — run the verification above on your build instead
+  of assuming. If nothing fires, use Mode A.
+- **No allow / deny permission list.** ZCode has four confirmation modes
+  (Ask before changes / Edit automatically / Plan / Full access, cycled with
+  `Shift + Tab`) but no equivalent of `.claude/settings.json` → `permissions`. The
+  secret-file and destructive-command blocks come from the hooks, not from a
+  deny-list — one more reason to confirm the hooks fired.
+- **No nested rule merge.** ZCode reads `~/.zcode/AGENTS.md` and the workspace
+  `AGENTS.md`, and does not walk child directories. Keep project rules in the root
+  `AGENTS.md`; do not split them into subdirectory files and expect them to load.
+- **CI does not care which agent you used.** `.github/workflows/` re-checks lint,
+  types, tests, build and file-size budgets on every push. That gate holds even when
+  every local hook is off.
+
+---
+
+## Regenerating
+
+| You changed | Run |
+|---|---|
+| `AGENTS.md` | `node scripts/sync-agent-rules.mjs` |
+| `.claude/commands/`, `.claude/agents/`, `.claude/skills/` | `node scripts/sync-zcode.mjs` |
+| `.claude/settings.json` hooks | `node scripts/sync-zcode.mjs`, then restart ZCode |
+
+`sync-agent-rules.mjs` calls `sync-zcode.mjs` for you, so running the first is always
+enough.

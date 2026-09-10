@@ -10,6 +10,10 @@
  *   .windsurfrules                    (Windsurf)
  *   .github/copilot-instructions.md   (GitHub Copilot)
  *
+ * ZCode reads AGENTS.md directly and needs no shim, but its commands, subagents,
+ * skills and hooks live in their own layout — `sync-zcode.mjs` regenerates those
+ * from `.claude/`, and this script calls it so one command covers every agent.
+ *
  * Run after editing AGENTS.md:
  *   node scripts/sync-agent-rules.mjs
  *
@@ -18,6 +22,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { syncZcode } from './sync-zcode.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'AGENTS.md');
@@ -62,5 +67,9 @@ for (const { path, content } of targets) {
   writeFileSync(path, content, { encoding: 'utf8' });
   console.log(`[sync-agent-rules] wrote ${path.replace(ROOT, '.')}`);
 }
+
+const zcode = syncZcode(ROOT);
+for (const note of zcode.notes) console.warn(`[sync-zcode] ${note}`);
+console.log(`[sync-zcode] ${zcode.written.length} ZCode files regenerated from .claude/.`);
 
 console.log('[sync-agent-rules] done. Shims regenerated from AGENTS.md.');

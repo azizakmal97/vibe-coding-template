@@ -2,8 +2,10 @@
 
 # AGENTS.md — Single Source of Truth for All AI Coding Tools
 
-> **This is the canonical rule source.** Claude Code, Cursor, Windsurf, GitHub Copilot, Aider, Google Antigravity, and other agents read it — directly or via the shim files generated from it.
-> Edit THIS file, then run `node scripts/sync-agent-rules.mjs` to regenerate `.cursorrules`, `.cursor/rules/project.mdc`, `.windsurfrules`, and `.github/copilot-instructions.md`. `CLAUDE.md` layers Claude-specific sections on top of these rules.
+> **This is the canonical rule source.** Claude Code, ZCode, Cursor, Windsurf, GitHub Copilot, Aider, Google Antigravity, and other agents read it — directly or via the shim files generated from it.
+> Edit THIS file, then run `node scripts/sync-agent-rules.mjs` to regenerate `.cursorrules`, `.cursor/rules/project.mdc`, `.windsurfrules`, `.github/copilot-instructions.md`, and the `.zcode/` layout. `CLAUDE.md` layers Claude-specific sections on top of these rules.
+>
+> **ZCode reads this file and nothing else automatically** — not `CLAUDE.md`, not `.claude/rules/*`, and not `AGENTS.md` files in subdirectories. Those rule files still exist on disk; read them with the file tools when a rule points at one. Setup and caveats: [`.zcode/README.md`](.zcode/README.md).
 
 ---
 
@@ -19,7 +21,7 @@ See `CLAUDE.md` §1–§2 for the active preset's stack + commands.
 4. **Test before commit** — typecheck + lint + test + build all green. No exceptions.
 5. **Verify UI in a real browser** — ANY frontend change or component refactor MUST be checked with a Playwright **e2e smoke** (load the page, assert key regions render, assert ZERO uncaught page errors). typecheck + build prove it compiles, NOT that it renders. Add a **flow test** where the page has real logic (validation, auth/role gates, dup-guard banners, confirm dialogs). The Playwright scaffold (`e2e/`, `playwright.config.ts`) ships ready to run — **run it yourself; never defer UI verification to the human.** See `.claude/rules/testing.md` → "E2E Smoke + Flow".
 6. **Per-edit commit** — see `PROGRESS.md` death-defense protocol. `wip(phase-id):` prefix.
-7. **No secrets in code or transcript** — keep secrets in `.env` / `.dev.vars` (gitignored). Never read or print a secret file (`cat`/`type`/`Get-Content` a `.env`); the runtime loads them itself. Claude Code enforces this via hook + Read deny-list; other agents must self-enforce.
+7. **No secrets in code or transcript** — keep secrets in `.env` / `.dev.vars` (gitignored). Never read or print a secret file (`cat`/`type`/`Get-Content` a `.env`); the runtime loads them itself. Claude Code enforces this via hook + Read deny-list. ZCode has hooks but no deny-list, and only once its plugin is installed. Every other agent must self-enforce.
 8. **Backwards-compatible APIs** — add fields, never remove.
 9. **No silent catches** — every `catch` must log or rethrow.
 10. **Ask before installing packages** — state name + version + why + bundle impact.
@@ -54,7 +56,7 @@ Project-specific list lives in `CLAUDE.md` §11. Universal forbidden:
 If `graphify-out/GRAPH_REPORT.md` exists, read it FIRST before any full-repo grep.
 After structural changes (file add/rename/move/delete), run `/graphify` to update.
 
-**Auto-generation:** In Claude Code, `scripts/graphify-bootstrap.mjs` runs on every SessionStart (wired in `.claude/settings.json`). Self-skips when source files < 50 OR graph < 7 days old. So the graph appears without the user asking once the codebase grows past the threshold. Other agents (Cursor / Aider / Windsurf / Copilot) don't get the auto-trigger and must run the script manually: `node scripts/graphify-bootstrap.mjs` after a fresh clone or major structural change.
+**Auto-generation:** In Claude Code, `scripts/graphify-bootstrap.mjs` runs on every SessionStart (wired in `.claude/settings.json`). ZCode runs the same script on SessionStart once `.zcode/` is installed as a plugin. Either way it self-skips when source files < 50 OR graph < 7 days old, so the graph appears without the user asking once the codebase grows past the threshold. Other agents (Cursor / Aider / Windsurf / Copilot) don't get the auto-trigger and must run the script manually: `node scripts/graphify-bootstrap.mjs` after a fresh clone or major structural change.
 
 ---
 
@@ -81,6 +83,9 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 - **Claude (Opus / Sonnet / Haiku)** — runs inside `.claude/` hooks: SessionStart resume, pre-commit checkpoint, post-edit file-size, post-commit auto-push, secret-read deny-list. Use for anything that touches code AND benefits from death-defense.
 - **DeepSeek (Pro / Flash)** — cheaper per token, strong at code, weak at architectural ambiguity. Run via Cursor / Aider. No `.claude/` hooks. Worth it only for bulk mechanical work where savings dominate.
 - **Gemini (Pro / Flash)** — native multimodal (PNG / PDF / screenshot), large context window (1M+), strong at translation + cultural nuance. Run via API / AI Studio / IDE plugins. No `.claude/` hooks. Worth it for visual QA, long-context whole-repo questions, and i18n translation passes.
+- **GLM (5.3 / 5.3-Flash)** — a flat-rate GLM Coding Plan instead of per-token Anthropic billing, 1M context, thinking effort selectable per model (`low` / `high` / `max`). Two ways to run it, and the difference matters more than the model does:
+  - *ZCode driving Claude Code as its Agent CLI* (or the Claude Code CLI pointed at `https://api.z.ai/api/anthropic`) — the whole `.claude/` layer applies unchanged. Treat it exactly like a Claude session with a cheaper model.
+  - *The native ZCode Agent* — reads this file, runs the same hooks **only** after `.zcode/` is installed as a plugin, and never gets a permission deny-list. Verify the guard fires before trusting it (`.zcode/README.md`).
 
 ### Decision matrix (starting defaults — customize at project start)
 
@@ -109,6 +114,11 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 | Status checks (`git log`, ci status, "is X live") | **Haiku** | Claude Code | Cheap = right |
 | Single-line edit per explicit instruction | **Haiku** | Claude Code | No judgment |
 | Format / lint auto-fix passes | **DeepSeek Flash** (current: V4 Flash) | Cursor / Aider | Mechanical; price wins |
+| Any Sonnet-row task, on a GLM plan | **GLM-5.3** effort `low` | ZCode (Agent CLI: Claude Code) | Flat-rate; hooks still fire |
+| Any Opus-row task, on a GLM plan | **GLM-5.3** effort `high`/`max` | ZCode (Agent CLI: Claude Code) | Buy thinking, not a bigger bill |
+| Any Haiku-row task, on a GLM plan | **GLM-5.3-Flash** | ZCode | Cheap = right |
+
+**Substituting GLM for an Opus row is a real trade, not a free swap.** For work assigned to Opus *because being wrong is expensive* — auth, money, patient-data correctness, legal copy, brand voice — either run it on Anthropic or say in the plan that you didn't. Don't quietly downgrade and call the assignment met.
 
 ### Workflow rules
 
@@ -133,12 +143,13 @@ Every phase block in `PROGRESS.md` carries a `Model:` line plus per-bullet model
 
 ## Tool-Specific Notes
 
-Local enforcement (hooks + permission deny-list) is **Claude Code only**. Every other agent gets these rules as *guidance* and relies on self-discipline. The one gate that runs regardless of which agent made the edit is **CI** (`.github/workflows/`) — it re-checks lint, types, tests, build, and file-size budgets on every push.
+Two agents run the hooks: **Claude Code** (out of the box) and **ZCode** (after a one-time plugin install). Only Claude Code also has a permission deny-list. Every other agent gets these rules as *guidance* and relies on self-discipline. The one gate that runs regardless of which agent made the edit is **CI** (`.github/workflows/`) — it re-checks lint, types, tests, build, and file-size budgets on every push.
 
-- **Claude Code**: reads `CLAUDE.md` + `.claude/rules/*`. Hooks in `.claude/hooks/` enforce rules automatically; SessionStart injects the resume reminder.
+- **Claude Code**: reads `CLAUDE.md` + `.claude/rules/*`. Hooks in `.claude/hooks/` enforce rules automatically; SessionStart injects the resume reminder; `.claude/settings.json` denies secret reads and destructive commands outright.
+- **ZCode**: reads this `AGENTS.md` only. Commands, subagents, skills and hooks come from `.zcode/`, generated from `.claude/` — see [`.zcode/README.md`](.zcode/README.md) for the install and the caveats. It has no deny-list, so check destructive and secret-reading commands yourself instead of expecting to be stopped.
 - **Cursor**: reads `.cursor/rules/project.mdc` (modern) and `.cursorrules` (legacy) — both generated from this file.
 - **Windsurf**: reads `.windsurfrules` (generated from this file) and/or this `AGENTS.md`.
 - **GitHub Copilot**: reads `.github/copilot-instructions.md` (generated from this file).
 - **Google Antigravity / Aider / others**: read this `AGENTS.md` directly at session start. No automated enforcement.
 
-> The shim files above are GENERATED — never hand-edit them. Edit `AGENTS.md`, then run `node scripts/sync-agent-rules.mjs`.
+> The shim files and everything under `.zcode/` except `config.json` are GENERATED — never hand-edit them. Edit `AGENTS.md` (rules) or `.claude/` (commands, agents, skills, hooks), then run `node scripts/sync-agent-rules.mjs`.
