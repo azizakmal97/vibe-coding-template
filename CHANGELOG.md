@@ -7,6 +7,14 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Community-practice adoption: Goal Mode + provider wiring + ZCode-native
+  notes.** `/autonomous` now says to prefer ZCode's native `/goal` when the
+  objective is measurable (hooks still fire in every mode). The ZCode addendum
+  gains a provider-wiring table (DeepSeek/Moonshot/OpenRouter/Ollama endpoints
+  so the non-GLM slots in the model lineup can be real providers) and a
+  "ZCode-native features" section: per-message checkpoints replace the manual
+  checkpoint ritual, and off-peak (0.67×) vs peak 14:00–18:00 (2×) quota math
+  for scheduling bulk jobs.
 - **`/update-template` command** — pulls the latest rules, hooks, scripts and
   CI from a vibe-coding-template clone into an existing project. Closes the
   drift gap: `setup.ps1` never clobbers, so projects created earlier never saw

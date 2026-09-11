@@ -6,6 +6,16 @@ description: Run autonomously — loop /resume → work → /checkpoint → /nex
 
 Loop entry point. Drives the project forward without user "go" between phases.
 
+## In ZCode: try Goal Mode first
+
+ZCode's native `/goal <objective>` loops until the objective is *verified* met —
+it is this command's built-in equivalent. Prefer it when the objective is
+measurable ("test suite passes", "zero TS compile errors", "Lighthouse > 90")
+and run it in Auto Edit or Full Access to keep iterations flowing — the
+PreToolUse safety hooks fire in every mode, so the guardrails stay up. Fall
+back to this command when the loop must follow the PROGRESS.md phase protocol
+(wip/done commits, phase transitions, bail reports) or on Claude Code.
+
 ## Hard Safety Rules (Apply Every Iteration)
 
 1. **Token-budget check FIRST.** See `rules/token-budget.md`. If context > 70% capacity → bail at next safe checkpoint, do NOT start a new phase, write `pause(<phase-id>): token budget low` commit, exit loop.
