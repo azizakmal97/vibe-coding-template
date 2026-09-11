@@ -14,36 +14,43 @@ agent to create one, every 2 hours) with this prompt:
 
 ---
 
-Quota-limit auto-resume watchdog. Model: GLM-5.3, task effort low for the
-check; resumed work uses the effort its phase's Model/Effort line declares.
+Quota-limit auto-resume watchdog — scans ALL recent projects, not just the
+most recent one. Model: GLM-5.3, task effort low for the check; resumed work
+uses the effort its phase's Model/Effort line declares.
 
-Check whether work was abandoned because the quota limit was hit, and resume
-it if safe. Follow these gates IN ORDER; exit at the first failure with a
-one-line reason:
+Run gates 1–2 once, then gates 3–9 PER PROJECT, most recent project first.
+Resume at most ONE project per tick — the first that passes every gate; the
+next tick picks up the rest. Per-project gate failures move on to the NEXT
+project, they do not end the whole run.
 
 1. PEAK SKIP — if local time is Mon–Fri 14:00–18:00, exit (peak costs 2×;
    resuming can wait for the next off-peak tick).
 2. PLAN STATUS — read `~/.zcode/v2/coding-plan-cache.json`; if
    `entryStatus.items["builtin:zai-coding-plan"].status` is not `available`,
    exit (plan not connected).
-3. TARGET — read `~/.zcode/v2/setting.json`, take the first path in
-   `recentProjects`, cd there. No paths → exit.
-4. TEMPLATE CHECK — no `PROGRESS.md` → exit (not a template project).
+3. TARGETS — read `~/.zcode/v2/setting.json`, take ALL paths in
+   `recentProjects`, in order. No paths → exit.
+4. TEMPLATE CHECK — no `PROGRESS.md` → not a template project; next project.
 5. ACTIVE-AGENT GUARD — `git status --porcelain` outputs anything → another
-   session may be mid-edit RIGHT NOW; do not touch the repo; exit.
+   session may be mid-edit RIGHT NOW; do not touch the repo; next project.
 6. STALENESS — `git log -1 --format=%ct` less than 45 minutes ago → possibly
-   still active; exit.
-7. IN-PROGRESS CHECK — `PROGRESS.md` has no 🟡 in-progress phase → exit
-   (nothing was interrupted).
+   still active; next project.
+7. IN-PROGRESS CHECK — the tracker is `PROGRESS.md`; if it is a stub naming
+   another file as the canonical tracker (e.g. `REFACTOR_PROGRESS.md`), use
+   that file instead. No 🟡 in-progress marker on a phase heading or CURRENT
+   STATE line → nothing interrupted; next project. Ignore 🟡 inside historical
+   plan-block text or status legends.
 8. RESUME — clean tree + `wip()` commit + 🟡 phase is the limit-hit
    signature. Execute the /resume protocol from the project's
    `.claude/commands/resume.md` (or `.zcode/commands/resume.md`): continue the
    in-progress phase ONE plan bullet at a time, checkpoint after each edit,
    following the /autonomous hard safety rules exactly — never bypass hooks,
    never start a blocked or new phase, bail at 70% context with a `pause()`
-   commit, CI red → stop and report.
-9. REPORT — what was resumed, bullets completed, current state, next action.
-   If you resumed nothing, one line saying why.
+   commit, CI red → stop and report. Never start a second project in the
+   same tick.
+9. REPORT — one line per scanned project: resumed, or which gate stopped it
+   and why. For the resumed project add: bullets completed, current state,
+   next action.
 
 ---
 
