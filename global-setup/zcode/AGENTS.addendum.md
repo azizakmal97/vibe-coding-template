@@ -53,7 +53,10 @@ the working equivalents are:
 
 Thinking effort is set per model in Settings → Model Providers → Advanced. Declaring
 the model and effort at the start of every task (Rule 1 above) applies unchanged —
-name the GLM slot and the effort instead of the Claude one.
+name the GLM slot and the effort instead of the Claude one — with one ZCode
+correction: the session's configured effort is **not visible to the agent**, so
+declare the task effort, mark the session effort `not visible` instead of a false
+`✓`, and treat the user's configured setting as the one that actually runs.
 
 For work the rules above assign to Opus specifically because being wrong is expensive
 — auth, money, patient-data correctness, brand voice — prefer switching the Agent CLI

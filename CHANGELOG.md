@@ -6,6 +6,17 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Fixed
+- **Rule 1 effort declaration could misreport the session.** The old format
+  (`Effort: medium (current session ✓)`) invited agents to stamp `✓` for an
+  effort they cannot see — in ZCode the session's configured thinking effort is
+  not exposed to the agent, so a session running at `max` could be labelled
+  `medium ✓`. The rule now separates *task effort* (the agent's judgment) from
+  *session effort* (what the app actually runs, set in Settings → Model
+  Providers → Advanced), bans unverified `✓`, and defines mismatch behavior:
+  session higher than needed → proceed and note; session lower than needed →
+  stop and ask. The ZCode addendum carries the `not visible` correction.
+
 ### Added
 - **Community-practice adoption: Goal Mode + provider wiring + ZCode-native
   notes.** `/autonomous` now says to prefer ZCode's native `/goal` when the
