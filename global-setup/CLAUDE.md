@@ -36,9 +36,23 @@ plan that you didn't.
 **Rule 1 — Declare model AND effort at the start of EVERY task, in plans AND in live prompts.**
 Whenever the user gives you any instruction — whether inside a formal plan phase OR
 as a direct one-off prompt — your FIRST sentence must declare which model owns this
-task, at what reasoning effort, and whether the current session matches. Format:
-> `Model: **Sonnet 5** · Effort: **medium** (current session ✓)` — then proceed.
-> `Model: **Opus 5** · Effort: **high** (current session is Sonnet — switch first)` — then stop.
+task, the effort the task NEEDS, and the effort the session is ACTUALLY configured
+to. These are two different things: task effort is your judgment (table below);
+session effort is set in the app (ZCode: Settings → Model Providers → Advanced;
+Claude Code: `/model`) and is what the model really runs at. Your declaration
+classifies and checks — it never overrides.
+
+**Never write `✓` you have not verified.** ZCode agents cannot see the session's
+configured effort; in a ZCode session say `session effort not visible` and assume
+the user's setting governs. Format:
+> `Model: **Sonnet 5** · Task effort: **medium** · Session: **medium** ✓` — proceed.
+> `Model: **GLM-5.3** · Task effort: **medium** · Session: **max** (more than needed — proceeding)` — proceed.
+> `Model: **GLM-5.3** · Task effort: **medium** · Session effort not visible (ZCode) — assuming user-configured effort` — proceed.
+> `Model: **Opus 5** · Task effort: **high** · Session: **Sonnet at low** — switch first` — then stop.
+
+Mismatch rule: session effort HIGHER than the task needs → proceed and note it
+(extra thinking is cheap insurance next to a broken session). Session effort
+LOWER than the task needs → stop and ask the user to raise it before starting.
 
 **Effort is a separate axis from model — never infer one from the other.** A big model on
 low effort is the right call for a mechanical edit; a small model on high effort is usually
