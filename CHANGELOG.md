@@ -7,6 +7,16 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **`/update-template` command** — pulls the latest rules, hooks, scripts and
+  CI from a vibe-coding-template clone into an existing project. Closes the
+  drift gap: `setup.ps1` never clobbers, so projects created earlier never saw
+  template fixes. Template is source of truth for hooks/rules/agents/skills/
+  scripts/shims; `CLAUDE.md`, `PROGRESS.md`, `memory/` and friends are
+  project-owned and never touched; locally-modified managed files are diffed
+  and confirmed before overwrite; re-runs `sync-zcode.mjs` (and
+  `sync-agent-rules.mjs` when `AGENTS.md` changed) and finishes with the
+  hook probe and a `chore:` commit. Existing projects bootstrap it by running
+  setup once — new files are added, existing ones preserved.
 - **Three rules earned from a live incident**, where a scheduling feature lost a
   user's work twice in one afternoon and a full green test suite reported nothing.
   - `rules/testing.md` — **a green gate proves it compiles, not that it renders.**
