@@ -26,3 +26,19 @@ Execute the 9-step session-resume protocol:
 9. Wait for user "go" before continuing.
 
 If no phase is `🟡 in-progress`, ask the user which phase to start.
+
+## Fast path: same window, right after a quota limit hit
+
+If THIS conversation was interrupted by a usage limit (the last assistant turn
+errored or stopped mid-task) and the user says "go" / "continue" in the same
+window: the context is already here — do not re-run steps 1–5 from scratch.
+
+1. `git log --oneline -5` + `git status` — establish what survived the cutoff.
+2. Read `PROGRESS.md`'s active phase only if its plan bullets are not in context.
+3. Reconcile uncommitted changes per step 6.
+4. Continue the interrupted bullet; checkpoint per edit as usual.
+
+Per-edit checkpoint discipline means a limit hit costs at most one uncommitted
+edit. Note: GLM Coding Plan quota refreshes on a rolling 5-hour window (and a
+7-day weekly cycle), not at a fixed time of day — check Usage Stats in ZCode
+for actual remaining quota before assuming a refresh.
