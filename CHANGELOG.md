@@ -18,6 +18,16 @@ All notable changes to this project are documented here. The format is based on
   stop and ask. The ZCode addendum carries the `not visible` correction.
 
 ### Added
+- **Limit-resume watchdog + `/resume` quota fast path.** GLM Coding Plan
+  quota has no fixed reset time (rolling 5-hour window + 7-day weekly cycle),
+  so `global-setup/zcode/limit-resume-watchdog.md` ships a recurring
+  every-2-hours automation recipe: while quota is exhausted the tick cannot
+  run at all (free no-op), and the first tick after refresh resumes abandoned
+  work through the `/resume` protocol. Gates: peak-window skip (14:00–18:00
+  costs 2×), plan-status check, active-agent guard (dirty git tree = another
+  session is mid-edit — never touch), 45-minute staleness, 🟡 phase required.
+  `/resume` gains a fast path for returning to the same window right after a
+  limit hit (git log + status instead of a full re-read).
 - **Community-practice adoption: Goal Mode + provider wiring + ZCode-native
   notes.** `/autonomous` now says to prefer ZCode's native `/goal` when the
   objective is measurable (hooks still fire in every mode). The ZCode addendum
