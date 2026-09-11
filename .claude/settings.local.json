@@ -28,8 +28,7 @@
       "Bash(tar *)",
       "Bash(chmod *)",
       "PowerShell(*)",
-      "Read(//d/Programming/**)",
-      "Bash(not exist *)"
+      "Read(//d/Programming/**)"
     ]
   },
   "hooks": {
