@@ -64,6 +64,34 @@ Running Claude Code on the GLM plan from a terminal: `npm i -g @z_ai/coding-help
 then `chelper init`. That is Z.AI's official wizard; there is no official ZCode agent
 CLI, so don't go looking for one.
 
+### Wiring the non-GLM slots (Settings → Models → Add Provider)
+
+ZCode accepts any Anthropic/OpenAI-compatible endpoint, so the other slots in the
+lineup above can be real wired providers, not just notes:
+
+| Slot | Provider | Endpoint · model |
+|---|---|---|
+| DeepSeek heavy | DeepSeek | `https://api.deepseek.com/anthropic` · `deepseek-chat` |
+| DeepSeek small | DeepSeek | same endpoint, low effort |
+| Google heavy | OpenRouter | `https://openrouter.ai/api` · Gemini model id |
+| Local / offline | Ollama / vLLM | local OpenAI-compatible endpoint |
+
+Keys go into the provider settings in the app, never into files. Moonshot
+(`https://api.moonshot.cn/anthropic`) also works.
+
+## ZCode-native features that change the rules above
+
+- **Checkpoints are automatic per message.** The "checkpoint before model swap"
+  ritual exists for Claude Code sessions. Inside ZCode every message already
+  creates a restore point with multi-file diff review — use those instead of
+  the manual ritual.
+- **Goal Mode (`/goal <objective>`)** loops until a *verifiable* objective is
+  met, checking after each round. Prefer it over `/autonomous` when the
+  objective is measurable; the safety hooks still fire in every mode.
+- **Off-peak quota.** On the GLM Coding Plan, off-peak calls cost 0.67× and
+  peak (14:00–18:00) cost 2×. Schedule bulk jobs — audits, big refactors,
+  scheduled automations — outside the peak window.
+
 ## Verifying the guardrails before you trust them
 
 Reported behaviour differs by ZCode version: hooks registered in
