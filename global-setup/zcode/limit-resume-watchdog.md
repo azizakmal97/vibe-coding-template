@@ -24,8 +24,10 @@ Resume at most ONE project per tick — the first that passes every gate; the
 next tick picks up the rest. Per-project gate failures move to the NEXT
 project, not the end of the run.
 
-1. PEAK SKIP — if local time is Mon–Fri 14:00–18:00, exit (peak costs 2×;
-   resuming can wait for the next off-peak tick).
+1. PEAK AWARENESS — weekday peak (Mon–Fri 14:00–18:00) costs 2×. Do NOT skip
+   the resume: during peak, cap the run to ONE plan bullet + checkpoint +
+   report, and say in the report it ran in peak. Weekends have no peak, so a
+   weekend tick always resumes normally.
 2. PLAN STATUS — read `~/.zcode/v2/coding-plan-cache.json`; if
    `entryStatus.items["builtin:zai-coding-plan"].status` is not `available`,
    exit (plan not connected).

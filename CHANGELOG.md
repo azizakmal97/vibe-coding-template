@@ -23,9 +23,11 @@ All notable changes to this project are documented here. The format is based on
   so `global-setup/zcode/limit-resume-watchdog.md` ships a recurring
   every-2-hours automation recipe: while quota is exhausted the tick cannot
   run at all (free no-op), and the first tick after refresh resumes abandoned
-  work through the `/resume` protocol. Gates: peak-window skip (14:00–18:00
-  costs 2×), plan-status check, active-agent guard (dirty git tree = another
-  session is mid-edit — never touch), 45-minute staleness, 🟡 phase required.
+  work through the `/resume` protocol. Gates: peak-aware cap (weekday
+  14:00–18:00 costs 2× — resume anyway but one bullet + checkpoint only;
+  weekends have no peak), plan-status check, active-agent guard (dirty git
+  tree = another session is mid-edit — never touch), 45-minute staleness,
+  🟡 phase required.
   `/resume` gains a fast path for returning to the same window right after a
   limit hit (git log + status instead of a full re-read).
 - **Community-practice adoption: Goal Mode + provider wiring + ZCode-native
