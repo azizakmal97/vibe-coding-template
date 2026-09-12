@@ -14,14 +14,15 @@ agent to create one, every 2 hours) with this prompt:
 
 ---
 
-Quota-limit auto-resume watchdog — scans ALL recent projects, not just the
-most recent one. Model: GLM-5.3, task effort low for the check; resumed work
+Quota-limit auto-resume watchdog — scans ALL recent projects and resumes
+work interrupted by a quota limit, INCLUDING repos left with uncommitted
+mid-edit changes. Model: GLM-5.3, task effort low for the check; resumed work
 uses the effort its phase's Model/Effort line declares.
 
 Run gates 1–2 once, then gates 3–9 PER PROJECT, most recent project first.
 Resume at most ONE project per tick — the first that passes every gate; the
-next tick picks up the rest. Per-project gate failures move on to the NEXT
-project, they do not end the whole run.
+next tick picks up the rest. Per-project gate failures move to the NEXT
+project, not the end of the run.
 
 1. PEAK SKIP — if local time is Mon–Fri 14:00–18:00, exit (peak costs 2×;
    resuming can wait for the next off-peak tick).
@@ -31,28 +32,41 @@ project, they do not end the whole run.
 3. TARGETS — read `~/.zcode/v2/setting.json`, take ALL paths in
    `recentProjects`, in order. No paths → exit.
 4. TEMPLATE CHECK — no `PROGRESS.md` → not a template project; next project.
-5. ACTIVE-AGENT GUARD — `git status --porcelain` outputs anything → another
-   session may be mid-edit RIGHT NOW; do not touch the repo; next project.
-6. STALENESS — `git log -1 --format=%ct` less than 45 minutes ago → possibly
-   still active; next project.
-7. IN-PROGRESS CHECK — the tracker is `PROGRESS.md`; if it is a stub naming
+5. ACTIVITY GUARD — estimate when the repo was last touched: newest mtime
+   among modified tracked files (fallback: `git log -1 --format=%ct`).
+   Touched less than 45 minutes ago → a session may be live RIGHT NOW; do not
+   touch the repo; next project.
+6. IN-PROGRESS CHECK — the tracker is `PROGRESS.md`; if it is a stub naming
    another file as the canonical tracker (e.g. `REFACTOR_PROGRESS.md`), use
    that file instead. No 🟡 in-progress marker on a phase heading or CURRENT
    STATE line → nothing interrupted; next project. Ignore 🟡 inside historical
    plan-block text or status legends.
-8. RESUME — clean tree + `wip()` commit + 🟡 phase is the limit-hit
-   signature. Execute the /resume protocol from the project's
+7. PRESERVE — if `git status --porcelain` is non-empty, the interrupted
+   session died mid-edit: preserve its work FIRST — `git add -u` then commit
+   `wip(watchdog): preserve mid-edit state` (tracked modifications only; skip
+   the commit if nothing stages; leave untracked files alone; NEVER discard,
+   stash-drop, or reset anything). Clean tree → go straight to resume.
+8. RESUME — preserved-or-clean tree + 🟡 phase is the limit-hit signature.
+   Execute the /resume protocol from the project's
    `.claude/commands/resume.md` (or `.zcode/commands/resume.md`): continue the
    in-progress phase ONE plan bullet at a time, checkpoint after each edit,
    following the /autonomous hard safety rules exactly — never bypass hooks,
    never start a blocked or new phase, bail at 70% context with a `pause()`
    commit, CI red → stop and report. Never start a second project in the
-   same tick.
+   same tick. The phase's Model line may assign a non-GLM model — this
+   watchdog is owner-authorized to resume on GLM-5.3 anyway, but the report
+   MUST state the assigned model vs the model that actually ran, and flag it
+   loudly when the phase is correctness-critical (auth, money, patient data).
 9. REPORT — one line per scanned project: resumed, or which gate stopped it
-   and why. For the resumed project add: bullets completed, current state,
-   next action.
+   and why. For the resumed project add: what was preserved (wip commit hash
+   + file count, if any), assigned model vs actual, bullets completed,
+   current state, next action.
 
 ---
 
-Keep the 45-minute staleness gate: two agents editing one repo concurrently
-is the main hazard this recipe guards against.
+The 45-minute ACTIVITY gate is the concurrency guard: two agents editing one
+repo concurrently is the main hazard, and a live session shows fresh file
+mtimes or a fresh commit. A dirty tree alone no longer blocks a resume — a
+quota hit mid-edit leaves exactly that state — so the watchdog PRESERVES it
+first (`wip(watchdog)` commit of tracked modifications) and never discards,
+stashes-away, or resets anything.
