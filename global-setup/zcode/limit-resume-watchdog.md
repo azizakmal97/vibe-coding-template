@@ -10,7 +10,9 @@ model cannot execute), which makes it a free no-op. The first tick after quota
 returns is the resume.
 
 To install on a machine: create a recurring automation (in ZCode: ask the
-agent to create one, every 2 hours) with this prompt:
+agent to create one, every 2 hours **at :30 past the hour** — weekly resets
+anchor to your subscription time, e.g. a 14:2x reset is caught by the 14:30
+tick instead of waiting for 16:10) with this prompt:
 
 ---
 
