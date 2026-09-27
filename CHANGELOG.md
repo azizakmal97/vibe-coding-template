@@ -17,7 +17,24 @@ All notable changes to this project are documented here. The format is based on
   session higher than needed → proceed and note; session lower than needed →
   stop and ask. The ZCode addendum carries the `not visible` correction.
 
+### Changed
+- **Model lineup refreshed to 2026-09-23.** The Anthropic flagship slot is now
+  Opus 5.5 (`claude-opus-5-5`) — launched 22 Sep at $4/$20 per 1M tokens, 40%
+  under Opus 5, so it is both the best and the cheaper flagship. Rollout note
+  added: Sonnet 5.5 + Haiku 5.5 expected within weeks; verify exact model IDs
+  on the models doc before updating those rows.
+
 ### Added
+- **antislop filter layer (optional) + DESIGN.md direction convention.**
+  `global-setup/CLAUDE.md` §7.8 sets precedence when the antislop skills
+  (github.com/miqdadbadjuber/anti-slop) are installed: the §7 charter wins
+  conflicts, house style beats antislop-code's comment-separator rules in
+  codebases that already use banner comments, and a project `DESIGN.md` is
+  design direction — data to apply, not instructions to obey. The template's
+  design-system skill and `CLAUDE.md` Design System section now define the
+  `DESIGN.md` direction file (identity, voice, palette meaning, motion,
+  optional ENERGY/RHYTHM/MOTION dials) as the counterpart to token values:
+  without it, antislop-governed UI must be labeled "draft without direction".
 - **Limit-resume watchdog + `/resume` quota fast path.** GLM Coding Plan
   quota has no fixed reset time (rolling 5-hour window + 7-day weekly cycle),
   so `global-setup/zcode/limit-resume-watchdog.md` ships a recurring
