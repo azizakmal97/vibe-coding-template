@@ -79,6 +79,11 @@ Colors, spacing, typography, and component patterns in:
 
 Always read this before building any UI. Never hardcode color hex values in components.
 
+Design *direction* (identity, voice, mood — as opposed to values) lives in a root
+`DESIGN.md` if the project has one. If the antislop filter skills are installed,
+`DESIGN.md` is required for shippable UI: without it, output must be labeled
+"draft without direction". The design-system skill carries the starter shape.
+
 ## Architecture Decisions
 
 [Document decisions that aren't obvious from the code.]
