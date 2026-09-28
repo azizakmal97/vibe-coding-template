@@ -35,6 +35,11 @@ All notable changes to this project are documented here. The format is based on
   `DESIGN.md` direction file (identity, voice, palette meaning, motion,
   optional ENERGY/RHYTHM/MOTION dials) as the counterpart to token values:
   without it, antislop-governed UI must be labeled "draft without direction".
+  §7.8 also carries a standing instruction to invoke the antislop core (plus
+  the matching satellite) before any UI, copy, or design task — converting
+  description-matched skill triggering into a deterministic pointer, since
+  the transparent skills-copy install deliberately skips the `npx antislop-ai`
+  installer's own pointer mechanism.
 - **Limit-resume watchdog + `/resume` quota fast path.** GLM Coding Plan
   quota has no fixed reset time (rolling 5-hour window + 7-day weekly cycle),
   so `global-setup/zcode/limit-resume-watchdog.md` ships a recurring
