@@ -32,6 +32,22 @@ All notable changes to this project are documented here. The format is based on
     is 20% ($4 vs $5 input).
 
 ### Added
+- **antislop is enforced, not just loaded.** In a long redesign session the antislop
+  skill faded and slop shipped anyway (dashes, a template hero, 40px tap targets, a
+  screen-reader paragraph rendered visibly after a rewrite dropped its CSS).
+  - **Checker:** `template/scripts/antislop-check.mjs` catches the mechanical rules
+    (dashes, buzzwords, generic CTAs, removed focus outlines, infinite animation,
+    tap targets under 44px, token contrast below 4.5:1, classes with no CSS rule).
+    Project bans go in a project-owned `anti-slop/rules.json`.
+  - **Hooks:** `post-edit-antislop.cjs` (Edit|Write, also wired for ZCode) reports
+    findings in the same turn; `pre-artifact-antislop.cjs` blocks publishing a page
+    until it passes and a fresh, FAIL-free Delivery Gate report exists at
+    `anti-slop/gates/<file>.md`.
+  - **CI:** every preset workflow checks the changed user-facing files
+    (`--since <base>`), which covers agents without hooks.
+  - **`/update-template`** now merges hook registrations the template gained into a
+    project's `settings.json` (add only, never remove). Without this, existing
+    projects received new hook files with nothing registering them.
 - **antislop filter layer (optional) + DESIGN.md direction convention.**
   `global-setup/CLAUDE.md` §7.8 sets precedence when the antislop skills
   (github.com/miqdadbadjuber/anti-slop) are installed: the §7 charter wins

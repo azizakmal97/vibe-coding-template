@@ -112,6 +112,16 @@
             "command": "node .claude/hooks/pre-commit-checkpoint.js"
           }
         ]
+      },
+      {
+        "matcher": "Artifact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/pre-artifact-antislop.cjs",
+            "statusMessage": "antislop gate"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -125,6 +135,10 @@
           {
             "type": "command",
             "command": "node .claude/hooks/check-file-size.js"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/post-edit-antislop.cjs"
           }
         ]
       },

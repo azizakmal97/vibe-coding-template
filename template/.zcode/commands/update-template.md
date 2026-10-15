@@ -29,9 +29,10 @@ user. Do not guess a path.
 
 ## What NEVER updates (project-owned)
 
-`CLAUDE.md`, `PROGRESS.md`, `memory/`, `settings.json`, `identity.json`,
-`package-manager.json`, `file-budgets.json`, `.audit-accepted.json`,
-`preset commands.json`, anything under `src/`, `.env*`.
+`CLAUDE.md`, `PROGRESS.md`, `memory/`, `settings.json` (except the hook merge
+in Phase 3), `identity.json`, `package-manager.json`, `file-budgets.json`,
+`.audit-accepted.json`, `preset commands.json`, `anti-slop/` (rules.json, gate
+reports, audits), anything under `src/`, `.env*`.
 
 ## Phase 1: Report what changed
 
@@ -53,6 +54,13 @@ classify: **identical** · **missing here** · **template newer** ·
    hooks and rules is the template version (that is the point of this
    command); local edits survive only if the user says so.
 3. New commands: copy in; never remove commands absent from the template.
+4. **Hook registrations: merge, never replace.** A copied hook does nothing until
+   `.claude/settings.json` registers it. For each `{event, matcher, command}` in
+   the template's `.claude/settings.json` → `hooks` that this project lacks, ADD
+   it (into the same event + matcher entry if one exists, else a new entry).
+   Never remove, reorder or edit an existing registration and touch no other key.
+   Show the user the added lines. Example: the antislop hooks
+   (`pre-artifact-antislop.cjs` on `Artifact`, `post-edit-antislop.cjs` on `Edit|Write`).
 
 ## Phase 4: Regenerate the ZCode half
 
@@ -66,6 +74,9 @@ the editor shims.
 ## Phase 5: Verify
 
 1. Hook probe: `echo "DROP TABLE probe_table"` must come back `🛑 BLOCKED`.
+   antislop probe: `node scripts/antislop-check.mjs <any user-facing file>` must run
+   (exit 0, or exit 2 with findings), and `settings.json` must register both
+   antislop hooks.
 2. `.zcode/commands/` still mirrors `.claude/commands/` (new command included).
 3. Run the project's typecheck/build if the setup scripts themselves changed.
 

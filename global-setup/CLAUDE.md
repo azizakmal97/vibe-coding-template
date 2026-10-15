@@ -308,3 +308,6 @@ anything you did NOT verify — never claim done on hope.
 - Before starting any UI, copy, or design task, invoke the `antislop` core
   skill (plus the matching satellite) — do not wait for a description match.
   Skills trigger probabilistically; this pointer makes it deterministic.
+- Projects built from the template enforce it with hooks: a checker after every
+  UI edit, and no page publish without a fresh FAIL-free Delivery Gate report in
+  `anti-slop/gates/`. Never bypass a finding; fix it or tighten the checker.
