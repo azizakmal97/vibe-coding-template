@@ -9,13 +9,14 @@
 Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task
 model assignment. Never run a whole project on one model by default.
 
-### Current lineup (last reviewed 2026-09-23 — names go stale, re-check every 6 months)
+### Current lineup (last reviewed 2026-10-15 — names go stale, re-check every 6 months)
 
 | Slot | Current name | Use for |
 |---|---|---|
+| Anthropic frontier | **Fable 5.1** (`claude-fable-5-1`) | Only when Opus 5.5 at `high`/`xhigh` already fell short: the hardest long-horizon agentic work, gnarly multi-system debugging. Owner opt-in per task, never a default |
 | Anthropic flagship | **Opus 5.5** (`claude-opus-5-5`) | Architecture, hard debugging, security review, novel copy/brand voice, tricky refactors |
-| Anthropic workhorse | **Sonnet 5** (`claude-sonnet-5`) | Default for normal feature work and edits |
-| Anthropic small | **Haiku 4.5** (`claude-haiku-4-5-20251001`) | Status checks, log inspection, mechanical edits, build runs |
+| Anthropic workhorse | **Sonnet 5.5** (`claude-sonnet-5-5`) | Default for normal feature work and edits |
+| Anthropic small | **Haiku 5.5** (`claude-haiku-5-5`) | Status checks, log inspection, mechanical edits, build runs |
 | DeepSeek heavy | V-series Pro | Bulk codegen, mass test scaffolding |
 | DeepSeek small | V-series Flash | Format / lint auto-fix |
 | Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context reads |
@@ -23,7 +24,23 @@ model assignment. Never run a whole project on one model by default.
 | Z.AI heavy | GLM-5.3 (effort `high`/`max`) | Flat-rate substitute for Sonnet/Opus rows — see the caveat below |
 | Z.AI small | GLM-5.3-Flash | Flat-rate substitute for Haiku rows |
 
-> **5.5 rollout (2026-09-23):** Opus 5.5 launched 22 Sep at $4/$20 per 1M tokens — 40% under Opus 5, so it is now both the best AND the cheaper flagship. Sonnet 5.5 + Haiku 5.5 expected within weeks; update the two rows above when they land (verify exact model IDs on the [models doc](https://platform.claude.com) first — don't guess suffixes).
+#### Anthropic capabilities (verified 2026-10-15 against the claude-api skill's model table, cached 2026-10-06)
+
+| Model | $ in / out per 1M | Context · max output | What's distinctive |
+|---|---|---|---|
+| Fable 5.1 | $10 / $50 | 1M · 128K | Most capable widely released model. Thinking always on; single turns on hard tasks can run many minutes. Over-prescriptive prompts written for older models reduce its quality. Needs 30-day data retention (no ZDR) |
+| Opus 5.5 | $4 / $20 | 1M · 128K | 20% cheaper than Opus 5 and better. Thinking can't be disabled; effort is the only dial and its API default is `medium` (Opus 5 defaulted to `high`). Fast mode $8 / $40 |
+| Sonnet 5.5 | $2 / $10 | 1M · 128K | Same price as Sonnet 5. Effort levels recalibrated: start at `medium` for agentic coding, `low` for chat |
+| Haiku 5.5 | $0.10 / $0.50 (≤100K prompt; $0.50 / $2.50 beyond) | 1M · 128K | 10× cheaper than Haiku 4.5 and 5× its old 200K context. Adaptive thinking on by default, effort default `medium` |
+
+All four: adaptive thinking, effort `low`→`max`, vision input, 1M context.
+Cost ratios that matter for slot choice: Opus 5.5 is only **2×** Sonnet 5.5, and Haiku 5.5 is **20×** cheaper than Sonnet 5.5.
+- When a Sonnet task is borderline Opus, Opus 5.5 at `low`/`medium` effort is a legitimate pick. The newest models at lower effort often match the previous generation at high effort.
+- Push anything mechanical down to Haiku without hesitation.
+
+Previous generation, still served: Opus 5, Sonnet 5, Fable 5, Haiku 4.5 (200K context). Only use these if a task names them.
+
+Model IDs are complete as written. Never append a date suffix. To verify a new ID, use the claude-api skill or the [models doc](https://platform.claude.com); don't guess.
 
 **On a GLM Coding Plan**, run it through ZCode with the Agent CLI set to Claude Code
 (or the Claude Code CLI pointed at `https://api.z.ai/api/anthropic`) so the `.claude/`
@@ -47,10 +64,10 @@ classifies and checks — it never overrides.
 **Never write `✓` you have not verified.** ZCode agents cannot see the session's
 configured effort; in a ZCode session say `session effort not visible` and assume
 the user's setting governs. Format:
-> `Model: **Sonnet 5** · Task effort: **medium** · Session: **medium** ✓` — proceed.
+> `Model: **Sonnet 5.5** · Task effort: **medium** · Session: **medium** ✓` — proceed.
 > `Model: **GLM-5.3** · Task effort: **medium** · Session: **max** (more than needed — proceeding)` — proceed.
 > `Model: **GLM-5.3** · Task effort: **medium** · Session effort not visible (ZCode) — assuming user-configured effort` — proceed.
-> `Model: **Opus 5** · Task effort: **high** · Session: **Sonnet at low** — switch first` — then stop.
+> `Model: **Opus 5.5** · Task effort: **high** · Session: **Sonnet at low** — switch first` — then stop.
 
 Mismatch rule: session effort HIGHER than the task needs → proceed and note it
 (extra thinking is cheap insurance next to a broken session). Session effort
