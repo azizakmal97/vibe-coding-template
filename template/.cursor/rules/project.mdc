@@ -57,6 +57,28 @@ Project-specific list lives in `CLAUDE.md` §11. Universal forbidden:
 
 ---
 
+## antislop: enforced, not remembered
+
+UI, copy and design work follows the antislop filter (github.com/miqdadbadjuber/anti-slop):
+load the `antislop` core skill plus the matching satellite before starting, and run the full
+Delivery Gate before delivering. A skill loaded once fades over a long session, so the
+mechanical half is enforced by a script and the judgment half by a written gate:
+
+- `scripts/antislop-check.mjs` checks em/en dashes, buzzwords, generic CTAs, removed focus
+  outlines, infinite animation, tap targets under 44px, theme-token contrast below 4.5:1, and
+  CSS classes used without a rule. Project bans (a name, a word the owner refuses) go in
+  `anti-slop/rules.json` (`banned` + `allowedPhrases`); that file is project-owned.
+- Claude Code: `post-edit-antislop.cjs` runs it on every user-facing file you change;
+  `pre-artifact-antislop.cjs` blocks publishing a page until it passes AND
+  `anti-slop/gates/<file name>.md` exists, is newer than the page, has the four blocks
+  (Hard Gate, Purpose-Gate, Liveliness, Craftsmanship) and no `FAIL` line.
+- Every agent: CI runs `node scripts/antislop-check.mjs --since <base>` on changed
+  user-facing files. Agents without hooks (Cursor, Windsurf, Copilot, Aider, ZCode) must run
+  the same command before committing.
+- Never bypass a finding. Fix it; a false positive means the checker needs tightening, not skipping.
+
+---
+
 ## Graph-First Exploration
 
 If `graphify-out/GRAPH_REPORT.md` exists, read it FIRST before any full-repo grep.

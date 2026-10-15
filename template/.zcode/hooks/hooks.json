@@ -49,6 +49,21 @@
             "enabled": true
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "process",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              "--tools",
+              "Artifact",
+              ".claude/hooks/pre-artifact-antislop.cjs"
+            ],
+            "enabled": true
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -62,7 +77,8 @@
               "--tools",
               "Edit|Write",
               ".claude/hooks/post-edit-check.cjs",
-              ".claude/hooks/check-file-size.js"
+              ".claude/hooks/check-file-size.js",
+              ".claude/hooks/post-edit-antislop.cjs"
             ],
             "enabled": true
           }

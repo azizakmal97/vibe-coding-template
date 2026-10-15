@@ -40,6 +40,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: antislop (changed user-facing files)
+        # Claude Code enforces antislop with hooks; this step covers every other agent
+        # and editor. Only files this push or PR changed are checked. AGENTS.md § antislop.
+        if: hashFiles('scripts/antislop-check.mjs') != ''
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE" 2>/dev/null || true
+          node scripts/antislop-check.mjs --since "$BASE"
+
       - name: Setup Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
