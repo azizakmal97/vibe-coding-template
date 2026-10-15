@@ -18,11 +18,18 @@ All notable changes to this project are documented here. The format is based on
   stop and ask. The ZCode addendum carries the `not visible` correction.
 
 ### Changed
-- **Model lineup refreshed to 2026-09-23.** The Anthropic flagship slot is now
-  Opus 5.5 (`claude-opus-5-5`) — launched 22 Sep at $4/$20 per 1M tokens, 40%
-  under Opus 5, so it is both the best and the cheaper flagship. Rollout note
-  added: Sonnet 5.5 + Haiku 5.5 expected within weeks; verify exact model IDs
-  on the models doc before updating those rows.
+- **Model lineup refreshed to the 5.5 family (2026-10-15).**
+  - **Slots:** Opus 5.5 (`claude-opus-5-5`, $4/$20 per 1M) is the flagship, Sonnet 5.5
+    (`claude-sonnet-5-5`, $2/$10) the workhorse and project pin, and Haiku 5.5
+    (`claude-haiku-5-5`, $0.10/$0.50, 1M context) the small slot.
+  - **New tier:** Fable 5.1 (`claude-fable-5-1`, $10/$50) is an opt-in frontier
+    row for when Opus at high effort fell short.
+  - **Capabilities:** `global-setup/CLAUDE.md` gained a capability table
+    (pricing, context, effort defaults, cost ratios).
+  - **Agent pins:** template subagents now pin the `sonnet` / `haiku` aliases
+    instead of dated IDs, so they follow the current generation without edits.
+  - **Correction:** the 2026-09-23 note said Opus 5.5 was 40% under Opus 5. It
+    is 20% ($4 vs $5 input).
 
 ### Added
 - **antislop filter layer (optional) + DESIGN.md direction convention.**
