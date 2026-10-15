@@ -89,18 +89,19 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 
 | Task type | Model | Tool | Reason |
 |---|---|---|---|
-| Implementation of a defined feature | **Sonnet** (current: Sonnet 5) | Claude Code | Spec exists; hooks fire |
+| Implementation of a defined feature | **Sonnet** (current: Sonnet 5.5) | Claude Code | Spec exists; hooks fire |
 | Tests (TDD red→green, one feature) | **Sonnet** | Claude Code | Pattern; hooks fire |
 | Scaffolding (component, route, schema stub) | **Sonnet** | Claude Code | Repeatable |
 | Bug fix with known root cause | **Sonnet** | Claude Code | Surgical |
 | Docs polish, README updates | **Sonnet** | Claude Code | Low-stakes prose |
-| Architecture / structural decision | **Opus** (current: Opus 5) | Claude Code | Trade-offs matter |
+| Architecture / structural decision | **Opus** (current: Opus 5.5) | Claude Code | Trade-offs matter |
 | Complex debugging (root cause unclear) | **Opus** | Claude Code | Reasoning across layers |
 | Security review / `/code-review high+` | **Opus** | Claude Code | Subtle issues |
 | Cross-cutting refactor (5+ files) | **Opus** | Claude Code | Many edges held in mind |
 | Copywriting (hero, product pitch, tone) | **Opus** | Claude Code | Voice + brand judgment |
 | Legal / compliance content (Privacy / Terms / ToS) | **Opus** | Claude Code | Compliance precision |
 | Performance investigation (bundle, runtime) | **Opus** | Claude Code | Diagnostic depth |
+| Hardest long-horizon work, after Opus at high fell short | **Fable** (current: Fable 5.1) | Claude Code | Frontier tier, 2.5× Opus price; opt-in only |
 | Bulk codegen (same pattern across 5+ files) | **DeepSeek Pro** (current: V4 Pro) | Cursor / Aider | Pattern repetition cheap |
 | Mass test scaffolding (E2E suite, fixtures) | **DeepSeek Pro** | Cursor / Aider | Repetitive; price wins |
 | i18n translation pass (cultural nuance) | **Gemini Pro** (current: 3 Pro) | API / Studio | Translation quality + long context |
@@ -108,7 +109,7 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 | Long-context whole-repo question (after `/graphify`) | **Gemini Pro** | API / Studio | 1M context covers GRAPH_REPORT + code |
 | Spell-check / copy proofread | **Gemini Flash** (current: 3 Flash) | API / Studio | Cheap + good at prose |
 | Bulk screenshot smoke (i18n toggle, cross-browser viewport) | **Gemini Flash** | API / Studio | Multimodal + cheap |
-| Mechanical sync (`AGENTS.md` → shim files) | **Haiku** (current: 4.5) | Claude Code | One script run |
+| Mechanical sync (`AGENTS.md` → shim files) | **Haiku** (current: Haiku 5.5) | Claude Code | One script run |
 | Status checks (`git log`, ci status, "is X live") | **Haiku** | Claude Code | Cheap = right |
 | Single-line edit per explicit instruction | **Haiku** | Claude Code | No judgment |
 | Format / lint auto-fix passes | **DeepSeek Flash** (current: V4 Flash) | Cursor / Aider | Mechanical; price wins |

@@ -282,8 +282,8 @@ Whenever the user gives any instruction — whether inside a formal plan phase O
 direct one-off prompt — the FIRST sentence must declare which model owns this task
 and whether the current session matches. Format:
 
-> `Model for this task: **Sonnet 5** (current session ✓)` — then proceed.
-> `Model for this task: **Opus 5** (current session is Sonnet — switch first)` — then stop.
+> `Model for this task: **Sonnet 5.5** (current session ✓)` — then proceed.
+> `Model for this task: **Opus 5.5** (current session is Sonnet — switch first)` — then stop.
 
 This applies to EVERY task: feature work, bug fix, a single file edit, a question
 that leads to code, a refactor, a review, anything. The declaration comes before the
@@ -311,7 +311,7 @@ model anyway."
 
 ### Project pin
 
-`.claude/settings.json` carries `"model": "claude-sonnet-5"` (or current Sonnet)
+`.claude/settings.json` carries `"model": "claude-sonnet-5-5"` (or current Sonnet)
 as the project default. Every fresh session in this repo opens on that model unless
 the user overrides with `/model`.
 
@@ -332,13 +332,14 @@ Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
 4. Return to Claude Code for verification: `bunx tsc --noEmit && <lint/test/build>`
    so post-edit and file-budget hooks fire on the merged state.
 
-### Concrete model lineup (last reviewed 2026-09-08)
+### Concrete model lineup (last reviewed 2026-10-15)
 
 | Slot | Current name | Notes |
 |---|---|---|
-| Anthropic flagship | Opus 5 (`claude-opus-5`) | Architecture, complex debug, copy, legal, security review |
-| Anthropic workhorse | Sonnet 5 (`claude-sonnet-5`) | Default project pin |
-| Anthropic small | Haiku 4.5 (`claude-haiku-4-5-20251001`) | Status checks, mechanical edits |
+| Anthropic frontier | Fable 5.1 (`claude-fable-5-1`) | Opt-in only, when Opus 5.5 at high fell short; $10/$50 per 1M
+| Anthropic flagship | Opus 5.5 (`claude-opus-5-5`) | Architecture, complex debug, copy, legal, security review; $4/$20 |
+| Anthropic workhorse | Sonnet 5.5 (`claude-sonnet-5-5`) | Default project pin; $2/$10 |
+| Anthropic small | Haiku 5.5 (`claude-haiku-5-5`) | Status checks, mechanical edits; $0.10/$0.50 |
 | DeepSeek heavy | V4 Pro | Bulk codegen, mass test scaffolding |
 | DeepSeek small | V4 Flash | Format / lint auto-fix |
 | Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context |
