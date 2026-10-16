@@ -12,6 +12,9 @@
  * purpose, mobile parity) cannot be scripted, so --gate also requires a written Delivery
  * Gate report at anti-slop/gates/<file name>.md, newer than the file, with no FAIL line.
  *
+ * Purpose-Gate rules (R-09, R-19) accept a written reason on the same line:
+ *   animation: spin 14s linear infinite; /* antislop-allow R-19: owner spec, brand motif *\/
+ *
  * Project-specific bans (a name, a word the owner refuses) go in anti-slop/rules.json:
  *   { "banned": [{ "pattern": "regex", "flags": "i", "message": "why", "exceptFiles": "regex" }],
  *     "allowedPhrases": ["a phrase the owner wrote and keeps"] }
@@ -31,6 +34,12 @@ const RULES_FILE = join(ROOT, 'anti-slop', 'rules.json');
 const GATE_SECTIONS = ['Hard Gate', 'Purpose-Gate', 'Liveliness', 'Craftsmanship'];
 const MIN_TAP_PX = 44;
 const MIN_TEXT_CONTRAST = 4.5;
+
+// Purpose-Gate rules allow a technique when its reason is written down (antislop R-31).
+// A line carrying `antislop-allow R-19: <reason>` waives that rule on that line only.
+// Hard Gate rules (dashes, contrast, tap targets, project bans) can never be waived.
+const WAIVABLE = new Set(['R-09', 'R-19']);
+const MIN_REASON_CHARS = 12;
 
 const BUZZWORDS = [
   'seamless', 'seamlessly', 'cutting-edge', 'cutting edge', 'revolutionary', 'next-generation',
@@ -234,10 +243,19 @@ function checkGateReport(file, add) {
   if (fail) add('GATE', 0, `gate report still has a FAIL: ${fail.trim()}`);
 }
 
+function isWaived(lines, rule, line) {
+  if (!WAIVABLE.has(rule) || line < 1) return false;
+  const m = (lines[line - 1] || '').match(new RegExp(`antislop-allow ${rule}:\\s*(.+)`));
+  return Boolean(m && m[1].replace(/\*\/|-->|\/\/.*$/g, '').trim().length >= MIN_REASON_CHARS);
+}
+
 function checkFile(file, gate, rules) {
   const findings = [];
-  const add = (rule, line, message) => findings.push({ rule, line, message });
   const text = readFileSync(file, 'utf8');
+  const lines = text.split('\n');
+  const add = (rule, line, message) => {
+    if (!isWaived(lines, rule, line)) findings.push({ rule, line, message });
+  };
   const isHtml = /\.html?$/i.test(file);
   const isCss = /\.(css|scss)$/i.test(file);
 
