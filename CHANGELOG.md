@@ -48,6 +48,10 @@ All notable changes to this project are documented here. The format is based on
   - **`/update-template`** now merges hook registrations the template gained into a
     project's `settings.json` (add only, never remove). Without this, existing
     projects received new hook files with nothing registering them.
+  - **Written waivers:** a Purpose-Gate finding (R-09 badge, R-19 infinite
+    animation) clears with a same-line `antislop-allow R-XX: <reason>` comment whose
+    reason is 12+ characters, for motion or badges the owner asked for. Hard bans
+    never accept a waiver.
 - **antislop filter layer (optional) + DESIGN.md direction convention.**
   `global-setup/CLAUDE.md` §7.8 sets precedence when the antislop skills
   (github.com/miqdadbadjuber/anti-slop) are installed: the §7 charter wins
