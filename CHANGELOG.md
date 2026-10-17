@@ -51,6 +51,11 @@ All notable changes to this project are documented here. The format is based on
     Tier 3 infrastructure without evidence.
   - **Other agents:** `AGENTS.md` rule 14 points ZCode, Cursor, Windsurf and
     Copilot at the rule. Existing projects pick it all up with `/update-template`.
+  - **Unattended runs:** `/autonomous` never stops to ask. `/next-phase` plans the
+    tier 2 safeguards as bullets; each phase in `PROGRESS.md` gains
+    `Safeguards added` (plain sentences) and `Waiting on owner` (account settings
+    and decisions only the owner can make, click by click), and the bail report
+    shows both. Tier 3 and payment/auth work park as `<requires user input>`.
 - **antislop is enforced, not just loaded.** In a long redesign session the antislop
   skill faded and slop shipped anyway (dashes, a template hero, 40px tap targets, a
   screen-reader paragraph rendered visibly after a rewrite dropped its CSS).

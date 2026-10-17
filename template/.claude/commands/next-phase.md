@@ -19,7 +19,7 @@ Pick the next phase from PROGRESS.md and start it safely.
 3. **Tool call 1: write intent on disk.** Edit PROGRESS.md:
    - Change `⬜ <phase-id>` → `🟡 <phase-id>` in the phase log AND in the header `Active phase:` line.
    - Update `Last update:` to today + agent name.
-   - Fill in the "Plan for this phase" block with explicit bullet list of edits (3-8 items typical).
+   - Fill in the "Plan for this phase" block with explicit bullet list of edits (3-8 items typical). Include a bullet for every tier 2 trigger the phase fires (`rules/production-readiness.md`), so safeguards are planned, not improvised.
 4. **Tool call 2: commit intent.**
    ```
    git add PROGRESS.md && git commit -m "wip(<phase-id>): starting <brief>"

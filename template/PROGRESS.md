@@ -145,7 +145,7 @@ Do NOT pause:
 ## Owner check-in cadence (non-coder friendly)
 
 Every Friday:
-1. Read week's `PROGRESS.md` updates.
+1. Read week's `PROGRESS.md` updates. Do every `Waiting on owner` step first: the AI cannot do them for you, and work that depends on them stays parked until you do.
 2. Click through the live app — does anything feel different?
 3. Run `npm test` (or preset equivalent) locally — all green?
 4. Check latest commits — anything surprising?
@@ -182,6 +182,12 @@ Every Friday:
 
 **Delivered:**
 - _list what shipped_
+
+**Safeguards added (plain words):**
+- _e.g. "If someone double-clicks Pay, they are charged once." See `.claude/rules/production-readiness.md`_
+
+**Waiting on owner:**
+- _steps only you can do (account settings, decisions), click by click. Empty = nothing_
 
 **Verified:**
 - _typecheck / build / test outputs_

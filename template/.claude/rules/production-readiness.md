@@ -159,3 +159,17 @@ signal is real, and write the evidence into `PROGRESS.md`.
 - When `.claude/identity.json` sets `technicalLevel` to `beginner` or `intermediate`, never use a term on its own.
 - When you decline a tier 3 topic the owner asked about, name the signal that would make it worth doing. A bare "not needed" gives them nothing to watch for.
 - A missing tier 1 item is a blocker to report at `/deploy`, not a footnote.
+
+## In `/autonomous` (nobody is reading the replies)
+
+The owner reads `PROGRESS.md` and the bail report later, not the live chat. So the
+explaining, the planning and the waiting all move onto disk, and the loop never
+stops to ask.
+
+- **Plan the safeguards, don't improvise them.** When `/next-phase` writes the plan, add a bullet for every tier 2 trigger the phase fires, so the safeguard is part of the plan from the start.
+- **Write the plain sentences into the phase.** Each safeguard you add gets its one-sentence explanation under the phase's `Safeguards added` line in `PROGRESS.md`, and in the bail report.
+- **Split tier 1 gaps by who can fix them.**
+  - *Code* (rate limit, health route, indexes, timeouts, logging, CORS): add a `⬜ Production baseline` phase the loop can run.
+  - *The owner's accounts* (spending caps, billing alerts, host backups, registrar 2FA, error-tracker signup, secrets in the host dashboard): you cannot log in to these and must never try. Add them to the phase's `Waiting on owner` line as click-by-click steps in plain words, keep going with other work, and never mark one done until the owner confirms it.
+- **Money and auth wait for a person.** A phase that fires the takes-money trigger, or changes login, is planned in full but tagged `<requires user input>`; `/autonomous` already refuses to run those without per-step approval.
+- **Tier 3 never enters a plan unattended.** If a bullet asks for one without the evidence its row names, mark that bullet `⛔ blocked <requires user input>`, write the signal question under `Waiting on owner`, and continue with the bullets that don't depend on it.
