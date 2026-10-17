@@ -32,6 +32,25 @@ All notable changes to this project are documented here. The format is based on
     is 20% ($4 vs $5 input).
 
 ### Added
+- **Production readiness, sized for a non-coder's app.** A widely shared list of
+  111 production topics (rate limiting through postmortems) is the kind of thing
+  an owner pastes into their agent, and an agent following it literally would
+  build Kubernetes for a to-do app.
+  - **Rule:** `template/.claude/rules/production-readiness.md` (always loaded)
+    puts every topic in a tier. Tier 1 is the baseline before real users (secrets,
+    rate limits, spending caps, backups, monitoring, health check). Tier 2 is
+    handled in the same change that triggers it (takes money → idempotency, slow
+    work → background job, calls an API → timeout and retry). Tier 3 is never
+    built without the evidence its row names. The agent tells the owner in one
+    plain sentence what each safeguard stops.
+  - **Owner doc:** `docs/PRODUCTION_READINESS_PLAIN.template.md` explains all
+    111 in plain words with a status column (✅ / ⬜ / ➖) that `/handover` now
+    fills as its fifth doc.
+  - **Commands:** `/new-feature` checks Tier 2 triggers, `/deploy` checks Tier 1
+    and refuses a gap the owner has not accepted, `/audit` stops recommending
+    Tier 3 infrastructure without evidence.
+  - **Other agents:** `AGENTS.md` rule 14 points ZCode, Cursor, Windsurf and
+    Copilot at the rule. Existing projects pick it all up with `/update-template`.
 - **antislop is enforced, not just loaded.** In a long redesign session the antislop
   skill faded and slop shipped anyway (dashes, a template hero, 40px tap targets, a
   screen-reader paragraph rendered visibly after a rewrite dropped its CSS).
