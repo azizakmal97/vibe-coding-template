@@ -7,6 +7,15 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Fixed
+- **`post-commit-update-progress.js` crashed on load.** It imported `execSync` from
+  `node:fs`, which has no such export, so the hook threw `SyntaxError` before doing
+  anything and `PROGRESS.md` was never updated after commits. Now imported from
+  `node:child_process`, in the template and this repo's working copy. Verified by
+  running the old file (SyntaxError, exit 1) and the new one (exit 0).
+- **`security.yml` never ran.** The `dependencies` job used `hashFiles()` in a
+  job-level `if:`, where GitHub does not allow it, so GitHub rejected the whole
+  workflow file and Semgrep and Gitleaks never ran either. The skip now sits on
+  each step after checkout. Both bugs were found by the SpendKu sync.
 - **New projects were missing `/update-template` and the antislop enforcement.**
   Both setup scripts copy from hand-written lists, and four files were never added:
   `.claude/commands/update-template.md`, `.claude/hooks/post-edit-antislop.cjs`,
