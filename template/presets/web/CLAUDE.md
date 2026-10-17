@@ -167,6 +167,7 @@ See `rules/methodology.md`.
 | `docs/ARCHITECTURE_PLAIN.md` | Plain-English architecture |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Plain-English audit |
 | `docs/LEARN_FULLSTACK.md` | Learning path tied to this codebase |
+| `docs/PRODUCTION_READINESS_PLAIN.md` | Plain-English production checklist + this app's status |
 | `git log` | Commit hashes per phase |
 
 Run `/audit` to refresh AUDIT_AND_ROADMAP.md. Run `/handover` to refresh plain-English docs.

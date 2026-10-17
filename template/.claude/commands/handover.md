@@ -1,5 +1,5 @@
 ---
-description: Generate or refresh the 4 plain-language docs in docs/ (HANDOVER, ARCHITECTURE_PLAIN, FINDINGS_AND_PLAN_PLAIN, LEARN_FULLSTACK). For non-coder maintainers.
+description: Generate or refresh the 5 plain-language docs in docs/ (HANDOVER, ARCHITECTURE_PLAIN, FINDINGS_AND_PLAN_PLAIN, LEARN_FULLSTACK, PRODUCTION_READINESS_PLAIN). For non-coder maintainers.
 ---
 
 # /handover
@@ -10,7 +10,7 @@ Refresh the plain-language docs so a non-coder can pick up the project at any ti
 
 1. Check `docs/*.template.md` exists. Use them as skeletons.
 2. Read `CLAUDE.md` (stack + commands), `PROGRESS.md` (current state), `AUDIT_AND_ROADMAP.md` (if exists), `package.json` / equivalent.
-3. For each of the 4 docs, fill the template with real project-specific details:
+3. For each of the 5 docs, fill the template with real project-specific details:
 
 | Doc | Fill with |
 |---|---|
@@ -18,6 +18,7 @@ Refresh the plain-language docs so a non-coder can pick up the project at any ti
 | `docs/ARCHITECTURE_PLAIN.md` | Real stack, real request flow (trace one real route from frontend → backend → DB), real file paths |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Distil `AUDIT_AND_ROADMAP.md` into plain English |
 | `docs/LEARN_FULLSTACK.md` | Replace example file paths with actual ones in this codebase |
+| `docs/PRODUCTION_READINESS_PLAIN.md` | Replace every `[status]`: ✅ plus where it lives, ⬜ plus the `PROGRESS.md` item that fixes it, ➖ plus the signal from `.claude/rules/production-readiness.md`. Check the code and host config for each ✅, never mark one from memory |
 
 4. Write each filled doc to `docs/<name>.md` (drop the `.template` suffix).
 5. Preserve any user edits already in the non-template files (do a 3-way merge if possible).
@@ -28,6 +29,7 @@ Refresh the plain-language docs so a non-coder can pick up the project at any ti
      docs/ARCHITECTURE_PLAIN.md
      docs/FINDINGS_AND_PLAN_PLAIN.md
      docs/LEARN_FULLSTACK.md
+     docs/PRODUCTION_READINESS_PLAIN.md  (N ✅, N ⬜, N ➖)
    ```
 
 ## Style Rules
