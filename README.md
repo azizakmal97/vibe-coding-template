@@ -191,7 +191,7 @@ your-project/
 ├─ .claude/
 │  ├─ settings.json               # Permission allow/deny-list + hook wiring
 │  ├─ hooks/                      # Pre/post tool hooks (destructive-cmd + secret block, file-size, DB guard, auto-push)
-│  ├─ rules/                      # Path-scoped deep rules (api, database, testing, refactor, …)
+│  ├─ rules/                      # Deep rules (api, database, testing, refactor, production-readiness, …)
 │  ├─ commands/                   # Slash commands (/resume, /checkpoint, /next-phase, /autonomous, …)
 │  ├─ agents/                     # Subagents (code-reviewer, debugger, security-auditor, …)
 │  └─ skills/                     # caveman-default (token-saving), design-system
@@ -202,7 +202,7 @@ your-project/
 │  └─ commands/ agents/ skills/   # Generated mirrors
 ├─ e2e/                           # Playwright scaffold (web/fullstack) — auth setup + example spec
 ├─ scripts/                       # check-file-sizes, sync-agent-rules, graphify-bootstrap, …
-├─ docs/                          # Plain-language templates for non-coder maintainers
+├─ docs/                          # Plain-language docs for non-coder owners (handover, architecture, production readiness, …)
 ├─ PROGRESS.md                    # Live phase tracker + session-resume protocol
 └─ file-budgets.json              # Per-file-type LOC limits (CI-enforced)
 ```
@@ -215,9 +215,11 @@ your-project/
 - **Test-before-commit gate.** No "I think it works." Typecheck **and** build (they catch different bugs), tests, file-size check — all green before commit.
 - **File-size budgets.** Soft warning + hard CI failure per file type, so god-files get split *before* they metastasize.
 - **Methodology baked in.** A hybrid **SDD + TDD + Characterization** strategy — the agent picks the right one per task. [See below.](#methodology--baked-in-not-bolted-on)
-- **Token-aware autonomy.** `/autonomous` loops through phases and bails gracefully at a safe checkpoint when the context budget gets tight.
+- **Token-aware autonomy.** `/autonomous` loops through phases and bails gracefully at a safe checkpoint when the context budget gets tight. It never stops to ask: what only you can do lands under "Waiting on owner" in `PROGRESS.md`.
+- **Production readiness, sized to your app.** All 111 topics from the viral "things vibe coders don't know" list (rate limiting to postmortems), sorted into three tiers: basics before real users (`/deploy` checks them), safeguards added in the same change that needs them (takes money: charge once; calls an AI: time limit and spending cap), and big-company infrastructure that is never built without evidence. The agent tells you in one plain sentence what each safeguard stops.
+- **A new computer needs nothing from your memory.** Open any project on an unset machine and it offers to install the global setup; it also warns if a project hides `.claude/` from git. `/update-template` works in every project and downloads the template from GitHub by itself.
 - **Knowledge graph you can *see*.** `graphify` maps the codebase so agents navigate by structure instead of grepping — and writes an **Obsidian vault** you can explore visually. [See below.](#see-your-codebase-as-a-graph-obsidian)
-- **Plain-language docs.** Generators for HANDOVER / ARCHITECTURE / FINDINGS docs aimed at non-coder project owners.
+- **Plain-language docs.** `/handover` writes HANDOVER / ARCHITECTURE / FINDINGS / LEARN docs plus a production-readiness checklist with your app's real status, all aimed at non-coder project owners.
 
 Also included: [`VIBE_CODING_PROMPT.md`](VIBE_CODING_PROMPT.md) — a standalone "senior engineer" system prompt you can paste as a `CLAUDE.md` if you want the philosophy without the full scaffold.
 
@@ -277,7 +279,7 @@ the safety net actually runs depends on which of two modes you pick.
 
 In ZCode's chat box: settings icon → **Agent CLI** → **Claude Code**. ZCode is the
 front end, Claude Code is the engine, and the project's entire `.claude/` layer applies
-unchanged — permissions, all nine hooks, `CLAUDE.md` + `.claude/rules/*`, commands,
+unchanged — permissions, every hook, `CLAUDE.md` + `.claude/rules/*`, commands,
 subagents.
 
 Prefer a terminal? Same engine, no app — Z.AI's official wizard points the Claude Code
