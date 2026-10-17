@@ -101,3 +101,20 @@ Every first Friday of the month:
 - Skim `AUDIT_AND_ROADMAP.md` Part 5 — are we on plan?
 
 If anything unclear, ask the AI to explain it in plain English with this file open as context.
+
+## 10. Working on Another Computer
+
+You don't need to remember any of this. When you open this project in Claude Code
+on a computer that hasn't been set up yet, the AI notices on its own, tells you,
+and offers to do the setup. Say yes, then restart Claude Code when it asks.
+
+What it does, in case you want to do it by hand (Windows, PowerShell):
+
+```powershell
+git clone https://github.com/azizakmal97/vibe-coding-template ~/vibe-coding-template
+cd ~/vibe-coding-template
+.\setup.ps1 -Agent claude
+```
+
+Then restart Claude Code. From then on, `/update-template` works in every project
+on that computer, and it downloads the newest template from GitHub by itself.
