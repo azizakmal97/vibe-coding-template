@@ -14,9 +14,8 @@ All notable changes to this project are documented here. The format is based on
   got a `settings.json` registering hooks that did not exist, so the edit hook
   crashed on every edit and CI's antislop step skipped silently. Both lists now
   include them, verified by a fresh setup of each script with zero files missing.
-  **Projects created before this fix:** copy
-  `template/.claude/commands/update-template.md` into the project's
-  `.claude/commands/` once, then run `/update-template` to pull in the rest.
+  Projects created before this fix get the command from the global setup (see
+  Added).
 - **Rule 1 effort declaration could misreport the session.** The old format
   (`Effort: medium (current session ✓)`) invited agents to stamp `✓` for an
   effort they cannot see — in ZCode the session's configured thinking effort is
@@ -42,6 +41,14 @@ All notable changes to this project are documented here. The format is based on
     is 20% ($4 vs $5 input).
 
 ### Added
+- **`/update-template` is installed machine-wide.** The per-project copy had a
+  chicken-and-egg problem: a project without it could never fetch it. The global
+  setup now installs `~/.claude/skills/update-template/SKILL.md` plus a pointer
+  file `~/.claude/vibe-template.json` naming the clone. A personal skill outranks
+  a project command of the same name (Claude Code skills docs), and the skill only
+  forwards to the clone's own command after a fast-forward pull, so it never goes
+  stale. The project copy stays for ZCode and machines without the global setup,
+  and now also reads the pointer file. Re-run `.\setup.ps1 -Agent claude` to get it.
 - **Production readiness, sized for a non-coder's app.** A widely shared list of
   111 production topics (rate limiting through postmortems) is the kind of thing
   an owner pastes into their agent, and an agent following it literally would

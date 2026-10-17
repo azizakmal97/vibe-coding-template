@@ -31,6 +31,8 @@ ZCode hook registration.
 |---|---|---|
 | `global-setup/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global coding rules, model + effort selection, token budget — loads every session |
 | `global-setup/hooks/post-commit-push.mjs` | `~/.claude/hooks/post-commit-push.mjs` | Auto-pushes to GitHub after every `git commit` |
+| `global-setup/skills/update-template/SKILL.md` | `~/.claude/skills/update-template/SKILL.md` | `/update-template` in every project. A personal skill outranks the project command of the same name; it forwards to this clone's `template/.claude/commands/update-template.md`, so it never goes stale |
+| (generated) | `~/.claude/vibe-template.json` | `{ "templateDir": "<this clone>" }`, the pointer that skill reads |
 | (generated) | `~/.claude/settings.json` | Auto-approve mode + the auto-push hook |
 
 If `settings.json` already exists the script skips it, so re-running is safe.

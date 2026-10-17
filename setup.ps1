@@ -50,7 +50,22 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $hooksDir "post-commit-push.mjs") `
         "~/.claude/hooks/post-commit-push.mjs"
 
-    # 3. settings.json — only if not already there
+    # 3. /update-template in every project. A personal skill outranks a project
+    #    command of the same name, and the skill only forwards to the template
+    #    clone's own command, so it never goes stale. The pointer file tells it
+    #    where this clone lives.
+    $skillDir = Join-Path $claudeDir "skills\update-template"
+    New-Item -ItemType Directory -Force -Path $skillDir | Out-Null
+    Install-File `
+        (Join-Path $scriptDir "global-setup\skills\update-template\SKILL.md") `
+        (Join-Path $skillDir "SKILL.md") `
+        "~/.claude/skills/update-template/SKILL.md"
+
+    $pointer = [ordered]@{ templateDir = ($scriptDir -replace '\\', '/') }
+    $pointer | ConvertTo-Json | Out-File -FilePath (Join-Path $claudeDir "vibe-template.json") -Encoding utf8NoBOM
+    Write-Host "  [OK] ~/.claude/vibe-template.json (templateDir = $($pointer.templateDir))" -ForegroundColor Green
+
+    # 4. settings.json — only if not already there
     $destSettings = Join-Path $claudeDir "settings.json"
     if (Test-Path $destSettings) {
         Write-Host "  [SKIP] ~/.claude/settings.json already exists — keeping your config" -ForegroundColor Yellow

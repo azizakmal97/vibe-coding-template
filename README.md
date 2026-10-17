@@ -118,6 +118,8 @@ Or just clone it and tell your AI agent: **"implement this template"** — the r
 |---|---|---|
 | `global-setup/CLAUDE.md` | `~/.claude/CLAUDE.md` | Coding rules + model/effort selection — loads in every project, every session |
 | `global-setup/hooks/post-commit-push.mjs` | `~/.claude/hooks/post-commit-push.mjs` | Auto-pushes to GitHub after every `git commit` |
+| `global-setup/skills/update-template/SKILL.md` | `~/.claude/skills/update-template/SKILL.md` | `/update-template` in every project, even ones created before it existed |
+| (generated) | `~/.claude/vibe-template.json` | Where this clone lives, so `/update-template` never has to ask |
 | (generated) | `~/.claude/settings.json` | Enables auto-approve mode + wires the auto-push hook |
 | (composed) | `~/.zcode/AGENTS.md` | The same global brain + a ZCode addendum — one source, no drift |
 | `global-setup/zcode/hooks/zcode-hook.mjs` | `~/.zcode/hooks/zcode-hook.mjs` | Adapter that runs your project's `.claude/hooks/*` under ZCode |
