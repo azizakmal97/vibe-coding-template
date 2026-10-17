@@ -23,7 +23,7 @@ Produce a brutal-honest architecture audit + N-month roadmap. Fills `AUDIT_AND_R
    - **Part 1.3 Security** — read `.claude/rules/*.md` adherence, grep for forbidden patterns (`@ts-ignore`, `any`, `.catch(()=>{})`, hardcoded secrets, inline auth checks).
    - **Part 1.4 Database** — read schema / migrations folder. List FKs missing indexes. Identify CASCADE chains.
    - **Part 1.5 Maintainability** — assess "new dev day-one quit risk" from above.
-   - **Part 1.6 Scalability** — guess breaking point + identify race conditions / N+1 / unbounded growth.
+   - **Part 1.6 Scalability** — guess breaking point + identify race conditions / N+1 / unbounded growth. Judge against the tiers in `.claude/rules/production-readiness.md`: flag every missing Tier 1 item, and recommend a Tier 3 item only with the evidence its row names.
    - **Part 1.7 Code smells** — fill the table with concrete file:line citations.
    - **Part 2 Refactor blueprint** — propose target directory structure with LOC budgets matching `file-budgets.json`.
    - **Part 4 Testing** — count existing tests; propose next 10 if coverage is low.

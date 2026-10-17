@@ -267,10 +267,11 @@ See `rules/methodology.md` for concrete examples.
 | `docs/ARCHITECTURE_PLAIN.md` | Plain-language architecture (for non-coder). |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Plain-language audit (for non-coder). |
 | `docs/LEARN_FULLSTACK.md` or `docs/LEARN.md` | Curated learning path tied to this codebase. |
+| `docs/PRODUCTION_READINESS_PLAIN.md` | Plain-language production checklist: all 111 topics, this app's status (for non-coder). |
 | `git log` | Commit hashes per phase. |
 
 Run `/audit` to generate / refresh AUDIT_AND_ROADMAP.md at project-maturity milestones.
-Run `/handover` to generate / refresh the 4 plain-language docs.
+Run `/handover` to generate / refresh the 5 plain-language docs.
 
 ## 22. Model Selection per Task
 

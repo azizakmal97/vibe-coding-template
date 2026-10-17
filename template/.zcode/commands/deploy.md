@@ -18,6 +18,7 @@ On-demand local deploy. Preset-aware. Always preceded by verification gate.
    ```
    (Pulled from `commands.json`.)
 4. **All commits pushed to remote** — `git status` shows `up to date`.
+5. **Production baseline** — check every Tier 1 row in `.claude/rules/production-readiness.md` against the code and host config. Report each gap to the owner in plain words; deploying to real users with a gap needs their explicit OK, recorded in `PROGRESS.md`.
 
 ## Deploy By Preset
 
@@ -51,6 +52,7 @@ git push --tags
 DEPLOY PIPELINE
 ===============
 PRE-FLIGHT:    [pass | fail]
+TIER 1:        [complete | N gaps, owner accepted: <list>]
 BUILD:         [success | error]
 DEPLOY:        [success | error]
 LIVE URL:      <url> → HTTP <code>
@@ -65,6 +67,7 @@ VERDICT:       SHIPPED / ROLLED BACK
 - Working tree dirty.
 - Local verification failed.
 - Unpushed commits (deploy MUST match what's on remote main).
+- A Tier 1 production-readiness gap the owner has not accepted in `PROGRESS.md`.
 - Live URL not reachable (env vars / DNS / firewall issue).
 - Smoke test failed post-deploy (auto-revert option).
 

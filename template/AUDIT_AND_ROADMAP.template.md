@@ -245,6 +245,7 @@ _Reserved for project-specific deep dives (e.g. one critical bug investigation, 
 | `docs/ARCHITECTURE_PLAIN.md` | Non-coder owner |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Non-coder owner |
 | `docs/LEARN_FULLSTACK.md` | Non-coder owner learning the stack |
+| `docs/PRODUCTION_READINESS_PLAIN.md` | Non-coder owner checking what the app is protected against |
 
 Run `/handover` to regenerate these after major architecture changes.
 

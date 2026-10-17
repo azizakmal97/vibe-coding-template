@@ -70,6 +70,7 @@ Before committing, confirm:
 - [ ] Auth checked on new protected routes
 - [ ] User inputs validated
 - [ ] No `any` types that could hide security issues
+- [ ] Every Tier 2 trigger in `.claude/rules/production-readiness.md` this feature fires is handled in this change (takes money → idempotency, slow work → background job, calls an API → timeout + retry, …), and the owner got one plain sentence per safeguard
 
 ## Phase 6: Code Review
 

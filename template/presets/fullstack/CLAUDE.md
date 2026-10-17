@@ -159,6 +159,7 @@ See `rules/methodology.md`. For fullstack: Zod contract first → test against P
 | `docs/ARCHITECTURE_PLAIN.md` | Plain-English architecture |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Plain-English audit |
 | `docs/LEARN_FULLSTACK.md` | Learning path |
+| `docs/PRODUCTION_READINESS_PLAIN.md` | Production checklist + status |
 | `git log` | Commit hashes per phase |
 
 Run `/audit` to refresh audit. Run `/handover` to refresh plain docs.
