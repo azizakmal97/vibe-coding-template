@@ -57,23 +57,27 @@ env:
 jobs:
   # ---------------------------------------------------------------------------
   # 1. Dependency vulnerabilities. Skipped automatically on non-npm projects.
+  #    The skip lives on each step: hashFiles() is not available in a job-level
+  #    `if`, and GitHub rejects the whole workflow file when it appears there.
   # ---------------------------------------------------------------------------
   dependencies:
     name: Dependency audit
-    if: ${{ hashFiles('package-lock.json') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: ${{ hashFiles('package-lock.json') != '' }}
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
-      - run: npm ci
+      - if: ${{ hashFiles('package-lock.json') != '' }}
+        run: npm ci
 
       # Full report, for the record. Non-blocking: the gate below decides
       # pass/fail and needs this log beside it to be readable during triage.
       - name: npm audit (full report)
+        if: ${{ hashFiles('package-lock.json') != '' }}
         continue-on-error: true
         run: npm audit
 
@@ -81,6 +85,7 @@ jobs:
       # any acceptance past its reviewBy date. See that file for why this is not
       # a plain "npm audit --audit-level=high".
       - name: Dependency audit gate (accepted-advisory allowlist)
+        if: ${{ hashFiles('package-lock.json') != '' }}
         run: node scripts/audit-gate.mjs
 
   # ---------------------------------------------------------------------------

@@ -13,7 +13,8 @@
  * Hook input (stdin JSON): { tool_input: { command }, tool_response: { stdout, exit_code } }
  */
 
-import { readFileSync, writeFileSync, execSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 
 const ROOT = process.cwd();
