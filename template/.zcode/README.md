@@ -23,7 +23,7 @@ decides how much of the safety net actually runs.
 
 In the chat box, open the settings icon → **Agent CLI** → pick **Claude Code**.
 ZCode becomes the front end; Claude Code is the engine, so the project's whole
-`.claude/` layer applies unchanged: `settings.json` permissions, all nine hooks,
+`.claude/` layer applies unchanged: `settings.json` permissions, every hook,
 `CLAUDE.md` + `.claude/rules/*`, slash commands, subagents.
 
 Same idea in a terminal, without the ZCode app: run the Claude Code CLI against

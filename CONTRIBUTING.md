@@ -36,8 +36,12 @@ From a throwaway empty folder:
 bash /path/to/repo/template/setup.sh web      # or: pwsh .../setup.ps1 web
 ```
 
-Then confirm the expected files landed and `node scripts/check-file-sizes.mjs`
-and `node scripts/sync-agent-rules.mjs` run without error.
+Then confirm every file landed, not just the one you added: each path from
+`git ls-files template` (minus `presets/`, `workflows/`, `e2e-scaffold/` and the
+setup scripts) must exist in the throwaway folder. Eyeballing it let four files
+slip through unnoticed, one of them a hook that `settings.json` registered, so
+every edit in a new project hit a crash. Finally, `node scripts/check-file-sizes.mjs`
+and `node scripts/sync-agent-rules.mjs` must run without error.
 
 ## PRs
 
