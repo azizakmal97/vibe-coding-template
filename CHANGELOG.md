@@ -60,6 +60,15 @@ All notable changes to this project are documented here. The format is based on
   (backup kept). The same steps are in `docs/HANDOVER.md` §10 and the README.
   Tested: set-up machine with an active phase shows only the resume banner, an
   unset machine shows the offer, a set-up machine with no active phase prints nothing.
+- **Lessons from the first real run (SpendKu).**
+  - **Gitignored `.claude/`:** the project had ignored the whole folder for six
+    months, so a clone on another computer got no rules, hooks or commands. The
+    SessionStart hook now detects it (`git check-ignore .claude/rules`) and offers
+    the fix: ignore only `db-backups/`, `worktrees/` and `settings.local.json`,
+    scan for secrets, commit. `/update-template` Phase 5 checks it too.
+  - **Local commands lost template steps:** an earlier sync kept the project's own
+    `/deploy` whole, dropping the new Tier 1 step. Phase 3 now merges template
+    steps into a locally rewritten command and confirms each one landed.
 - **Production readiness, sized for a non-coder's app.** A widely shared list of
   111 production topics (rate limiting through postmortems) is the kind of thing
   an owner pastes into their agent, and an agent following it literally would

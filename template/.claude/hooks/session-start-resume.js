@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 /**
- * SessionStart hook. Two independent checks, both printed to the agent:
+ * SessionStart hook. Three independent checks, all printed to the agent:
  *   1. This computer lacks the vibe-coding-template global setup → tell the
  *      agent to offer it, with the exact steps, so the owner never has to
  *      remember them on a new machine.
- *   2. PROGRESS.md has a 🟡 in-progress phase → remind the agent to run
+ *   2. .claude/ is gitignored → offer to share it, or other computers get
+ *      none of the template.
+ *   3. PROGRESS.md has a 🟡 in-progress phase → remind the agent to run
  *      /resume before any other action.
  *
  * Exit 0 = continue silently. Stdout is shown to the agent.
@@ -38,6 +40,31 @@ On yes (Windows, PowerShell):
   3. Tell the owner to restart Claude Code.
 The setup replaces ~/.claude/CLAUDE.md; the old copy is kept as CLAUDE.md.bak.
 Say so before running it.
+`;
+}
+
+// A project that gitignores .claude/ works on this computer and silently loses
+// every rule, hook and command on the next one, because the folder never
+// reaches the remote. Found in a real project that had ignored it for months.
+function ignoredConfigNotice() {
+  try {
+    // Exit 0 means ignored; exit 1 (not ignored) and "not a git repo" both throw.
+    execSync('git check-ignore -q .claude/rules', { cwd: ROOT, stdio: 'ignore' });
+  } catch {
+    return '';
+  }
+  return `
+.claude/ IS GITIGNORED in this project, so its rules, hooks and commands never
+reach GitHub and are missing on any other computer that clones it.
+
+Tell the owner this in one plain sentence and offer to fix it. On yes:
+  1. In .gitignore, replace the line that ignores .claude/ with:
+       .claude/db-backups/
+       .claude/worktrees/
+       .claude/settings.local.json
+  2. Scan the files that would be added for keys, tokens and private keys;
+     stop and report any hit.
+  3. Commit the .gitignore change together with .claude/.
 `;
 }
 
@@ -81,5 +108,5 @@ ${gitStatus || '(none)'}
 `;
 }
 
-process.stdout.write(machineSetupNotice() + resumeBanner());
+process.stdout.write(machineSetupNotice() + ignoredConfigNotice() + resumeBanner());
 process.exit(0);

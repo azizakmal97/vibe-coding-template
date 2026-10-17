@@ -68,7 +68,11 @@ classify: **identical** · **missing here** · **template newer** ·
 1. **Missing / template newer** → copy the template version in.
 2. **Modified locally** → show the user the diff and ask. The default for
    hooks and rules is the template version (that is the point of this
-   command); local edits survive only if the user says so.
+   command); local edits survive only if the user says so. A command the
+   project rewrote for itself (its own deploy recipe, say) is usually a
+   **merge**: keep the local file and add the template's new steps into it.
+   Keeping a local file must never silently drop a step the template added;
+   list every such step in the Phase 1 summary and confirm each landed.
 3. New commands: copy in; never remove commands absent from the template.
 4. **Hook registrations: merge, never replace.** A copied hook does nothing until
    `.claude/settings.json` registers it. For each `{event, matcher, command}` in
@@ -95,6 +99,9 @@ the editor shims.
    antislop hooks.
 2. `.zcode/commands/` still mirrors `.claude/commands/` (new command included).
 3. Run the project's typecheck/build if the setup scripts themselves changed.
+4. `.claude/` reaches the remote: `git check-ignore -q .claude/rules` must FAIL
+   (exit 1). If it succeeds, `.claude/` is gitignored and every other computer
+   gets none of this update; follow the fix the SessionStart notice prints.
 
 ## Phase 6: Commit
 
