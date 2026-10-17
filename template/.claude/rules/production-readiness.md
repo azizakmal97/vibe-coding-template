@@ -21,7 +21,9 @@ The owner-facing version of every topic is `docs/PRODUCTION_READINESS_PLAIN.md`
 ## Tier 1: Baseline (every app with real users)
 
 Most of these are a setting on the host or the auth provider, not code. Done means
-in place AND written in `docs/HANDOVER.md`, so the owner can find it.
+in place AND written in `docs/HANDOVER.md`, so the owner can find it. A row that
+cannot apply to this project (no server, no database, no login, as in many
+desktop, mobile and CLI apps) is ➖ not applicable, never a gap.
 
 | Topic | Done at small scale means |
 |---|---|
