@@ -7,6 +7,16 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Fixed
+- **New projects were missing `/update-template` and the antislop enforcement.**
+  Both setup scripts copy from hand-written lists, and four files were never added:
+  `.claude/commands/update-template.md`, `.claude/hooks/post-edit-antislop.cjs`,
+  `.claude/hooks/pre-artifact-antislop.cjs`, `scripts/antislop-check.mjs`. Projects
+  got a `settings.json` registering hooks that did not exist, so the edit hook
+  crashed on every edit and CI's antislop step skipped silently. Both lists now
+  include them, verified by a fresh setup of each script with zero files missing.
+  **Projects created before this fix:** copy
+  `template/.claude/commands/update-template.md` into the project's
+  `.claude/commands/` once, then run `/update-template` to pull in the rest.
 - **Rule 1 effort declaration could misreport the session.** The old format
   (`Effort: medium (current session ✓)`) invited agents to stamp `✓` for an
   effort they cannot see — in ZCode the session's configured thinking effort is

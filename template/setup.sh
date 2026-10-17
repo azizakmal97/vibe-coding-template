@@ -99,6 +99,7 @@ declare -A FILES=(
   [".claude/commands/forecast-storage.md"]=".claude/commands/forecast-storage.md"
   [".claude/commands/migrate.md"]=".claude/commands/migrate.md"
   [".claude/commands/deploy.md"]=".claude/commands/deploy.md"
+  [".claude/commands/update-template.md"]=".claude/commands/update-template.md"
   # hooks (existing 3 + new 3)
   [".claude/hooks/validate-command.js"]=".claude/hooks/validate-command.js"
   [".claude/hooks/post-edit-check.cjs"]=".claude/hooks/post-edit-check.cjs"
@@ -109,6 +110,8 @@ declare -A FILES=(
   [".claude/hooks/post-commit-push.js"]=".claude/hooks/post-commit-push.js"
   [".claude/hooks/config-protection.cjs"]=".claude/hooks/config-protection.cjs"
   [".claude/hooks/post-commit-update-progress.js"]=".claude/hooks/post-commit-update-progress.js"
+  [".claude/hooks/post-edit-antislop.cjs"]=".claude/hooks/post-edit-antislop.cjs"
+  [".claude/hooks/pre-artifact-antislop.cjs"]=".claude/hooks/pre-artifact-antislop.cjs"
   # rules (existing 4 + new 3)
   [".claude/rules/frontend.md"]=".claude/rules/frontend.md"
   [".claude/rules/backend.md"]=".claude/rules/backend.md"
@@ -148,6 +151,7 @@ declare -A FILES=(
   ["scripts/sync-zcode.mjs"]="scripts/sync-zcode.mjs"
   ["scripts/auto-checkpoint.sh"]="scripts/auto-checkpoint.sh"
   ["scripts/auto-checkpoint.ps1"]="scripts/auto-checkpoint.ps1"
+  ["scripts/antislop-check.mjs"]="scripts/antislop-check.mjs"
   # audit + handover + docs templates
   ["AUDIT_AND_ROADMAP.template.md"]="AUDIT_AND_ROADMAP.template.md"
   ["docs/HANDOVER.template.md"]="docs/HANDOVER.template.md"
