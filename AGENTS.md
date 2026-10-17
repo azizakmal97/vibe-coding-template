@@ -72,3 +72,11 @@ generated file — the next sync overwrites it.
 
 Editing `.claude/commands/`, `.claude/agents/`, `.claude/skills/`, or the `hooks`
 block of `.claude/settings.json` also needs a sync, for the same reason.
+
+**Adding a file under `template/`?** `template/setup.ps1` and `template/setup.sh`
+each copy from a hand-written list. A file in neither list never reaches a
+project, and nothing errors: `/update-template` and the antislop hooks shipped
+that way, so new projects got a `settings.json` calling hooks that did not exist.
+Add the file to BOTH lists, then run one setup into an empty folder and confirm
+every `git ls-files template` entry (minus `presets/`, `workflows/`,
+`e2e-scaffold/`, the setup scripts) exists there.
