@@ -9,8 +9,9 @@ Pull the latest rules, hooks, scripts and CI from the vibe-coding-template repo
 into THIS project. Projects drift as the template evolves; this closes the gap
 without touching project-owned files.
 
-Template location, in order: the argument → `$VIBE_TEMPLATE_DIR` → ask the
-user. Do not guess a path.
+Template location, in order: the argument → `$VIBE_TEMPLATE_DIR` →
+`templateDir` in `~/.claude/vibe-template.json` (written by the global setup) →
+ask the user. Do not guess a path.
 
 ## What updates (template is the source of truth)
 
