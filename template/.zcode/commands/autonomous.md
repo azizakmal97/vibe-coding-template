@@ -25,6 +25,7 @@ back to this command when the loop must follow the PROGRESS.md phase protocol
 3. **Never auto-start a phase tagged `⛔ blocked` or `<requires user input>`.**
 4. **Never bypass hooks.** Validate-command + pre-db-migrate + check-file-size + pre-commit-checkpoint stay active. If hook blocks → STOP, report to user.
 5. **CI failure halts loop.** Before each `/next-phase`, run `/check-ci`. If red → switch active phase to "fix CI red" + bail at end of fix.
+6. **Production readiness runs on disk, not in chat.** Follow the `/autonomous` section of `rules/production-readiness.md`: tier 2 safeguards are planned bullets, their plain-English explanations go under the phase's `Safeguards added`, anything only the owner can do (account settings, tier 3 decisions) goes under `Waiting on owner` while the loop continues with other work. Never stop the loop to ask.
 
 ## Loop Sequence
 
@@ -72,6 +73,8 @@ AUTONOMOUS LOOP BAILED
 REASON: <token-budget | hook-block | test-fail | ci-fail | user-interrupt>
 PHASES COMPLETED THIS SESSION: <list of phase-ids>
 ACTIVE PHASE: <phase-id> — <N of M bullets done>
+SAFEGUARDS ADDED: <one plain sentence each, or "none">
+WAITING ON YOU: <owner-only steps from PROGRESS.md, or "nothing">
 LAST COMMIT: <hash> <message>
 NEXT SESSION SHOULD: <one specific action>
 ═══════════════════════════════════

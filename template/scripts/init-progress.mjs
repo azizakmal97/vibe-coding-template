@@ -27,7 +27,7 @@ body = body
   .replace(/\*\*Last commit:\*\* .*/m, '**Last commit:** _none yet_');
 
 if (!body.includes('### 🟡 INIT-P00')) {
-  body += `\n\n### 🟡 INIT-P00 — Project bootstrap\n\n**Status:** in-progress\n**Started:** ${today}\n**Completed:** _pending_\n**Commits:** _pending_\n\n**Plan for this phase:**\n- [ ] Fill all [BRACKETED] sections in CLAUDE.md\n- [ ] Install dependencies (\`npm install\` / \`flutter pub get\` / \`cargo build\` per preset)\n- [ ] Run dev server, verify it boots\n- [ ] First feature scaffold\n- [ ] First test\n- [ ] First commit with proper message format\n\n**Delivered:**\n- _pending_\n\n**Verified:**\n- _pending_\n\n**Rollback:**\n- \`git checkout -- .\` (no commits yet)\n`;
+  body += `\n\n### 🟡 INIT-P00 — Project bootstrap\n\n**Status:** in-progress\n**Started:** ${today}\n**Completed:** _pending_\n**Commits:** _pending_\n\n**Plan for this phase:**\n- [ ] Fill all [BRACKETED] sections in CLAUDE.md\n- [ ] Install dependencies (\`npm install\` / \`flutter pub get\` / \`cargo build\` per preset)\n- [ ] Run dev server, verify it boots\n- [ ] First feature scaffold\n- [ ] First test\n- [ ] First commit with proper message format\n\n**Delivered:**\n- _pending_\n\n**Safeguards added (plain words):**\n- _none yet_\n\n**Waiting on owner:**\n- _nothing_\n\n**Verified:**\n- _pending_\n\n**Rollback:**\n- \`git checkout -- .\` (no commits yet)\n`;
 }
 
 writeFileSync(PROGRESS, body);
