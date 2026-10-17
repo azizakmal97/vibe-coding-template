@@ -49,6 +49,9 @@ All notable changes to this project are documented here. The format is based on
   forwards to the clone's own command after a fast-forward pull, so it never goes
   stale. The project copy stays for ZCode and machines without the global setup,
   and now also reads the pointer file. Re-run `.\setup.ps1 -Agent claude` to get it.
+  On a computer with no clone, both the skill and the project command now clone
+  the public upstream into `~/vibe-coding-template` and write the pointer, instead
+  of asking for a path.
 - **Production readiness, sized for a non-coder's app.** A widely shared list of
   111 production topics (rate limiting through postmortems) is the kind of thing
   an owner pastes into their agent, and an agent following it literally would
