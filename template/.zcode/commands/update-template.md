@@ -1,6 +1,6 @@
 ---
 name: update-template
-argument-hint: "[optional: path to the vibe-coding-template clone — defaults to $VIBE_TEMPLATE_DIR]"
+argument-hint: "[optional: path to the vibe-coding-template clone — found or downloaded automatically]"
 ---
 
 <!-- GENERATED from .claude/ by scripts/sync-zcode.mjs — DO NOT EDIT. Edit the .claude/ source and re-run. -->
@@ -11,9 +11,24 @@ Pull the latest rules, hooks, scripts and CI from the vibe-coding-template repo
 into THIS project. Projects drift as the template evolves; this closes the gap
 without touching project-owned files.
 
-Template location, in order: the argument → `$VIBE_TEMPLATE_DIR` →
-`templateDir` in `~/.claude/vibe-template.json` (written by the global setup) →
-ask the user. Do not guess a path.
+## Find the template first
+
+Upstream: https://github.com/azizakmal97/vibe-coding-template (public, no login).
+
+1. **Location, in order:** the argument → `$VIBE_TEMPLATE_DIR` → `templateDir` in
+   `~/.claude/vibe-template.json` (written by the global setup) →
+   `~/vibe-coding-template` if it is a clone of upstream. Never guess any other path.
+2. **None found (a new computer):** clone upstream into `~/vibe-coding-template`,
+   then write `~/.claude/vibe-template.json` as `{ "templateDir": "<that path>" }`
+   so the next run finds it. Tell the user in one line what was downloaded and where.
+3. **Refresh it:** `git -C <dir> fetch`. If it is behind and has no local changes,
+   `git -C <dir> pull --ff-only`. If it has local changes, say so and use it as it is.
+4. **Sanity check:** stop if `<dir>/template/.claude/commands/update-template.md`
+   is missing; that folder is not a template clone.
+5. **No global setup on this machine** (`~/.claude/skills/update-template/`
+   missing)? In the Phase 6 report, tell the user that running
+   `.\setup.ps1 -Agent claude` inside `<dir>` makes `/update-template` available in
+   every project, including ones that don't carry this file.
 
 ## What updates (template is the source of truth)
 
