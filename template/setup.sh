@@ -125,6 +125,7 @@ declare -A FILES=(
   [".claude/rules/command-guide.md"]=".claude/rules/command-guide.md"
   [".claude/rules/simplicity.md"]=".claude/rules/simplicity.md"
   [".claude/rules/memory.md"]=".claude/rules/memory.md"
+  [".claude/rules/production-readiness.md"]=".claude/rules/production-readiness.md"
   ["memory/MEMORY.md"]="memory/MEMORY.md"
   # skills
   [".claude/skills/design-system/SKILL.md"]=".claude/skills/design-system/SKILL.md"
@@ -153,6 +154,7 @@ declare -A FILES=(
   ["docs/ARCHITECTURE_PLAIN.template.md"]="docs/ARCHITECTURE_PLAIN.template.md"
   ["docs/FINDINGS_AND_PLAN_PLAIN.template.md"]="docs/FINDINGS_AND_PLAN_PLAIN.template.md"
   ["docs/LEARN_FULLSTACK.template.md"]="docs/LEARN_FULLSTACK.template.md"
+  ["docs/PRODUCTION_READINESS_PLAIN.template.md"]="docs/PRODUCTION_READINESS_PLAIN.template.md"
 )
 
 echo ""
