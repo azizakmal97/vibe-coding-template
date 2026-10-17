@@ -112,6 +112,10 @@ node global-setup/zcode/install-zcode.mjs
 
 Or just clone it and tell your AI agent: **"implement this template"** — the repo's `AGENTS.md` tells the agent exactly what to run.
 
+Forgot? Nothing to remember: open any project built from this template on the new
+machine and its SessionStart hook spots the missing global setup, tells you, and
+offers to clone this repo into `~/vibe-coding-template` and run the setup for you.
+
 **What gets installed globally:**
 
 | File | Destination | What it does |

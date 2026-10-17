@@ -52,6 +52,14 @@ All notable changes to this project are documented here. The format is based on
   On a computer with no clone, both the skill and the project command now clone
   the public upstream into `~/vibe-coding-template` and write the pointer, instead
   of asking for a path.
+- **A new computer sets itself up on request.** `session-start-resume.js` now also
+  checks for the global setup (`~/.claude/skills/update-template/SKILL.md`). When
+  it is missing, the agent is told to say so in plain words, offer the exact steps
+  (clone into `~/vibe-coding-template`, run `.\setup.ps1 -Agent claude`, restart)
+  and run them on a yes, warning first that the global `CLAUDE.md` is replaced
+  (backup kept). The same steps are in `docs/HANDOVER.md` §10 and the README.
+  Tested: set-up machine with an active phase shows only the resume banner, an
+  unset machine shows the offer, a set-up machine with no active phase prints nothing.
 - **Production readiness, sized for a non-coder's app.** A widely shared list of
   111 production topics (rate limiting through postmortems) is the kind of thing
   an owner pastes into their agent, and an agent following it literally would
