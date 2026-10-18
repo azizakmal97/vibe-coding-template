@@ -310,6 +310,10 @@ state which model to switch to, wait for the user to swap. Planning across the
 boundary is fine; executing is not, unless the user explicitly says "run it on this
 model anyway."
 
+Inside `/autonomous` a mismatch defers that work instead of stopping: the loop
+finishes everything this model owns, then stops and names the model to switch to.
+See `/autonomous` → "Model Gate".
+
 ### Project pin
 
 `.claude/settings.json` carries `"model": "claude-sonnet-5-5"` (or current Sonnet)

@@ -39,6 +39,14 @@ Pick the next phase from PROGRESS.md and start it safely.
 
 When called by `/autonomous`, skip step 6 (no wait) and proceed to execute bullet 1 with `/checkpoint` after each focused edit.
 
+Step 2 changes too: pick the first `⬜ pending` phase that has work for this
+session's model and does not depend on a `⏸` parked phase or a pending phase you
+passed over. Judge "has work" by the phase `Model:` line and bullet tags; if the
+plan isn't written yet, write it in step 3 (with a `Model:` tag per bullet) and then
+judge. Phases you pass over stay `⬜`. If no phase qualifies, start nothing and
+return to `/autonomous`, which bails with `model-switch`. The rules are in
+`/autonomous` → "Model Gate".
+
 ## Token Discipline
 
 - Do NOT re-read CLAUDE.md / AGENTS.md / rule files unless first phase of session.

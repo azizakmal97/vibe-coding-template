@@ -107,6 +107,10 @@ stop, state which model to switch to, wait for the user to swap. Planning across
 the boundary is fine; executing is not, unless the user explicitly says "run it on
 this model anyway."
 
+Inside a template project's `/autonomous` loop, a mismatch defers that task
+instead of stopping: finish everything this model owns, then stop and name the
+model to switch to. The command's "Model Gate" section has the rules.
+
 - Switch Claude models with `/model opus|sonnet|haiku`. If mid-session swap isn't
   supported: checkpoint → new session → `/model <target>` → `/resume`.
 - Before leaving Claude Code for another tool (Cursor/Aider/Gemini/direct API):

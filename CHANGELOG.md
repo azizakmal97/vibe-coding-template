@@ -50,6 +50,14 @@ All notable changes to this project are documented here. The format is based on
     is 20% ($4 vs $5 input).
 
 ### Added
+- **`/autonomous` works by model.** Its new Model Gate runs only the bullets
+  tagged for the session's model and skips the rest (unless a later bullet depends
+  on them). A phase with nothing left for this model is parked as `⏸ waiting for
+  <model>` and the loop moves on to other work. Once nothing fits, it stops with
+  `REASON: model-switch` and names the model to switch to. The next session on that
+  model picks the parked phase up first, and the SessionStart hook lists parked
+  phases so nobody has to remember them. `/next-phase`, `CLAUDE.md` §22 Rule 4 and
+  the global brain's Rule 4 point at the gate.
 - **`/update-template` is installed machine-wide.** The per-project copy had a
   chicken-and-egg problem: a project without it could never fetch it. The global
   setup now installs `~/.claude/skills/update-template/SKILL.md` plus a pointer

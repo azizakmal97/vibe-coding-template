@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart hook. Three independent checks, all printed to the agent:
+ * SessionStart hook. Four independent checks, all printed to the agent:
  *   1. This computer lacks the vibe-coding-template global setup → tell the
  *      agent to offer it, with the exact steps, so the owner never has to
  *      remember them on a new machine.
@@ -8,6 +8,7 @@
  *      none of the template.
  *   3. PROGRESS.md has a 🟡 in-progress phase → remind the agent to run
  *      /resume before any other action.
+ *   4. PROGRESS.md has ⏸ phases parked for another model → list them.
  *
  * Exit 0 = continue silently. Stdout is shown to the agent.
  */
@@ -108,5 +109,34 @@ ${gitStatus || '(none)'}
 `;
 }
 
-process.stdout.write(machineSetupNotice() + ignoredConfigNotice() + resumeBanner());
+// /autonomous parks a phase as ⏸ when its remaining work belongs to another
+// model. The owner won't remember which model each phase waits for, so every
+// session lists them and the agent compares against its own model.
+function waitingForModelNotice() {
+  const progressName = ['PROGRESS.md', 'REFACTOR_PROGRESS.md'].find((name) => existsSync(join(ROOT, name)));
+  if (!progressName) return '';
+
+  const body = readFileSync(join(ROOT, progressName), 'utf8');
+  // ⏸ is also used for phases parked for other reasons (owner decisions), so
+  // only a "waiting for <model>" status counts.
+  const parked = [...body.matchAll(/^### ⏸️?\s+(.+)$/gm)].flatMap((match) => {
+    const blockStart = match.index + match[0].length;
+    const nextHeader = body.indexOf('\n### ', blockStart);
+    const block = body.slice(blockStart, nextHeader === -1 ? undefined : nextHeader);
+    const waitingFor = block.match(/\*\*Status:\*\*\s*waiting for\s+(.+)/i);
+    return waitingFor ? [`  - ${match[1].trim()} — waiting for ${waitingFor[1].trim()}`] : [];
+  });
+  if (parked.length === 0) return '';
+
+  return `
+PHASES WAITING FOR A DIFFERENT MODEL (parked by /autonomous):
+${parked.join('\n')}
+
+Tell the owner in one plain sentence. If this session runs one of those models,
+offer to run /autonomous, which picks them up first. If not, name the model to
+switch to (Claude Code: /model <name>) and continue with what they asked.
+`;
+}
+
+process.stdout.write(machineSetupNotice() + ignoredConfigNotice() + resumeBanner() + waitingForModelNotice());
 process.exit(0);

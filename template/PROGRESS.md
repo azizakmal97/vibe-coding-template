@@ -160,6 +160,7 @@ Every Friday:
 - ✅ done
 - ⛔ blocked
 - ⏭️ skipped
+- ⏸ waiting for a different model; `/autonomous` resumes it when a session on that model runs
 
 ---
 
