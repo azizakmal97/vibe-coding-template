@@ -11,11 +11,16 @@
  * Appends only the missing lines, under their group comment. Never removes,
  * reorders or edits the project's own lines. Idempotent.
  *
- * Prints each added line, so the caller can show the user what changed.
+ * Skips a line that would ignore files the project already commits: SpendKu
+ * tracks graphify-out/ on purpose, and ignoring it would silently leave every
+ * newly generated graph file out of Git.
+ *
+ * Prints each added and skipped line, so the caller can show the user.
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 const GITIGNORE = join(process.cwd(), '.gitignore');
 
@@ -33,14 +38,28 @@ function normalize(line) {
   return line.trim().replace(/^\//, '').replace(/\/$/, '');
 }
 
+// Tracked files this pattern would match, using .gitignore rules. Outside a
+// repo git exits 128 and nothing is tracked.
+function trackedFileCount(pattern) {
+  const result = spawnSync('git', ['ls-files', '--cached', '--ignored', `--exclude=${pattern}`], { encoding: 'utf8' });
+  if (result.status !== 0) return 0;
+  return result.stdout.split('\n').filter(Boolean).length;
+}
+
 // Lines this group must append. A negation (`!.env.example`) only works below
 // the pattern it carves out of, so when an earlier line in its group gets
 // appended, the negation is appended again after it even if it already exists.
-function missingLines(group, present) {
+function missingLines(group, present, skipped) {
   const toAdd = [];
   for (const line of group.lines) {
     const isNegation = line.startsWith('!');
-    if (!present.has(normalize(line)) || (isNegation && toAdd.length > 0)) toAdd.push(line);
+    if (present.has(normalize(line)) && !(isNegation && toAdd.length > 0)) continue;
+    const tracked = isNegation ? 0 : trackedFileCount(line);
+    if (tracked > 0) {
+      skipped.push(`${line} (${tracked} tracked files; this project commits them)`);
+      continue;
+    }
+    toAdd.push(line);
   }
   return toAdd;
 }
@@ -51,12 +70,15 @@ const present = new Set(existing.split(/\r?\n/).map(normalize).filter(Boolean));
 
 const blocks = [];
 const added = [];
+const skipped = [];
 for (const group of REQUIRED_GROUPS) {
-  const toAdd = missingLines(group, present);
+  const toAdd = missingLines(group, present, skipped);
   if (toAdd.length === 0) continue;
   blocks.push([group.comment, ...toAdd].join(eol));
   added.push(...toAdd);
 }
+
+for (const line of skipped) console.log(`  ~ .gitignore: skipped ${line}`);
 
 if (added.length === 0) {
   console.log('  ~ .gitignore already has every required line');

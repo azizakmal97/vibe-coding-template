@@ -16,7 +16,9 @@ All notable changes to this project are documented here. The format is based on
   under its group comment and never removes or reorders the project's own. Both
   setup scripts and `/update-template` run it, setup now does so before the
   graph bootstrap, and the bootstrap warns when `graphify-out/` is not ignored.
-  Found from omfs-game.
+  A line that would ignore files the project already commits is skipped and
+  reported instead (SpendKu commits its graph on purpose; ignoring it would leave
+  every new graph file out of Git). Found from omfs-game.
 - **The SessionStart banner called a paused phase active.** It took the first
   `### 🟡` heading over the `**Active phase:**` header, so omfs-game's "none
   running" header still produced "P04d … has an active phase". The header now
