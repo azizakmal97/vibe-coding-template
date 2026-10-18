@@ -7,6 +7,20 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Fixed
+- **Projects never ignored the graphify output, and later ignore lines never
+  arrived.** Both setup scripts wrote a fixed `.gitignore` block without
+  `graphify-out/` or `.graphify_*`, and appended it only when the file had no
+  `.env` line, so an existing project never got a line added later (setup.sh's
+  append branch also skipped the build and OS lines). The required lines now live
+  in one place, `scripts/ensure-gitignore.mjs`, which appends each missing line
+  under its group comment and never removes or reorders the project's own. Both
+  setup scripts and `/update-template` run it, setup now does so before the
+  graph bootstrap, and the bootstrap warns when `graphify-out/` is not ignored.
+  Found from omfs-game.
+- **The SessionStart banner called a paused phase active.** It took the first
+  `### 🟡` heading over the `**Active phase:**` header, so omfs-game's "none
+  running" header still produced "P04d … has an active phase". The header now
+  wins; the first `🟡` heading is used only when there is no header.
 - **`post-commit-update-progress.js` crashed on load.** It imported `execSync` from
   `node:fs`, which has no such export, so the hook threw `SyntaxError` before doing
   anything and `PROGRESS.md` was never updated after commits. Now imported from
@@ -57,7 +71,9 @@ All notable changes to this project are documented here. The format is based on
   `REASON: model-switch` and names the model to switch to. The next session on that
   model picks the parked phase up first, and the SessionStart hook lists parked
   phases so nobody has to remember them. `/next-phase`, `CLAUDE.md` §22 Rule 4 and
-  the global brain's Rule 4 point at the gate.
+  the global brain's Rule 4 point at the gate. Upstreams the per-project versions
+  in SpendKu and omfs-game (`e40d66c`); `/next-phase` step 2 now applies outside
+  the loop too and names the model the next phase needs when none matches.
 - **`/update-template` is installed machine-wide.** The per-project copy had a
   chicken-and-egg problem: a project without it could never fetch it. The global
   setup now installs `~/.claude/skills/update-template/SKILL.md` plus a pointer
