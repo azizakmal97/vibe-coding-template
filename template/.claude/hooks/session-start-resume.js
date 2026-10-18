@@ -69,17 +69,24 @@ Tell the owner this in one plain sentence and offer to fix it. On yes:
 `;
 }
 
+// "none" comes first: a header like "none running; several phases are half
+// done (🟡)" carries the emoji without naming an active phase.
+function activePhaseFromHeader(headerText) {
+  if (/^\s*_?none\b/i.test(headerText)) return null;
+  return /🟡|in[- ]progress/i.test(headerText) ? headerText.trim() : null;
+}
+
 function resumeBanner() {
   const progressName = ['PROGRESS.md', 'REFACTOR_PROGRESS.md'].find((name) => existsSync(join(ROOT, name)));
   if (!progressName) return '';
 
   const body = readFileSync(join(ROOT, progressName), 'utf8');
-  const activeMatch = body.match(/\*\*Active phase:\*\*\s*(.+)/);
-  const inProgressMatch = body.match(/^### 🟡 (.+)$/m);
-
-  if (!inProgressMatch && !(activeMatch && /🟡|in[- ]progress/i.test(activeMatch[1]))) return '';
-
-  const phaseLine = inProgressMatch ? inProgressMatch[1] : activeMatch[1];
+  // The header line is the one /next-phase, /autonomous and the progress hook
+  // keep current. A 🟡 left on a paused phase's heading must not override it:
+  // omfs-game's header said "none running" while the banner reported P04d.
+  const header = body.match(/\*\*Active phase:\*\*\s*(.+)/);
+  const phaseLine = header ? activePhaseFromHeader(header[1]) : body.match(/^### 🟡 (.+)$/m)?.[1];
+  if (!phaseLine) return '';
 
   let gitStatus = '';
   let recentCommits = '';
