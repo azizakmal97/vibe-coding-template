@@ -46,12 +46,20 @@ for (const name of PROGRESS_CANDIDATES) {
 if (!progressPath) process.exit(0);
 
 const body = readFileSync(progressPath, 'utf8');
-// Accept both ### 🟡 and "in-progress" markers
-const phaseMatch = body.match(/### 🟡\s+([A-Z0-9-]+)/) || body.match(/Active phase:\*\*\s*([A-Z0-9-]+)\s+—.*in[- ]progress/i);
-if (!phaseMatch) {
+// The **Active phase:** header wins over a 🟡 left on a paused phase's heading
+// (same rule as session-start-resume.js). "none" comes first: a header like
+// "none running; several phases are half done (🟡)" names no active phase.
+function activePhaseId() {
+  const header = body.match(/\*\*Active phase:\*\*\s*(.+)/);
+  if (!header) return body.match(/### 🟡\s+([A-Za-z0-9-]+)/)?.[1] ?? null;
+  if (/^\s*_?none\b/i.test(header[1]) || !/🟡|in[- ]progress/i.test(header[1])) return null;
+  return header[1].match(/^\s*`?([A-Za-z0-9-]+)`?/)?.[1] ?? null;
+}
+
+const phaseId = activePhaseId();
+if (!phaseId) {
   process.exit(0);
 }
-const phaseId = phaseMatch[1];
 
 // Extract -m "message" or --message="message" (rough but enough)
 const msgMatch = command.match(/-m\s+["']([^"']+)["']|--message[= ]["']([^"']+)["']/);

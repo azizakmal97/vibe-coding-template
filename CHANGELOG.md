@@ -21,6 +21,8 @@ All notable changes to this project are documented here. The format is based on
   `### 🟡` heading over the `**Active phase:**` header, so omfs-game's "none
   running" header still produced "P04d … has an active phase". The header now
   wins; the first `🟡` heading is used only when there is no header.
+  `pre-commit-checkpoint.js` had the same bug (it nagged every omfs-game commit to
+  carry the paused P04d's prefix) and now uses the same rule.
 - **`post-commit-update-progress.js` crashed on load.** It imported `execSync` from
   `node:fs`, which has no such export, so the hook threw `SyntaxError` before doing
   anything and `PROGRESS.md` was never updated after commits. Now imported from
