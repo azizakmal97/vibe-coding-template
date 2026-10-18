@@ -26,7 +26,7 @@ back to this command when the loop must follow the PROGRESS.md phase protocol
 4. **Never bypass hooks.** Validate-command + pre-db-migrate + check-file-size + pre-commit-checkpoint stay active. If hook blocks → STOP, report to user.
 5. **CI failure halts loop.** Before each `/next-phase`, run `/check-ci`. If red → switch active phase to "fix CI red" + bail at end of fix.
 6. **Production readiness runs on disk, not in chat.** Follow the `/autonomous` section of `rules/production-readiness.md`: tier 2 safeguards are planned bullets, their plain-English explanations go under the phase's `Safeguards added`, anything only the owner can do (account settings, tier 3 decisions) goes under `Waiting on owner` while the loop continues with other work. Never stop the loop to ask.
-7. **Run only the work this session's model owns.** Apply the Model Gate below before every bullet. Work tagged for another model is skipped and left for later, not done on the wrong model and not a reason to stop early. The loop stops to ask for a model switch only once nothing is left for this model.
+7. **Model match: run only the work this session's model owns, in both directions.** Apply the Model Gate below before every bullet. Work tagged for another model is skipped and left for later, not done on the wrong model and not a reason to stop early. The loop stops to ask for a model switch only once nothing is left for this model.
 
 ## Model Gate
 
@@ -93,7 +93,7 @@ LOOP:
        ELSE /check-ci        # absorb any CI failures into PROGRESS.md first
             /next-phase      # first ⬜ pending phase with work for this model
        IF nothing can run on this model → bail: model-switch
-  3. Execute ONE plan bullet from the active phase, the next one that passes the Model Gate:
+  3. Execute ONE plan bullet whose model matches this session (Model Gate):
         - IF none passes → park the phase (Model Gate), goto step 2.
         - Edit target file(s) (one focused change).
         - /checkpoint        # typecheck + build + test + commit wip(phase-id) [skip ci]

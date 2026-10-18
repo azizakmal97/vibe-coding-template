@@ -17,7 +17,7 @@ Pick the next phase from PROGRESS.md and start it safely.
 ## Steps (Layer 1 death-defense FIRST)
 
 1. Read `PROGRESS.md`.
-2. Find the first phase still marked `⬜ pending`. If none, ask user to add new phases (or run `/audit` to generate roadmap).
+2. Find the first phase still marked `⬜ pending` that has work for this session's model (its `Model:` line or at least one bullet's model tag matches, `CLAUDE.md` §22 Rule 4) and does not depend on a phase you passed over or a `⏸` parked one. Phases you pass over stay `⬜`. If the plan isn't written yet, write it in step 3 (with a `Model:` tag per bullet), then judge. If no pending phase matches, name the model and effort the next one needs and stop. If there are no pending phases at all, ask user to add new phases (or run `/audit` to generate roadmap).
 3. **Tool call 1: write intent on disk.** Edit PROGRESS.md:
    - Change `⬜ <phase-id>` → `🟡 <phase-id>` in the phase log AND in the header `Active phase:` line.
    - Update `Last update:` to today + agent name.
@@ -39,12 +39,8 @@ Pick the next phase from PROGRESS.md and start it safely.
 
 When called by `/autonomous`, skip step 6 (no wait) and proceed to execute bullet 1 with `/checkpoint` after each focused edit.
 
-Step 2 changes too: pick the first `⬜ pending` phase that has work for this
-session's model and does not depend on a `⏸` parked phase or a pending phase you
-passed over. Judge "has work" by the phase `Model:` line and bullet tags; if the
-plan isn't written yet, write it in step 3 (with a `Model:` tag per bullet) and then
-judge. Phases you pass over stay `⬜`. If no phase qualifies, start nothing and
-return to `/autonomous`, which bails with `model-switch`. The rules are in
+When step 2 finds no phase for this model, start nothing and return to
+`/autonomous`, which bails with `model-switch`. The matching rules are in
 `/autonomous` → "Model Gate".
 
 ## Token Discipline
