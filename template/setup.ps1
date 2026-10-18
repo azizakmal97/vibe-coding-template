@@ -143,6 +143,7 @@ $fileMappings = [ordered]@{
     ".zcode\hooks\zcode-hook.mjs"                     = ".zcode\hooks\zcode-hook.mjs"
     # scripts
     "scripts\check-file-sizes.mjs"                    = "scripts\check-file-sizes.mjs"
+    "scripts\ensure-gitignore.mjs"                    = "scripts\ensure-gitignore.mjs"
     "scripts\graphify-bootstrap.mjs"                  = "scripts\graphify-bootstrap.mjs"
     "scripts\graphify-rebuild.py"                     = "scripts\graphify-rebuild.py"
     "scripts\init-progress.mjs"                       = "scripts\init-progress.mjs"
@@ -210,55 +211,19 @@ Write-Host ""
 Write-Host "Initialising PROGRESS.md..." -ForegroundColor Yellow
 & node (Join-Path $TemplateDir "scripts\init-progress.mjs")
 
+# .gitignore before the graph bootstrap, so graphify-out/ is ignored before it exists.
+Write-Host ""
+Write-Host "Configuring .gitignore..." -ForegroundColor Yellow
+# The required lines live in ensure-gitignore.mjs, shared with setup.sh and /update-template.
+& node (Join-Path $TemplateDir "scripts\ensure-gitignore.mjs")
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "  ! .gitignore update failed - run 'node scripts\ensure-gitignore.mjs' by hand" -ForegroundColor Red
+}
+
 # Graphify bootstrap
 Write-Host ""
 Write-Host "Checking codebase for graphify..." -ForegroundColor Yellow
 & node (Join-Path $TemplateDir "scripts\graphify-bootstrap.mjs")
-
-# .gitignore
-Write-Host ""
-Write-Host "Configuring .gitignore..." -ForegroundColor Yellow
-
-$gitignorePath = Join-Path $ProjectDir ".gitignore"
-$gitignoreAdditions = @"
-
-# Secrets — never commit these
-.env
-.env.*
-!.env.example
-
-# Claude Code local settings
-.claude/settings.local.json
-.claude/db-backups/
-
-# E2E (Playwright) artifacts
-e2e/.auth/
-playwright-report/
-test-results/
-
-# Build outputs
-dist/
-build/
-.next/
-.vite/
-
-# OS
-.DS_Store
-Thumbs.db
-"@
-
-if (-not (Test-Path $gitignorePath)) {
-    Set-Content -Path $gitignorePath -Value $gitignoreAdditions.TrimStart()
-    Write-Host "  + .gitignore created" -ForegroundColor Green
-} else {
-    $existing = Get-Content $gitignorePath -Raw
-    if ($existing -notmatch "\.env") {
-        Add-Content -Path $gitignorePath -Value $gitignoreAdditions
-        Write-Host "  + .gitignore updated" -ForegroundColor Green
-    } else {
-        Write-Host "  ~ .gitignore already has .env entries" -ForegroundColor DarkYellow
-    }
-}
 
 $envExamplePath = Join-Path $ProjectDir ".env.example"
 if (-not (Test-Path $envExamplePath)) {

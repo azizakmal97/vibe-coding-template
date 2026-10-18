@@ -60,12 +60,23 @@ if (sourceFileCount < MIN_FILES) {
   process.exit(0);
 }
 
+// The graph is rebuilt locally and churns on every rebuild; committed, it
+// floods every diff. `git check-ignore` exits 0 when ignored, 1 when not, and
+// 128 outside a repo, where there is nothing to warn about.
+function warnIfGraphNotIgnored() {
+  const check = spawnSync('git', ['check-ignore', '-q', 'graphify-out/GRAPH_REPORT.md'], { cwd: ROOT });
+  if (check.status !== 1) return;
+  console.log('[graphify-bootstrap] WARNING: graphify-out/ is not git-ignored, so the graph would be committed.');
+  console.log('[graphify-bootstrap]   Fix: node scripts/ensure-gitignore.mjs');
+}
+
 const report = join(ROOT, 'graphify-out', 'GRAPH_REPORT.md');
 const before = existsSync(report) ? statSync(report).mtimeMs : 0;
 if (before) {
   const ageDays = (Date.now() - before) / 86400000;
   if (ageDays < STALE_DAYS) {
     console.log(`[graphify-bootstrap] Graph fresh (${ageDays.toFixed(1)}d old). Skipping.`);
+    warnIfGraphNotIgnored();
     process.exit(0);
   }
   console.log(`[graphify-bootstrap] Graph stale (${ageDays.toFixed(1)}d). Regenerating.`);
@@ -104,6 +115,7 @@ if (run.status !== 0 || after === before) {
   console.error('[graphify-bootstrap] rebuild did not produce a graph; continuing setup.');
 } else {
   console.log('[graphify-bootstrap] Done. GRAPH_REPORT.md written.');
+  warnIfGraphNotIgnored();
   if (existsSync(join(ROOT, 'graphify-out', 'obsidian'))) {
     console.log('[graphify-bootstrap]   Obsidian -> "Open folder as vault" -> graphify-out/obsidian');
   }

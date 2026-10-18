@@ -141,6 +141,7 @@ declare -A FILES=(
   [".zcode/hooks/zcode-hook.mjs"]=".zcode/hooks/zcode-hook.mjs"
   # scripts
   ["scripts/check-file-sizes.mjs"]="scripts/check-file-sizes.mjs"
+  ["scripts/ensure-gitignore.mjs"]="scripts/ensure-gitignore.mjs"
   ["scripts/graphify-bootstrap.mjs"]="scripts/graphify-bootstrap.mjs"
   ["scripts/graphify-rebuild.py"]="scripts/graphify-rebuild.py"
   ["scripts/init-progress.mjs"]="scripts/init-progress.mjs"
@@ -200,62 +201,16 @@ echo ""
 echo "Initialising PROGRESS.md..."
 node "$TEMPLATE_DIR/scripts/init-progress.mjs" || true
 
+# .gitignore before the graph bootstrap, so graphify-out/ is ignored before it exists.
+echo ""
+echo "Configuring .gitignore..."
+# The required lines live in ensure-gitignore.mjs, shared with setup.ps1 and /update-template.
+node "$TEMPLATE_DIR/scripts/ensure-gitignore.mjs" || echo "  ! .gitignore update failed — run 'node scripts/ensure-gitignore.mjs' by hand" >&2
+
 # Try graphify bootstrap (idempotent, never blocks)
 echo ""
 echo "Checking codebase for graphify..."
 node "$TEMPLATE_DIR/scripts/graphify-bootstrap.mjs" || true
-
-# .gitignore
-echo ""
-echo "Configuring .gitignore..."
-if [ ! -f ".gitignore" ]; then
-  cat > .gitignore << 'EOF'
-# Secrets — never commit these
-.env
-.env.*
-!.env.example
-
-# Claude Code local settings
-.claude/settings.local.json
-.claude/db-backups/
-
-# E2E (Playwright) artifacts
-e2e/.auth/
-playwright-report/
-test-results/
-
-# Build outputs
-dist/
-build/
-.next/
-.vite/
-
-# OS
-.DS_Store
-Thumbs.db
-EOF
-  echo "  + .gitignore created"
-elif ! grep -q "\.env" .gitignore 2>/dev/null; then
-  cat >> .gitignore << 'EOF'
-
-# Secrets — never commit these
-.env
-.env.*
-!.env.example
-
-# Claude Code local settings
-.claude/settings.local.json
-.claude/db-backups/
-
-# E2E (Playwright) artifacts
-e2e/.auth/
-playwright-report/
-test-results/
-EOF
-  echo "  + .gitignore updated"
-else
-  echo "  ~ .gitignore already has .env entries"
-fi
 
 # .env.example
 if [ ! -f ".env.example" ]; then
