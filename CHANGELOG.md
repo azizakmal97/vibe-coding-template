@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+- **Model table now carries benchmark and cost data, re-checked monthly.** Artificial Analysis
+  (2026-10-19): at equal effort Opus 5.5 leads Sonnet 5.5 (max 58 vs 56, high 54 vs 47, medium 51 vs
+  41), and Sonnet at `max` costs about 3× Opus at `high` per index task (5.46 vs 1.82 USD) for 2 more
+  points, so the rule is "never run Sonnet at max". Added to `global-setup/CLAUDE.md` and
+  `template/CLAUDE.md`; the review interval is now monthly (a scheduled routine). Found from omfs-game.
+
 ### Fixed
 - **Projects never ignored the graphify output, and later ignore lines never
   arrived.** Both setup scripts wrote a fixed `.gitignore` block without

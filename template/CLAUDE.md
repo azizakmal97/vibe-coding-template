@@ -337,7 +337,7 @@ Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
 4. Return to Claude Code for verification: `bunx tsc --noEmit && <lint/test/build>`
    so post-edit and file-budget hooks fire on the merged state.
 
-### Concrete model lineup (last reviewed 2026-10-15)
+### Concrete model lineup (last reviewed 2026-10-19, monthly)
 
 | Slot | Current name | Notes |
 |---|---|---|
@@ -349,6 +349,12 @@ Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
 | DeepSeek small | V4 Flash | Format / lint auto-fix |
 | Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context |
 | Google small | Gemini 3 Flash | Spell-check, screenshot smoke |
+
+**Benchmarks (Artificial Analysis, 2026-10-19).** Intelligence Index / cost per index task (USD):
+Opus 5.5 max 58 / 5.98 · high 54 / 1.82 · medium 51 / 1.34 — Sonnet 5.5 max 56 / 5.46 · high 47 / 0.88 ·
+medium 41 / 0.48 — Fable 5.1 max 53 / 7.63 — Haiku 5.5 max 43 / 0.21 · medium 34 / 0.05. At equal effort Opus
+leads; Sonnet at `max` costs 3× Opus `high` for +2 points, so never run Sonnet at max. Healthcare index
+(max): Opus 61, Sonnet 58, Fable 58.
 
 **Review at project adoption.** These names will go stale. Update both this section
 and `AGENTS.md` matrix when starting a new project from this template.

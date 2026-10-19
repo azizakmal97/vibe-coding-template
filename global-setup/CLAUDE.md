@@ -9,7 +9,7 @@
 Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task
 model assignment. Never run a whole project on one model by default.
 
-### Current lineup (last reviewed 2026-10-15 — names go stale, re-check every 6 months)
+### Current lineup (last reviewed 2026-10-19 — names go stale; a monthly routine re-checks benchmarks and prices)
 
 | Slot | Current name | Use for |
 |---|---|---|
@@ -37,6 +37,14 @@ All four: adaptive thinking, effort `low`→`max`, vision input, 1M context.
 Cost ratios that matter for slot choice: Opus 5.5 is only **2×** Sonnet 5.5, and Haiku 5.5 is **20×** cheaper than Sonnet 5.5.
 - When a Sonnet task is borderline Opus, Opus 5.5 at `low`/`medium` effort is a legitimate pick. The newest models at lower effort often match the previous generation at high effort.
 - Push anything mechanical down to Haiku without hesitation.
+- Benchmark check (Artificial Analysis Intelligence Index, read 2026-10-19): at the SAME effort Opus 5.5
+  leads Sonnet 5.5 (max 58 vs 56, high 54 vs 47, medium 51 vs 41). Sonnet beats Opus only when it runs
+  a higher effort: Sonnet max (56) > Opus high (54) > Opus medium (51). Healthcare & medicine index (max):
+  Opus 61, Sonnet 58, Fable 5.1 58. Fable 5.1 max (53) scores below Opus 5.5 high.
+  Cost per index task (USD): Opus max 5.98 · Sonnet max 5.46 · Opus high 1.82 · Opus medium 1.34 ·
+  Sonnet high 0.88 · Sonnet medium 0.48 · Fable max 7.63 · Haiku max 0.21 / medium 0.05.
+  So: never run Sonnet at `max` (3× Opus `high`'s cost for +2 points); hard or clinical work → Opus 5.5
+  `high`; normal building → Sonnet 5.5 `medium`/`high`; mechanical → Haiku.
 
 Previous generation, still served: Opus 5, Sonnet 5, Fable 5, Haiku 4.5 (200K context). Only use these if a task names them.
 
