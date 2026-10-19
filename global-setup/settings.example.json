@@ -13,6 +13,17 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/YOUR_USERNAME/.claude/hooks/session-start-template-sync.mjs\""
+          }
+        ]
+      }
     ]
   }
 }

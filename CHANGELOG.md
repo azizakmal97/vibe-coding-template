@@ -6,6 +6,17 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+- **Global files follow the template automatically.** New global SessionStart hook
+  `global-setup/hooks/session-start-template-sync.mjs`: each session it asks GitHub (one
+  `git ls-remote`) whether `main` has a commit the local clone lacks, and only then pulls
+  (`--ff-only`) and copies changed global files (`CLAUDE.md`, the global hooks, the
+  update-template skill) into `~/.claude`, keeping a `.bak`. A file edited by hand is never
+  overwritten; the hook prints one line asking for a merge instead. Toggle off with `TEMPLATE_SYNC=0`.
+  `global-setup/register-hooks.mjs` registers both global hooks in an existing `settings.json`
+  without touching other keys; `setup.ps1` now runs it instead of skipping an existing file.
+  Sandbox-tested: first install, no change, new commit, hand-edited file.
+
 ### Changed
 - **Model table now carries benchmark and cost data, re-checked monthly.** Artificial Analysis
   (2026-10-19): at equal effort Opus 5.5 leads Sonnet 5.5 (max 58 vs 56, high 54 vs 47, medium 51 vs

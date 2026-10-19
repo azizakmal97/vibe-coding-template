@@ -50,6 +50,13 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $hooksDir "post-commit-push.mjs") `
         "~/.claude/hooks/post-commit-push.mjs"
 
+    # 2b. Template auto-sync: when GitHub has a new template commit, pulls this clone (ff-only) and copies changed
+    #     global files into ~/.claude, never over a file edited by hand.
+    Install-File `
+        (Join-Path $scriptDir "global-setup\hooks\session-start-template-sync.mjs") `
+        (Join-Path $hooksDir "session-start-template-sync.mjs") `
+        "~/.claude/hooks/session-start-template-sync.mjs"
+
     # 3. /update-template in every project. A personal skill outranks a project
     #    command of the same name, and the skill only forwards to the template
     #    clone's own command, so it never goes stale. The pointer file tells it
@@ -65,32 +72,15 @@ if ($Agent -in @("both", "claude")) {
     $pointer | ConvertTo-Json | Out-File -FilePath (Join-Path $claudeDir "vibe-template.json") -Encoding utf8NoBOM
     Write-Host "  [OK] ~/.claude/vibe-template.json (templateDir = $($pointer.templateDir))" -ForegroundColor Green
 
-    # 4. settings.json — only if not already there
+    # 4. settings.json — create a minimal one if absent, then register the global hooks
+    #    (auto-push, template sync) without touching any other setting.
     $destSettings = Join-Path $claudeDir "settings.json"
-    if (Test-Path $destSettings) {
-        Write-Host "  [SKIP] ~/.claude/settings.json already exists — keeping your config" -ForegroundColor Yellow
-        Write-Host "         To add the auto-push hook, see global-setup/settings.example.json" -ForegroundColor DarkGray
-    } else {
-        $hookPath = ($hooksDir -replace '\\', '/') + "/post-commit-push.mjs"
-        $settings = [ordered]@{
-            permissions = [ordered]@{ defaultMode = "auto" }
-            hooks = [ordered]@{
-                PostToolUse = @(
-                    [ordered]@{
-                        matcher = "Bash"
-                        hooks   = @(
-                            [ordered]@{
-                                type    = "command"
-                                command = "node `"$hookPath`""
-                            }
-                        )
-                    }
-                )
-            }
-        }
-        $settings | ConvertTo-Json -Depth 10 | Out-File -FilePath $destSettings -Encoding utf8NoBOM
-        Write-Host "  [OK] ~/.claude/settings.json (minimal — auto mode + auto-push)" -ForegroundColor Green
+    if (-not (Test-Path $destSettings)) {
+        [ordered]@{ permissions = [ordered]@{ defaultMode = "auto" } } |
+            ConvertTo-Json -Depth 10 | Out-File -FilePath $destSettings -Encoding utf8NoBOM
+        Write-Host "  [OK] ~/.claude/settings.json (minimal — auto mode)" -ForegroundColor Green
     }
+    node (Join-Path $scriptDir "global-setup\register-hooks.mjs")
 }
 
 # ZCode ignores hooks declared in a workspace config, so its guardrails have to be
