@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Rule: more free-tier read lessons.** `database.md` "Read Budgets" now also covers: never defeat an index (function on a column, `LIKE` month filters, `EXPLAIN QUERY PLAN` check), measure per-query insights before fixing, the daily cap is shared by every database on the account (a neighbour or demo copy can stop the app, and migrations fail while capped), polling multiplies reads, and no `INSERT OR REPLACE` inside triggers. `AGENTS.md` and Copilot rule 15 mention the first and third. Found from omfs-system history (2026-07 and 2026-10) and a SpendKu cap alert caused by another project.
 - **Rule: price aggregate reads against free-tier caps.** New "Read Budgets" section in `template/.claude/rules/database.md`, pointers in `production-readiness.md`, `template/AGENTS.md` rule 15 and the plain-language readiness doc. Cause: a clinic app on Cloudflare D1 free tier hit its 5M-reads/day cap (history-sized COUNTs recomputed on every save). Found from omfs-system.
 - **Global files follow the template automatically.** New global SessionStart hook
   `global-setup/hooks/session-start-template-sync.mjs`: each session it asks GitHub (one
