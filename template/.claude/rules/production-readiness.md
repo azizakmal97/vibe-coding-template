@@ -38,7 +38,7 @@ desktop, mobile and CLI apps) is ➖ not applicable, never a gap.
 | CSRF | Cookie-based auth uses SameSite cookies plus the framework's CSRF protection on forms |
 | CORS | Allowlist your own domains. Never `*` together with credentials |
 | Rate Limiting | On login, signup, password reset, AI calls, email and SMS sends, anything billed per call (`backend.md`) |
-| Cost Optimization | A billing alert AND a hard spending cap on every paid service (AI, email, SMS, hosting, database) before launch. Per-user caps on AI features |
+| Cost Optimization | A billing alert AND a hard spending cap on every paid service (AI, email, SMS, hosting, database) before launch. Per-user caps on AI features. On a free-tier database the daily read cap is a hard stop, not a bill: price every aggregate and alarm at ~50% of the cap (`database.md` → "Read Budgets") |
 | Timeouts | Every outbound call has one (`api.md`: 10 s default) |
 | Logging | Server logs carry route, user id and a request id. Never secrets or personal data |
 | Monitoring, Alerts | An error tracker (Sentry or the host's own) is wired, and error spikes plus billing alerts reach the owner's phone or inbox |
@@ -107,7 +107,7 @@ Measure before changing anything: Latency per route, P99 Latency and Tail Latenc
 Then work down this list and stop at the first step that fixes it:
 
 1. Query Optimization and Database Indexing (tier 1).
-2. Caching: Edge Caching through CDN headers for public pages first, then app-level caching. Every cache gets a written Cache Invalidation rule (which change clears it) or a short expiry.
+2. Caching: Edge Caching through CDN headers for public pages first, then app-level caching. Every cache gets a written Cache Invalidation rule (which change clears it) or a short expiry. Never clear a cache on save when the recompute scans history, and price the worst-case reads per day first (`database.md` → "Read Budgets").
 3. Read Replicas: only when the database is the measured bottleneck on reads. Replication lag means Eventual Consistency, so read-your-own-writes go to the primary.
 4. Vertical Scaling (a bigger plan) before Horizontal Scaling (more copies). Serverless hosts already do Autoscaling and Load Balancing.
 

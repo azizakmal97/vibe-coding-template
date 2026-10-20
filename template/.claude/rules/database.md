@@ -129,6 +129,18 @@ const users = await db.execute(sql`SELECT * FROM users WHERE id = ${userId}`)
 - Always paginate: include `limit` and `offset` / cursor on list queries
 - Add database index for every column used in `WHERE`, `JOIN`, or `ORDER BY`
 
+## Read Budgets: Price Every Aggregate (metered / free-tier databases)
+
+Why this exists: a clinic app on Cloudflare D1's free tier (5M rows read per day, hard cap) went down for an afternoon on 2026-10-20. Each dashboard "attention" card ran a COUNT over the whole history (~26k rows). The cache was cleared on every save "for freshness", so every save made the next load a full rescan: 165 recounts, ~4.7M rows in one day. The cost grew every month because it scaled with total history, not daily use. The rule "put repeated aggregates behind a cache" was followed and was not enough, because nobody priced it. Free tiers do not bill overages; they STOP the app until the daily reset.
+
+1. **Price before it ships.** Rows read per run x runs per day, using the WORST trigger rate (every page load, every cache clear, every timer tick). Write the number in the plan or PR and compare it with the provider's daily cap.
+2. **Cost that grows with total history must not be recomputed per save or on a short TTL.** (A COUNT or GROUP BY over every row ever.) Pick one:
+   - (a) Store the result per entity and recompute only the slice a write touched (triggers or writer hooks mark rows dirty; the read re-checks only dirty ones), plus a daily full rebuild as self-heal.
+   - (b) Split closed history (locked or past periods that can no longer change) from the live window. Cache the closed part and count only the live window.
+3. **Never clear a cache on save unless its recompute is cheap and bounded.** A TTL is a cost ceiling, not a fix, and a long TTL makes the screen lag, which users reject.
+4. **A free-tier cap stops the app.** Before real users: an alarm at about 50% of the daily cap that reaches the owner (the provider's own 75%/90% emails arrive too late in a working day), and a known paid-plan escape hatch (e.g. Cloudflare Workers Paid, $5/month).
+5. **Re-measure monthly** from per-query insights (e.g. `wrangler d1 insights <db> --timePeriod 7d --sort-by reads`) and compare with last month. One good snapshot says nothing about a cost that grows with history.
+
 ## Sensitive Data
 
 ```typescript

@@ -36,7 +36,7 @@ bills, lost data.
 | CSRF | Another website tricks a logged-in user's browser into pressing a button on your app. Prevented by cookie settings and hidden form tokens. | [status] |
 | CORS | The browser rule for which other websites may call your app's behind-the-scenes API. It should list only your own sites. | [status] |
 | Rate Limiting | A cap on how often one person can do something, such as 5 login attempts a minute. Stops password guessing and stops one user running up your bill. | [status] |
-| Cost Optimization | Keeping the monthly bill sane. For a young app this mostly means a billing alert and a hard spending cap on every paid service, so a bug or an abuser can't cost you a fortune overnight. | [status] |
+| Cost Optimization | Keeping the monthly bill sane. For a young app this mostly means a billing alert and a hard spending cap on every paid service, so a bug or an abuser can't cost you a fortune overnight. On a free-tier database the daily limit on reads is a hard stop: the app stops working until the next day. So every count on a screen is priced in advance, and an alarm warns you at half the limit. | [status] |
 | Timeouts | How long your app waits for another service before giving up. Without one, a slow service makes your app hang too. | [status] |
 | Logging | The app's diary of what happened, kept on the server. It is how anyone finds out why something broke. It must never contain passwords or personal data. | [status] |
 | Monitoring | Something watching the app that notices when errors pile up, so you hear about problems before your users tell you. | [status] |

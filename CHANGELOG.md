@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Rule: price aggregate reads against free-tier caps.** New "Read Budgets" section in `template/.claude/rules/database.md`, pointers in `production-readiness.md`, `template/AGENTS.md` rule 15 and the plain-language readiness doc. Cause: a clinic app on Cloudflare D1 free tier hit its 5M-reads/day cap (history-sized COUNTs recomputed on every save). Found from omfs-system.
 - **Global files follow the template automatically.** New global SessionStart hook
   `global-setup/hooks/session-start-template-sync.mjs`: each session it asks GitHub (one
   `git ls-remote`) whether `main` has a commit the local clone lacks, and only then pulls
