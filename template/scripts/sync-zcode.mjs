@@ -9,7 +9,7 @@
  *
  *   .claude/commands/*.md        ->  .zcode/commands/*.md
  *   .claude/agents/*.md          ->  .zcode/agents/*.md      (model: inherit)
- *   .claude/skills/<n>/SKILL.md  ->  .zcode/skills/<n>/SKILL.md
+ *   .claude/skills/<n>/SKILL.md  ->  .zcode/skills/<n>/SKILL.md  (sibling files copied as is)
  *   .claude/settings.json hooks  ->  .zcode/hooks/hooks.json (via the ZCode adapter)
  *
  * Run directly, or let `scripts/sync-agent-rules.mjs` call it:
@@ -17,7 +17,7 @@
  *
  * Idempotent. Never hand-edit anything under `.zcode/` except `config.json`.
  */
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, copyFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -92,6 +92,14 @@ function mirrorSkills(root) {
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, render(kept, body), 'utf8');
     written.push(target);
+
+    // SKILL.md links its sibling files (checklists, notices); copy them as they are.
+    for (const file of readdirSync(join(src, entry.name), { withFileTypes: true })) {
+      if (!file.isFile() || file.name === 'SKILL.md') continue;
+      const siblingTarget = join(dest, entry.name, file.name);
+      copyFileSync(join(src, entry.name, file.name), siblingTarget);
+      written.push(siblingTarget);
+    }
   }
   return written;
 }
