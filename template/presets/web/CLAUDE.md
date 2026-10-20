@@ -171,3 +171,4 @@ See `rules/methodology.md`.
 | `git log` | Commit hashes per phase |
 
 Run `/audit` to refresh AUDIT_AND_ROADMAP.md. Run `/handover` to refresh plain-English docs.
+Run `/security-audit` before launch and after big auth / money / sharing changes.

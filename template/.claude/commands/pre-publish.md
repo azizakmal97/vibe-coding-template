@@ -95,6 +95,16 @@ Default for solo-dev SaaS: AGPL + Commercial dual-license.
 Default for community library: MIT.
 Default for "I want to keep selling this": Proprietary, do NOT publish to public.
 
+### Phase 6b — Security Audit Records
+
+`docs/security/` holds `/security-audit` reports. An open finding in a public repo
+is a published exploit map.
+
+1. Any `confirmed` record in `docs/security/findings.json` without `fixed_in`? Fix it
+   first, or move the folder to the gitignored `.security-audit/` and remove it from
+   history the same way as a secret.
+2. Fixed-only reports may stay public if the owner wants them; ask.
+
 ### Phase 7 — Final Checklist
 
 Report back:
@@ -102,6 +112,7 @@ Report back:
 PRE-PUBLISH AUDIT
 =================
 SECRETS:       [CLEAN | N findings — rotate + scrub history]
+SECURITY DOCS: [none | fixed-only, kept | N open findings — moved out of the repo]
 HARDCODED IDS: [CLEAN | N findings — templated]
 DEV-ONLY FILES: [moved to scripts/historical/ | none found]
 .gitignore:    [complete | missing N patterns — added]
@@ -113,5 +124,6 @@ VERDICT:       [SAFE TO PUBLISH | DO NOT PUBLISH (rotate secrets first)]
 ## Refuse Conditions
 
 - Refuse to mark "SAFE TO PUBLISH" if secrets found in current tree (no exceptions).
+- Refuse to mark "SAFE TO PUBLISH" while `docs/security/` holds an unfixed confirmed finding.
 - Refuse to force-push without explicit user confirmation "yes force push to scrub secrets".
 - Refuse to add a license without user choosing one.

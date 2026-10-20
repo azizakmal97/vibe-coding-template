@@ -163,3 +163,4 @@ See `rules/methodology.md`. For fullstack: Zod contract first → test against P
 | `git log` | Commit hashes per phase |
 
 Run `/audit` to refresh audit. Run `/handover` to refresh plain docs.
+Run `/security-audit` before launch and after big auth / money / sharing changes.

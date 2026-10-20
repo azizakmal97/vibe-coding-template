@@ -45,6 +45,7 @@ $dirs = @(
     ".claude\rules",
     ".claude\skills\design-system",
     ".claude\skills\caveman-default",
+    ".claude\skills\security-audit",
     ".zcode\hooks",
     ".zcode\.zcode-plugin",
     ".cursor\rules",
@@ -96,6 +97,7 @@ $fileMappings = [ordered]@{
     ".claude\commands\autonomous.md"                  = ".claude\commands\autonomous.md"
     ".claude\commands\check-ci.md"                    = ".claude\commands\check-ci.md"
     ".claude\commands\audit.md"                       = ".claude\commands\audit.md"
+    ".claude\commands\security-audit.md"              = ".claude\commands\security-audit.md"
     ".claude\commands\handover.md"                    = ".claude\commands\handover.md"
     ".claude\commands\pre-publish.md"                 = ".claude\commands\pre-publish.md"
     ".claude\commands\forecast-storage.md"            = ".claude\commands\forecast-storage.md"
@@ -135,6 +137,9 @@ $fileMappings = [ordered]@{
     # skills
     ".claude\skills\design-system\SKILL.md"           = ".claude\skills\design-system\SKILL.md"
     ".claude\skills\caveman-default\SKILL.md"         = ".claude\skills\caveman-default\SKILL.md"
+    ".claude\skills\security-audit\SKILL.md"          = ".claude\skills\security-audit\SKILL.md"
+    ".claude\skills\security-audit\CHECKLISTS.md"     = ".claude\skills\security-audit\CHECKLISTS.md"
+    ".claude\skills\security-audit\NOTICE.md"         = ".claude\skills\security-audit\NOTICE.md"
     # zcode — static half; commands/agents/skills/hooks.json are generated below
     ".zcode\README.md"                                = ".zcode\README.md"
     ".zcode\config.json"                              = ".zcode\config.json"
@@ -268,5 +273,6 @@ Write-Host "  /autonomous      — loop work unattended (token-aware bail-out)" 
 Write-Host "  /check-ci        — ingest CI failures as PROGRESS entries" -ForegroundColor Yellow
 Write-Host "  /graphify        — update codebase knowledge graph" -ForegroundColor Yellow
 Write-Host "  /audit           — generate AUDIT_AND_ROADMAP.md" -ForegroundColor Yellow
+Write-Host "  /security-audit  — verified security audit + fix phase" -ForegroundColor Yellow
 Write-Host "  /handover        — refresh plain-English docs/" -ForegroundColor Yellow
 Write-Host ""

@@ -47,6 +47,7 @@ mkdir -p \
   .claude/rules \
   .claude/skills/design-system \
   .claude/skills/caveman-default \
+  .claude/skills/security-audit \
   .zcode/hooks \
   .zcode/.zcode-plugin \
   .cursor/rules \
@@ -94,6 +95,7 @@ declare -A FILES=(
   [".claude/commands/autonomous.md"]=".claude/commands/autonomous.md"
   [".claude/commands/check-ci.md"]=".claude/commands/check-ci.md"
   [".claude/commands/audit.md"]=".claude/commands/audit.md"
+  [".claude/commands/security-audit.md"]=".claude/commands/security-audit.md"
   [".claude/commands/handover.md"]=".claude/commands/handover.md"
   [".claude/commands/pre-publish.md"]=".claude/commands/pre-publish.md"
   [".claude/commands/forecast-storage.md"]=".claude/commands/forecast-storage.md"
@@ -133,6 +135,9 @@ declare -A FILES=(
   # skills
   [".claude/skills/design-system/SKILL.md"]=".claude/skills/design-system/SKILL.md"
   [".claude/skills/caveman-default/SKILL.md"]=".claude/skills/caveman-default/SKILL.md"
+  [".claude/skills/security-audit/SKILL.md"]=".claude/skills/security-audit/SKILL.md"
+  [".claude/skills/security-audit/CHECKLISTS.md"]=".claude/skills/security-audit/CHECKLISTS.md"
+  [".claude/skills/security-audit/NOTICE.md"]=".claude/skills/security-audit/NOTICE.md"
   # zcode — static half; commands/agents/skills/hooks.json are generated below
   [".zcode/README.md"]=".zcode/README.md"
   [".zcode/config.json"]=".zcode/config.json"
@@ -251,5 +256,6 @@ echo "  /autonomous      — loop work unattended (token-aware bail-out)"
 echo "  /check-ci        — ingest CI failures as PROGRESS entries"
 echo "  /graphify        — update codebase knowledge graph"
 echo "  /audit           — generate AUDIT_AND_ROADMAP.md"
+echo "  /security-audit  — verified security audit + fix phase"
 echo "  /handover        — refresh plain-English docs/"
 echo ""

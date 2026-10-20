@@ -20,7 +20,7 @@ Produce a brutal-honest architecture audit + N-month roadmap. Fills `AUDIT_AND_R
 3. For each Part of the template (1-13), gather evidence:
    - **Part 1.1 Architecture Score** — read entry points, count god files, eyeball test coverage, observe layering.
    - **Part 1.2 Code Org** — `Glob` for `**/*.{ts,tsx,js,jsx,dart,rs}`, count LOC per file, list any over hard budget.
-   - **Part 1.3 Security** — read `.claude/rules/*.md` adherence, grep for forbidden patterns (`@ts-ignore`, `any`, `.catch(()=>{})`, hardcoded secrets, inline auth checks).
+   - **Part 1.3 Security** — read `.claude/rules/*.md` adherence, grep for forbidden patterns (`@ts-ignore`, `any`, `.catch(()=>{})`, hardcoded secrets, inline auth checks). This is a hygiene scan, not a security audit: summarise the latest `docs/security/AUDIT-*.md` (open confirmed findings by severity, owner checks still waiting). If there is none, or it predates big auth / money / sharing changes, add a `/security-audit` phase to the Part 5 roadmap.
    - **Part 1.4 Database** — read schema / migrations folder. List FKs missing indexes. Identify CASCADE chains.
    - **Part 1.5 Maintainability** — assess "new dev day-one quit risk" from above.
    - **Part 1.6 Scalability** — guess breaking point + identify race conditions / N+1 / unbounded growth. Judge against the tiers in `.claude/rules/production-readiness.md`: flag every missing Tier 1 item, and recommend a Tier 3 item only with the evidence its row names.

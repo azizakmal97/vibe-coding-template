@@ -120,7 +120,7 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 | Docs polish, README updates | **Sonnet** | Claude Code | Low-stakes prose |
 | Architecture / structural decision | **Opus** (current: Opus 5.5) | Claude Code | Trade-offs matter |
 | Complex debugging (root cause unclear) | **Opus** | Claude Code | Reasoning across layers |
-| Security review / `/code-review high+` | **Opus** | Claude Code | Subtle issues |
+| Security review / `/security-audit` / `/code-review high+` | **Opus** | Claude Code | Subtle issues; every finding verified by a second agent |
 | Cross-cutting refactor (5+ files) | **Opus** | Claude Code | Many edges held in mind |
 | Copywriting (hero, product pitch, tone) | **Opus** | Claude Code | Voice + brand judgment |
 | Legal / compliance content (Privacy / Terms / ToS) | **Opus** | Claude Code | Compliance precision |

@@ -7,6 +7,31 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **`/security-audit`: a verified, full-repo security audit.** New skill
+  `template/.claude/skills/security-audit/` (`SKILL.md`, `CHECKLISTS.md`, `NOTICE.md`)
+  and command `.claude/commands/security-audit.md`. Recon writes a system map and a
+  coverage ledger (surface × attack class). Hunters run in parallel. Every candidate
+  must name a principal, input, control, crossed boundary, affected resource and result,
+  and then goes to a fresh verifier that tries to refute it. Verdicts are `confirmed`
+  (only these get a severity), `needs_validation` (an exact owner check, no severity)
+  or `rejected` (kept so later runs do not repeat it). The report and `findings.json`
+  go to `docs/security/` (`.security-audit/`, gitignored, for public repos), and the
+  fixes become a `SEC-<date>` phase in `PROGRESS.md` with model and effort per bullet.
+  Source and existing tests only: the audit never calls a deployed app, a production
+  database or a provider API. Finding IDs come from OWASP Top 10:2025, API Top 10:2023,
+  LLM Top 10:2025 and CWE. The checklists add Workers/Hono/D1/R2, Supabase RLS, Next.js,
+  React, AI/MCP tool and GitHub Actions items. The method is adapted from
+  cloudflare/security-audit-skill (MIT, notice kept). A few checklist ideas come from
+  mukul975/Anthropic-Cybersecurity-Skills (Apache-2.0), rewritten, with nothing copied
+  or installed. Why: the old `security-auditor` checklist reported "missing best
+  practice" items as vulnerabilities and nothing verified them, so real findings drowned.
+- **`security-auditor` agent: review / hunter / verifier modes, the candidate gate,
+  `model: opus`.** Review mode keeps the old checklist and adds NEEDS OWNER CHECK and
+  HARDENING NOTES sections, so hardening advice stops being reported as severity.
+- **Wiring.** `/audit` Part 1.3 summarises the latest security report and roadmaps a
+  `/security-audit` when it is missing or stale. `/pre-publish` refuses SAFE TO PUBLISH while
+  `docs/security/` holds an unfixed confirmed finding. `ensure-gitignore.mjs` adds
+  `.security-audit/`. The `AGENTS.md` model table row and both setup scripts are updated.
 - **Rule: more free-tier read lessons.** `database.md` "Read Budgets" now also covers: never defeat an index (function on a column, `LIKE` month filters, `EXPLAIN QUERY PLAN` check), measure per-query insights before fixing, the daily cap is shared by every database on the account (a neighbour or demo copy can stop the app, and migrations fail while capped), polling multiplies reads, and no `INSERT OR REPLACE` inside triggers. `AGENTS.md` and Copilot rule 15 mention the first and third. Found from omfs-system history (2026-07 and 2026-10) and a SpendKu cap alert caused by another project.
 - **Rule: price aggregate reads against free-tier caps.** New "Read Budgets" section in `template/.claude/rules/database.md`, pointers in `production-readiness.md`, `template/AGENTS.md` rule 15 and the plain-language readiness doc. Cause: a clinic app on Cloudflare D1 free tier hit its 5M-reads/day cap (history-sized COUNTs recomputed on every save). Found from omfs-system.
 - **Global files follow the template automatically.** New global SessionStart hook
@@ -27,6 +52,9 @@ All notable changes to this project are documented here. The format is based on
   `template/CLAUDE.md`; the review interval is now monthly (a scheduled routine). Found from omfs-game.
 
 ### Fixed
+- **ZCode skill mirror dropped a skill's supporting files.** `sync-zcode.mjs` copied only
+  `SKILL.md`, so any skill that links a sibling file (here `CHECKLISTS.md`) broke under
+  ZCode. Sibling files are now copied as they are.
 - **Projects never ignored the graphify output, and later ignore lines never
   arrived.** Both setup scripts wrote a fixed `.gitignore` block without
   `graphify-out/` or `.graphify_*`, and appended it only when the file had no

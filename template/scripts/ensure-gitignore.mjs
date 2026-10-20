@@ -30,6 +30,7 @@ const REQUIRED_GROUPS = [
   { comment: '# E2E (Playwright) artifacts', lines: ['e2e/.auth/', 'playwright-report/', 'test-results/'] },
   { comment: '# Build outputs', lines: ['dist/', 'build/', '.next/', '.vite/'] },
   { comment: '# Graphify knowledge graph (rebuilt locally by scripts/graphify-rebuild.py)', lines: ['graphify-out/', '.graphify_*'] },
+  { comment: '# Security audit output for public repos (/security-audit writes docs/security/ when private)', lines: ['.security-audit/'] },
   { comment: '# OS', lines: ['.DS_Store', 'Thumbs.db'] },
 ];
 

@@ -271,6 +271,7 @@ See `rules/methodology.md` for concrete examples.
 | `git log` | Commit hashes per phase. |
 
 Run `/audit` to generate / refresh AUDIT_AND_ROADMAP.md at project-maturity milestones.
+Run `/security-audit` before launch, after big auth / money / sharing changes, and quarterly (Opus 5.5 · high; report in `docs/security/`).
 Run `/handover` to generate / refresh the 5 plain-language docs.
 
 ## 22. Model Selection per Task
