@@ -50,8 +50,26 @@ All notable changes to this project are documented here. The format is based on
   41), and Sonnet at `max` costs about 3× Opus at `high` per index task (5.46 vs 1.82 USD) for 2 more
   points, so the rule is "never run Sonnet at max". Added to `global-setup/CLAUDE.md` and
   `template/CLAUDE.md`; the review interval is now monthly (a scheduled routine). Found from omfs-game.
+- **Model rules: downward handoff, plus an escalation ladder (Rule 5).** A Claude Code session
+  may now hand a bullet tagged for a cheaper Claude model to a subagent (Agent tool `model` +
+  `effort` from the tag) instead of stopping for a swap, when a brief can carry the whole task.
+  It reviews the diff and runs the check itself. Work is never handed upward: Opus and Fable work
+  needs the full context, so that still means a session swap. New Rule 5: after one failed
+  repair, step up once. If it missed something it could see, raise the effort; if it was wrong
+  with full context, use a bigger model. Then save a one-line routing lesson. `/autonomous` and
+  `/next-phase` follow both. Why: taken from the Model Routing Playbook (AI LEVELS, checked
+  2026-10-05). Its "router" is a Sonnet session sending every task to subagents. We kept
+  per-phase sessions, because hard work belongs where the full context is, and took only the
+  handoff direction that loses nothing plus its escalation rule. Applies to
+  `global-setup/CLAUDE.md` §1, `template/CLAUDE.md` §22 and `rules/memory.md`.
 
 ### Fixed
+- **Session effort was reported as verified when nobody could see it.** Claude Code may show no
+  session effort, or one that differs from what the owner set in `/model`. The rules only
+  exempted ZCode, so a Claude Code session could print `Session: medium ✓` with nothing behind
+  it. Both agents now say `session effort not visible` unless the owner stated it, and the
+  lower-effort stop rule and `/autonomous`'s effort mismatch check apply only to an
+  owner-stated effort.
 - **ZCode skill mirror dropped a skill's supporting files.** `sync-zcode.mjs` copied only
   `SKILL.md`, so any skill that links a sibling file (here `CHECKLISTS.md`) broke under
   ZCode. Sibling files are now copied as they are.

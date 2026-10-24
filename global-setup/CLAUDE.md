@@ -69,17 +69,21 @@ session effort is set in the app (ZCode: Settings → Model Providers → Advanc
 Claude Code: `/model`) and is what the model really runs at. Your declaration
 classifies and checks — it never overrides.
 
-**Never write `✓` you have not verified.** ZCode agents cannot see the session's
-configured effort; in a ZCode session say `session effort not visible` and assume
-the user's setting governs. Format:
-> `Model: **Sonnet 5.5** · Task effort: **medium** · Session: **medium** ✓` — proceed.
-> `Model: **GLM-5.3** · Task effort: **medium** · Session: **max** (more than needed — proceeding)` — proceed.
-> `Model: **GLM-5.3** · Task effort: **medium** · Session effort not visible (ZCode) — assuming user-configured effort` — proceed.
-> `Model: **Opus 5.5** · Task effort: **high** · Session: **Sonnet at low** — switch first` — then stop.
+**Never write `✓` you have not verified.** Neither agent can read the session's
+configured effort reliably. ZCode does not expose it, and Claude Code may show no
+effort or one that differs from what the owner set in `/model` (owner-reported
+2026-10-24), so an effort value in your own context is not proof either. Unless the
+owner stated the effort in this conversation, say `session effort not visible` and
+assume the owner's setting governs. Format:
+> `Model: **Sonnet 5.5** · Task effort: **medium** · Session: **medium** (owner-stated) ✓` — proceed.
+> `Model: **GLM-5.3** · Task effort: **medium** · Session: **max** (owner-stated, more than needed — proceeding)` — proceed.
+> `Model: **Opus 5.5** · Task effort: **high** · Session effort not visible — assuming user-configured effort` — proceed.
+> `Model: **Opus 5.5** · Task effort: **high** · Session: **Sonnet** — switch first` — then stop.
 
-Mismatch rule: session effort HIGHER than the task needs → proceed and note it
-(extra thinking is cheap insurance next to a broken session). Session effort
-LOWER than the task needs → stop and ask the user to raise it before starting.
+Mismatch rule, for an owner-stated effort: session effort HIGHER than the task
+needs → proceed and note it (extra thinking is cheap insurance next to a broken
+session). Session effort LOWER than the task needs → stop and ask the user to raise
+it before starting. The model, unlike the effort, is visible: check it every time.
 
 **Effort is a separate axis from model — never infer one from the other.** A big model on
 low effort is the right call for a mechanical edit; a small model on high effort is usually
@@ -113,7 +117,16 @@ Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned
 work on an Opus session. Check the assignment BEFORE the first edit. On a mismatch:
 stop, state which model to switch to, wait for the user to swap. Planning across
 the boundary is fine; executing is not, unless the user explicitly says "run it on
-this model anyway."
+this model anyway", or the downward handoff below applies.
+
+**Downward handoff (Claude Code only).** Work tagged for a cheaper Claude model
+than this session (Fable > Opus > Sonnet > Haiku) needs no swap: hand it to a
+subagent through the Agent tool, with `model` set to the tag's model and `effort`
+to the tag's effort. Only when a brief can carry the whole task: the files, the
+exact change, and the check that proves it. Review the subagent's diff and run that
+check yourself before committing. Never hand work upward: Opus or Fable work needs
+the full context a brief drops, so swap the session. GLM, DeepSeek and Gemini rows
+still need their own tool.
 
 Inside a template project's `/autonomous` loop, a mismatch defers that task
 instead of stopping: finish everything this model owns, then stop and name the
@@ -124,6 +137,23 @@ model to switch to. The command's "Model Gate" section has the rules.
 - Before leaving Claude Code for another tool (Cursor/Aider/Gemini/direct API):
   `/checkpoint` first so hooks fire and work is pushed. Return to Claude Code for
   final verification so post-edit + file-budget hooks run on the merged state.
+
+**Rule 5 — When a check fails, escalate once, one step up.**
+A check is a test, typecheck, lint, build or review verdict. Try one repair on the
+same model and effort. If that repair fails too, stop repairing and step up: after
+one failed repair, not five, because failed cheap runs cost more than an early
+step up.
+- It missed something it could have seen (skipped a file, didn't run the tests,
+  ignored an instruction) → **effort** one step up, same model. That keeps the
+  prompt cache. For the main session, ask the owner to raise it (`/model`); for a
+  subagent, re-run it with a higher `effort`.
+- It had the full context and was still wrong → **model** one step up
+  (Haiku → Sonnet → Opus → Fable). For the main session that is a Rule 4 swap: stop
+  and name the model. A handed-down subagent's step up is usually this session:
+  take the task back. Fable stays owner opt-in, as in the lineup.
+- After a model step up fixes it, save a routing lesson (§6) in one line:
+  `<task pattern> → <model · effort that worked>`, so the next plan tags that kind
+  of task right the first time.
 
 ### Anti-patterns
 
@@ -215,8 +245,9 @@ BEFORE moving on. Don't wait for "the end."
 - Record four things: **symptom** (what you saw), **root cause** (why), **fix** (the
   exact command/change), **how to apply next time**. Add a one-line pointer to `MEMORY.md`.
 - Worth capturing: OS/env-specific failures, flaky tests, data-wiping footguns,
-  "use script X not command Y", non-obvious config, anything you'd otherwise
-  re-derive next time. NOT worth it: one-off typos, anything obvious from the code.
+  "use script X not command Y", non-obvious config, a routing miss (§1 Rule 5),
+  anything you'd otherwise re-derive next time. NOT worth it: one-off typos,
+  anything obvious from the code.
 - **A wrong lesson is worse than none.** Only write what you actually VERIFIED fixed
   it — never a guess. (This is the discipline auto-learning agents skip, and why
   their memory rots.)

@@ -309,11 +309,41 @@ Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned 
 on an Opus session. Check the assignment BEFORE the first edit. On a mismatch: stop,
 state which model to switch to, wait for the user to swap. Planning across the
 boundary is fine; executing is not, unless the user explicitly says "run it on this
-model anyway."
+model anyway", or the downward handoff below applies.
+
+**Downward handoff.** Work tagged for a cheaper Claude model than this session
+(Fable > Opus > Sonnet > Haiku) needs no swap: hand it to a subagent through the
+Agent tool, with `model` set to the tag's model and `effort` to the tag's effort.
+Only when a brief can carry the whole task: the files, the exact change, and the
+check that proves it. Review the subagent's diff and run that check yourself before
+committing. Never hand work upward: Opus or Fable work needs the full context a
+brief drops, so swap the session.
 
 Inside `/autonomous` a mismatch defers that work instead of stopping: the loop
 finishes everything this model owns, then stops and names the model to switch to.
 See `/autonomous` → "Model Gate".
+
+### Rule 5 — When a check fails, escalate once, one step up
+
+A check is a test, typecheck, lint, build or review verdict. Try one repair on the
+same model and effort. If that fails too, stop repairing and step up. One failed
+repair, not five: failed cheap runs cost more than an early step up.
+
+- It missed something it could have seen (skipped a file, didn't run the tests,
+  ignored an instruction) → **effort** one step up, same model. For the main
+  session ask the owner to raise it (`/model`); for a subagent, re-run it with a
+  higher `effort`.
+- It had the full context and was still wrong → **model** one step up
+  (Haiku → Sonnet → Opus → Fable). For the main session that is a Rule 4 swap. A
+  handed-down subagent's step up is usually this session: take the task back.
+- After a model step up fixes it, save a one-line routing lesson
+  (`rules/memory.md`): `<task pattern> → <model · effort that worked>`.
+
+### Session effort is not visible
+
+Claude Code may show no session effort, or one that differs from what the owner
+set in `/model`. Treat it as not visible unless the owner stated it in this
+conversation, and never mark an effort `✓` you have not been told.
 
 ### Project pin
 

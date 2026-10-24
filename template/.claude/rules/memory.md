@@ -32,8 +32,8 @@ Where it goes:
   "Known Issues" or gotcha section instead.
 
 Worth capturing: OS- or environment-specific failures, flaky tests, data-wiping
-footguns, "use script X, not command Y", non-obvious config, anything you would
-otherwise re-derive. Not worth capturing: one-off typos, or anything already
+footguns, "use script X, not command Y", non-obvious config, a routing miss
+(`CLAUDE.md` §22 Rule 5), anything you would otherwise re-derive. Not worth capturing: one-off typos, or anything already
 obvious from reading the code.
 
 **A wrong lesson is worse than none.** Write only what you VERIFIED fixed the

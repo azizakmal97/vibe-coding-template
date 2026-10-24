@@ -26,7 +26,7 @@ back to this command when the loop must follow the PROGRESS.md phase protocol
 4. **Never bypass hooks.** Validate-command + pre-db-migrate + check-file-size + pre-commit-checkpoint stay active. If hook blocks → STOP, report to user.
 5. **CI failure halts loop.** Before each `/next-phase`, run `/check-ci`. If red → switch active phase to "fix CI red" + bail at end of fix.
 6. **Production readiness runs on disk, not in chat.** Follow the `/autonomous` section of `rules/production-readiness.md`: tier 2 safeguards are planned bullets, their plain-English explanations go under the phase's `Safeguards added`, anything only the owner can do (account settings, tier 3 decisions) goes under `Waiting on owner` while the loop continues with other work. Never stop the loop to ask.
-7. **Model match: run only the work this session's model owns, in both directions.** Apply the Model Gate below before every bullet. Work tagged for another model is skipped and left for later, not done on the wrong model and not a reason to stop early. The loop stops to ask for a model switch only once nothing is left for this model.
+7. **Model match: run only the work this session's model owns, or hand it down.** Apply the Model Gate below before every bullet. On Claude Code, work tagged for a cheaper Claude model goes to a subagent on that model; work tagged for a stronger model, or another tool, is skipped and left for later, not done on the wrong model and not a reason to stop early. The loop stops to ask for a model switch only once nothing is left for this model.
 
 ## Model Gate
 
@@ -36,7 +36,9 @@ model. Inside this loop a mismatch defers the work instead of stopping the loop.
 **This session's model** is the one named in your system prompt (e.g. Opus 5.5,
 GLM-5.3). If it isn't named, ask once before the first bullet; never guess. Say it
 once at loop start:
-`Model gate: this session is **<model>** · effort **<effort or "not visible">**`.
+`Model gate: this session is **<model>** · effort **<owner-stated effort, or "not visible">**`.
+Claude Code's own reading of the session effort can be missing or wrong, so an
+effort the owner did not state counts as not visible.
 
 **Owner override.** The gate is lifted only when the message that started the
 loop says so ("run everything on this model", `/autonomous any-model`). Write
@@ -53,7 +55,17 @@ plan: GLM-5.3 for Sonnet rows, GLM-5.3-Flash for Haiku rows). An Opus row runs o
 GLM only if the bullet or phase explicitly says GLM is acceptable, because the
 owner can't be asked mid-loop whether the trade is fine. DeepSeek and Gemini rows
 never run here; they need the owner to open that tool. If the bullet carries an
-effort and the session's effort is visible and lower, treat it as a mismatch too.
+effort and the owner-stated session effort is lower, treat it as a mismatch too.
+
+**Handing down (Claude Code).** A bullet tagged for a cheaper Claude model than
+this session (Fable > Opus > Sonnet > Haiku) runs as a subagent instead of being
+deferred: the Agent tool with `model` and `effort` from the tag, and a brief naming
+the files, the exact change and the check to run. Hand down only bullets a brief
+can fully carry; a bullet that needs this conversation's context runs here instead.
+Review the diff and run the check yourself before `/checkpoint`. If it fails, re-run
+the subagent once one effort step up when it missed something, or take the bullet
+back and do it here when it was wrong with full context (`CLAUDE.md` §22 Rule 5).
+Never hand a bullet upward. Write `handed down` next to each bullet run this way.
 
 **Deferring.** Skip a mismatched bullet and continue with the next one that runs
 here, but only if that next bullet does not depend on the skipped one (it edits a
@@ -93,7 +105,8 @@ LOOP:
        ELSE /check-ci        # absorb any CI failures into PROGRESS.md first
             /next-phase      # first ⬜ pending phase with work for this model
        IF nothing can run on this model → bail: model-switch
-  3. Execute ONE plan bullet whose model matches this session (Model Gate):
+  3. Execute ONE plan bullet whose model matches this session, or hand down one
+     tagged for a cheaper Claude model (Model Gate):
         - IF none passes → park the phase (Model Gate), goto step 2.
         - Edit target file(s) (one focused change).
         - /checkpoint        # typecheck + build + test + commit wip(phase-id) [skip ci]
@@ -110,7 +123,10 @@ LOOP:
         - git commit -m "pause(<phase-id>): token budget low [skip ci]"
         - Exit loop with summary report.
   6. IF hook blocked OR test failed OR build failed:
-        - Do NOT auto-fix repeatedly. Report to user + exit loop.
+        - Hook blocked → report to user + exit loop.
+        - Test or build failed → one repair, no more (CLAUDE.md §22 Rule 5). Still
+          failing → report + exit loop, with the Rule 5 step up (more effort, or
+          which model) in NEXT SESSION SHOULD.
   7. IF user has interrupted (input received):
         - Bail at next safe checkpoint.
 ```
