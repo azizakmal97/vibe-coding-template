@@ -2,6 +2,7 @@
 name: migration-writer
 description: Writes safe DB migrations. Refuses destructive operations without explicit user confirmation. Detects DB engine from project files.
 tools: Read, Glob, Grep, Bash
+effort: high
 model: inherit
 ---
 

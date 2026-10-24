@@ -2,6 +2,7 @@
 name: refactorer
 description: Safely improves code quality without changing behavior. Tests must pass before and after. Stop immediately if tests break.
 tools: Read, Glob, Grep, Bash, Edit
+effort: low
 model: inherit
 ---
 

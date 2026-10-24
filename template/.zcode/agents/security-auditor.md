@@ -2,6 +2,7 @@
 name: security-auditor
 description: Security auditor. Reviews a change touching auth, payments, user data or file uploads (blocks on critical), and is the hunter and the independent verifier for /security-audit.
 tools: Read, Glob, Grep, Bash
+effort: high
 model: inherit
 ---
 

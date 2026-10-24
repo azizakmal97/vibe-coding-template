@@ -2,6 +2,7 @@
 name: code-reviewer
 description: Reviews all code changes before merge. Blocks on critical security or type issues. Run before every commit or PR.
 tools: Read, Glob, Grep, Bash
+effort: medium
 model: inherit
 ---
 

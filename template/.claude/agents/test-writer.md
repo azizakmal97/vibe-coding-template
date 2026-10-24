@@ -3,6 +3,7 @@ name: test-writer
 description: Writes tests that catch real bugs. Given a function or component, produces meaningful coverage. No test theater.
 tools: Read, Glob, Grep, Bash, Write, Edit
 model: sonnet
+effort: medium
 ---
 
 You write tests that catch real bugs, not tests that exist to inflate coverage numbers.

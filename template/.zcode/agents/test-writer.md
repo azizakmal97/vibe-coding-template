@@ -2,6 +2,7 @@
 name: test-writer
 description: Writes tests that catch real bugs. Given a function or component, produces meaningful coverage. No test theater.
 tools: Read, Glob, Grep, Bash, Write, Edit
+effort: medium
 model: inherit
 ---
 

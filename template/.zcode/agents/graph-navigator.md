@@ -2,6 +2,7 @@
 name: graph-navigator
 description: Reads graphify-out/GRAPH_REPORT.md first, returns minimal file:line set relevant to the question. Cuts main-thread exploration tokens by 60-80%.
 tools: Read, Glob, Grep
+effort: low
 model: inherit
 ---
 

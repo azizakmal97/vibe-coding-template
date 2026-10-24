@@ -67,6 +67,12 @@ All notable changes to this project are documented here. The format is based on
   even of a locked design. Never Sonnet, Haiku or GLM, never handed down, whatever a plan tag
   says. Only effort varies. Added to the `AGENTS.md` matrix, the lineups in both CLAUDE.md
   files, their anti-patterns, and `/autonomous`'s handoff rule.
+- **Every template subagent now sets its own `effort`.** `graph-navigator` and `refactorer` low,
+  `code-reviewer` and `test-writer` medium, `debugger`, `migration-writer` and
+  `security-auditor` high. Before, all seven ran at whatever effort the session had, so a
+  lookup on a `max` session paid for thinking it didn't need. Claude Code supports the field
+  (it overrides the session effort; only `CLAUDE_CODE_EFFORT_LEVEL` overrides it). Whether
+  ZCode reads it in the regenerated `.zcode/agents/` copies is not verified.
 
 ### Fixed
 - **Session effort was reported as verified when nobody could see it.** Claude Code may show no
