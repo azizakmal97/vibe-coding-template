@@ -62,6 +62,11 @@ All notable changes to this project are documented here. The format is based on
   per-phase sessions, because hard work belongs where the full context is, and took only the
   handoff direction that loses nothing plus its escalation rule. Applies to
   `global-setup/CLAUDE.md` §1, `template/CLAUDE.md` §22 and `rules/memory.md`.
+- **Design, graphics and video editing always run on Opus.** Owner rule (2026-10-25): UI and
+  visual design, graphics, thumbnails, covers, storyboards, and video edits and re-renders,
+  even of a locked design. Never Sonnet, Haiku or GLM, never handed down, whatever a plan tag
+  says. Only effort varies. Added to the `AGENTS.md` matrix, the lineups in both CLAUDE.md
+  files, their anti-patterns, and `/autonomous`'s handoff rule.
 
 ### Fixed
 - **Session effort was reported as verified when nobody could see it.** Claude Code may show no

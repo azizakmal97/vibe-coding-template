@@ -123,6 +123,7 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 | Security review / `/security-audit` / `/code-review high+` | **Opus** | Claude Code | Subtle issues; every finding verified by a second agent |
 | Cross-cutting refactor (5+ files) | **Opus** | Claude Code | Many edges held in mind |
 | Copywriting (hero, product pitch, tone) | **Opus** | Claude Code | Voice + brand judgment |
+| Design, graphics, video editing (UI and visual design, thumbnails, covers, storyboards, video edits and re-renders) | **Opus**, always | Claude Code | Owner rule: never Sonnet, Haiku or GLM, never handed down, whatever the plan tag says |
 | Legal / compliance content (Privacy / Terms / ToS) | **Opus** | Claude Code | Compliance precision |
 | Performance investigation (bundle, runtime) | **Opus** | Claude Code | Diagnostic depth |
 | Hardest long-horizon work, after Opus at high fell short | **Fable** (current: Fable 5.1) | Claude Code | Frontier tier, 2.5× Opus price; opt-in only |
@@ -141,7 +142,7 @@ Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task 
 | Any Opus-row task, on a GLM plan | **GLM-5.3** effort `high`/`max` | ZCode (Agent CLI: Claude Code) | Buy thinking, not a bigger bill |
 | Any Haiku-row task, on a GLM plan | **GLM-5.3-Flash** | ZCode | Cheap = right |
 
-**Substituting GLM for an Opus row is a real trade, not a free swap.** For work assigned to Opus *because being wrong is expensive* — auth, money, patient-data correctness, legal copy, brand voice — either run it on Anthropic or say in the plan that you didn't. Don't quietly downgrade and call the assignment met.
+**Substituting GLM for an Opus row is a real trade, not a free swap.** For work assigned to Opus *because being wrong is expensive* — auth, money, patient-data correctness, legal copy, brand voice — either run it on Anthropic or say in the plan that you didn't. Design, graphics and video editing have no GLM option at all: they run on Opus. Don't quietly downgrade and call the assignment met.
 
 ### Workflow rules
 

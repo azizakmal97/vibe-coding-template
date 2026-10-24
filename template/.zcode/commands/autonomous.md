@@ -60,7 +60,9 @@ effort and the owner-stated session effort is lower, treat it as a mismatch too.
 **Handing down (Claude Code).** A bullet tagged for a cheaper Claude model than
 this session (Fable > Opus > Sonnet > Haiku) runs as a subagent instead of being
 deferred: the Agent tool with `model` and `effort` from the tag, and a brief naming
-the files, the exact change and the check to run. Hand down only bullets a brief
+the files, the exact change and the check to run. Design, graphics and video
+editing are Opus whatever their tag says, so they are never handed down or run on
+GLM. Hand down only bullets a brief
 can fully carry; a bullet that needs this conversation's context runs here instead.
 Review the diff and run the check yourself before `/checkpoint`. If it fails, re-run
 the subagent once one effort step up when it missed something, or take the bullet

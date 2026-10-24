@@ -373,7 +373,7 @@ Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
 | Slot | Current name | Notes |
 |---|---|---|
 | Anthropic frontier | Fable 5.1 (`claude-fable-5-1`) | Opt-in only, when Opus 5.5 at high fell short; $10/$50 per 1M
-| Anthropic flagship | Opus 5.5 (`claude-opus-5-5`) | Architecture, complex debug, copy, legal, security review; $4/$20 |
+| Anthropic flagship | Opus 5.5 (`claude-opus-5-5`) | Architecture, complex debug, copy, legal, security review, and always design, graphics and video editing; $4/$20 |
 | Anthropic workhorse | Sonnet 5.5 (`claude-sonnet-5-5`) | Default project pin; $2/$10 |
 | Anthropic small | Haiku 5.5 (`claude-haiku-5-5`) | Status checks, mechanical edits; $0.10/$0.50 |
 | DeepSeek heavy | V4 Pro | Bulk codegen, mass test scaffolding |
@@ -394,5 +394,6 @@ and `AGENTS.md` matrix when starting a new project from this template.
 
 - Opus for status checks, build runs, log inspection — burn for no upside.
 - Sonnet for novel copywriting, brand voice, or architectural calls — output reads thin.
+- Anything but Opus for design, graphics or video editing (`AGENTS.md` matrix): never Sonnet, Haiku or GLM, never handed down.
 - Leaving Claude Code without committing first — non-Claude tools don't fire `.claude/` hooks.
 - Inheriting this lineup unchanged six months from now without checking what shipped.
