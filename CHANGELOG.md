@@ -75,6 +75,13 @@ All notable changes to this project are documented here. The format is based on
   ZCode reads it in the regenerated `.zcode/agents/` copies is not verified.
 
 ### Fixed
+- **Renamed hooks ran twice after `/update-template`.** Commit a7de2eb renamed
+  `config-protection`, `post-edit-check` and `pre-db-migrate` from `.js` to `.cjs`. The update
+  only ever added registrations, so projects kept both and every edit or command ran each hook
+  twice (seen in SpendKu, azizakmal-com and madinah-ziarah-app; one still registered a
+  `config-protection.js` it never had). `/update-template` now carries a Retired hooks table and
+  a Phase 3 step that swaps old registrations for new ones and deletes an old file only if it was
+  never edited. Phase 5 now checks every registered hook file exists. Any future rename adds a row.
 - **The model declaration hid which model was running, and Rule 4 forced swaps for tiny
   tasks.** "Model: Haiku" on an Opus session read as if Haiku were running. The declaration
   now names both: `Task: <model · effort> · Running: <model>`. New Rule 4 exception: a task

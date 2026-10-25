@@ -42,7 +42,7 @@ Upstream: https://github.com/azizakmal97/vibe-coding-template (public, no login)
 - Generated shims: `.cursorrules`, `.cursor/rules/`, `.windsurfrules`,
   `.github/copilot-instructions.md`
 - `AGENTS.md` — only when the user accepts the new version (see Phase 3)
-- `.gitignore` — missing required lines appended, nothing else touched (Phase 3 step 5)
+- `.gitignore` — missing required lines appended, nothing else touched (Phase 3 step 6)
 
 ## What NEVER updates (project-owned)
 
@@ -50,6 +50,18 @@ Upstream: https://github.com/azizakmal97/vibe-coding-template (public, no login)
 in Phase 3), `identity.json`, `package-manager.json`, `file-budgets.json`,
 `.audit-accepted.json`, `preset commands.json`, `anti-slop/` (rules.json, gate
 reports, audits), anything under `src/`, `.env*`.
+
+## Retired hooks
+
+These hooks were renamed or removed, and the update swaps them out.
+
+| Old file | Replaced by | Since |
+|---|---|---|
+| `.claude/hooks/config-protection.js` | `.claude/hooks/config-protection.cjs` | a7de2eb |
+| `.claude/hooks/post-edit-check.js` | `.claude/hooks/post-edit-check.cjs` | a7de2eb |
+| `.claude/hooks/pre-db-migrate.js` | `.claude/hooks/pre-db-migrate.cjs` | a7de2eb |
+
+When the template renames or removes a hook, add a row here in the same commit, so every project's next update cleans up after it.
 
 ## Phase 1: Report what changed
 
@@ -82,7 +94,19 @@ classify: **identical** · **missing here** · **template newer** ·
    Never remove, reorder or edit an existing registration and touch no other key.
    Show the user the added lines. Example: the antislop hooks
    (`pre-artifact-antislop.cjs` on `Artifact`, `post-edit-antislop.cjs` on `Edit|Write`).
-5. **`.gitignore`: append, never replace.** From the project root run
+5. **Retired hooks: swap, then clean up.**
+   - This is the one exception to "never remove or edit a registration": it
+     applies only to rows in the Retired hooks table.
+   - For each row, find a registration in `.claude/settings.json` whose command
+     points at the old file. If the new file is also registered for the same
+     event and matcher, remove the old registration. Otherwise change its path
+     to the new file in place. Touch nothing else in that entry.
+   - The old file itself: delete it only if its content equals the template's
+     last version of it (`git -C <dir> show <since>~1:template/<old path>`, run
+     with `MSYS_NO_PATHCONV=1` under Git Bash). Otherwise keep it and list it in
+     the report as locally modified.
+   - Show the user every registration removed or rewritten and every file deleted.
+6. **`.gitignore`: append, never replace.** From the project root run
    `node <dir>/template/scripts/ensure-gitignore.mjs`. It holds the template's
    required ignore lines and appends only the ones this project lacks, under their
    group comment; it never removes, reorders or edits a line. Show the user the
@@ -103,6 +127,10 @@ the editor shims.
    antislop probe: `node scripts/antislop-check.mjs <any user-facing file>` must run
    (exit 0, or exit 2 with findings), and `settings.json` must register both
    antislop hooks.
+   Hook files exist: every hook command in `.claude/settings.json` points at a
+   file that exists. A registration pointing at a missing file is reported (it
+   fails silently on every tool call). One that matches a Retired hooks row
+   means Phase 3 step 5 was skipped.
 2. `.zcode/commands/` still mirrors `.claude/commands/` (new command included).
 3. Run the project's typecheck/build if the setup scripts themselves changed.
 4. `.claude/` reaches the remote: `git check-ignore -q .claude/rules` must FAIL
