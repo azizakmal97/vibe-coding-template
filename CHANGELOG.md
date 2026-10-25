@@ -75,6 +75,14 @@ All notable changes to this project are documented here. The format is based on
   ZCode reads it in the regenerated `.zcode/agents/` copies is not verified.
 
 ### Fixed
+- **The model declaration hid which model was running, and Rule 4 forced swaps for tiny
+  tasks.** "Model: Haiku" on an Opus session read as if Haiku were running. The declaration
+  now names both: `Task: <model · effort> · Running: <model>`. New Rule 4 exception: a task
+  tagged for a cheaper model that takes about three tool calls or fewer, with no decisions,
+  runs on the current model. A switch re-reads the whole conversation with no prompt cache,
+  and a subagent starts a fresh context, so both cost more than the calls they save.
+  Downward only; design, graphics and video editing stay on Opus. Found when an Opus
+  session closed an app under a "Model: Haiku" line.
 - **Session effort was reported as verified when nobody could see it.** Claude Code may show no
   session effort, or one that differs from what the owner set in `/model`. The rules only
   exempted ZCode, so a Claude Code session could print `Session: medium ✓` with nothing behind

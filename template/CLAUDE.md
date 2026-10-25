@@ -282,10 +282,13 @@ Full vendor-neutral matrix + tradeoff explanation lives in `AGENTS.md` → "Mode
 
 Whenever the user gives any instruction — whether inside a formal plan phase OR as a
 direct one-off prompt — the FIRST sentence must declare which model owns this task
-and whether the current session matches. Format:
+AND which model is actually running. Name both: "Model: Haiku" on an Opus session
+reads as if Haiku were running. Format:
 
-> `Model for this task: **Sonnet 5.5** (current session ✓)` — then proceed.
-> `Model for this task: **Opus 5.5** (current session is Sonnet — switch first)` — then stop.
+> `Task: **Sonnet 5.5 · medium** · Running: **Sonnet 5.5** ✓` — then proceed.
+> `Task: **Haiku 5.5 · low** · Running: **Opus 5.5** — tiny task, staying (Rule 4)` — then proceed.
+> `Task: **Sonnet 5.5 · medium** · Running: **Opus 5.5** — handing down (Rule 4)` — then proceed.
+> `Task: **Opus 5.5 · high** · Running: **Sonnet 5.5** — switch first` — then stop.
 
 This applies to EVERY task: feature work, bug fix, a single file edit, a question
 that leads to code, a refactor, a review, anything. The declaration comes before the
@@ -309,7 +312,14 @@ Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned 
 on an Opus session. Check the assignment BEFORE the first edit. On a mismatch: stop,
 state which model to switch to, wait for the user to swap. Planning across the
 boundary is fine; executing is not, unless the user explicitly says "run it on this
-model anyway", or the downward handoff below applies.
+model anyway", or one of the two exceptions below applies.
+
+**Tiny task: stay put.** A task tagged for a cheaper model that takes a few tool
+calls (about three or fewer) and needs no decisions runs on the current model, with
+the declaration saying so. A model switch re-reads the whole conversation with no
+prompt cache, and a subagent spins up a fresh context, so both cost more than a few
+calls at the bigger model's price. Downward only, and never for design, graphics or
+video editing, which stay on Opus.
 
 **Downward handoff.** Work tagged for a cheaper Claude model than this session
 (Fable > Opus > Sonnet > Haiku) needs no swap: hand it to a subagent through the

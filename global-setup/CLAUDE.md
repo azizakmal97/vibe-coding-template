@@ -69,8 +69,9 @@ Effort still varies: high for a new look, lower for an edit to a settled one.
 **Rule 1 — Declare model AND effort at the start of EVERY task, in plans AND in live prompts.**
 Whenever the user gives you any instruction — whether inside a formal plan phase OR
 as a direct one-off prompt — your FIRST sentence must declare which model owns this
-task, the effort the task NEEDS, and the effort the session is ACTUALLY configured
-to. These are two different things: task effort is your judgment (table below);
+task, the effort the task NEEDS, the model ACTUALLY running this session, and the
+effort the session is ACTUALLY configured to. Name both models: "Model: Haiku" on an
+Opus session reads as if Haiku were running. Task effort is your judgment (table below);
 session effort is set in the app (ZCode: Settings → Model Providers → Advanced;
 Claude Code: `/model`) and is what the model really runs at. Your declaration
 classifies and checks — it never overrides.
@@ -81,10 +82,12 @@ effort or one that differs from what the owner set in `/model` (owner-reported
 2026-10-24), so an effort value in your own context is not proof either. Unless the
 owner stated the effort in this conversation, say `session effort not visible` and
 assume the owner's setting governs. Format:
-> `Model: **Sonnet 5.5** · Task effort: **medium** · Session: **medium** (owner-stated) ✓` — proceed.
-> `Model: **GLM-5.3** · Task effort: **medium** · Session: **max** (owner-stated, more than needed — proceeding)` — proceed.
-> `Model: **Opus 5.5** · Task effort: **high** · Session effort not visible — assuming user-configured effort` — proceed.
-> `Model: **Opus 5.5** · Task effort: **high** · Session: **Sonnet** — switch first` — then stop.
+> `Task: **Sonnet 5.5 · medium** · Running: **Sonnet 5.5** ✓ · Session effort: **medium** (owner-stated) ✓` — proceed.
+> `Task: **GLM-5.3 · medium** · Running: **GLM-5.3** ✓ · Session effort: **max** (owner-stated, more than needed)` — proceed.
+> `Task: **Opus 5.5 · high** · Running: **Opus 5.5** ✓ · Session effort not visible — assuming user-configured effort` — proceed.
+> `Task: **Haiku 5.5 · low** · Running: **Opus 5.5** — tiny task, staying (Rule 4) · Session effort not visible` — proceed.
+> `Task: **Sonnet 5.5 · medium** · Running: **Opus 5.5** — handing down (Rule 4) · Session effort not visible` — proceed.
+> `Task: **Opus 5.5 · high** · Running: **Sonnet 5.5** — switch first` — then stop.
 
 Mismatch rule, for an owner-stated effort: session effort HIGHER than the task
 needs → proceed and note it (extra thinking is cheap insurance next to a broken
@@ -123,7 +126,15 @@ Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned
 work on an Opus session. Check the assignment BEFORE the first edit. On a mismatch:
 stop, state which model to switch to, wait for the user to swap. Planning across
 the boundary is fine; executing is not, unless the user explicitly says "run it on
-this model anyway", or the downward handoff below applies.
+this model anyway", or one of the two exceptions below applies.
+
+**Tiny task: stay put.** A task tagged for a cheaper model that takes a few tool
+calls (about three or fewer) and needs no decisions runs on the current model, with
+the declaration saying so. A model switch re-reads the whole conversation with no
+prompt cache, and a subagent spins up a fresh context, so both cost more than a few
+calls at the bigger model's price. This only works downward: a tiny task tagged for
+a STRONGER model still needs that model. Design, graphics and video editing stay
+on Opus regardless.
 
 **Downward handoff (Claude Code only).** Work tagged for a cheaper Claude model
 than this session (Fable > Opus > Sonnet > Haiku) needs no swap: hand it to a
