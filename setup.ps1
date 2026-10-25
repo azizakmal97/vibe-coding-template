@@ -68,6 +68,17 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $skillDir "SKILL.md") `
         "~/.claude/skills/update-template/SKILL.md"
 
+    # 3b. Media skills: the shared method for videos, motion, 3D and posters. Each
+    #     project keeps only a short local skill with its brand rules that points here.
+    foreach ($mediaSkill in @("video-studio", "motion-design", "blender-3d", "poster-design")) {
+        $mediaDir = Join-Path $claudeDir "skills\$mediaSkill"
+        New-Item -ItemType Directory -Force -Path $mediaDir | Out-Null
+        Install-File `
+            (Join-Path $scriptDir "global-setup\skills\$mediaSkill\SKILL.md") `
+            (Join-Path $mediaDir "SKILL.md") `
+            "~/.claude/skills/$mediaSkill/SKILL.md"
+    }
+
     $pointer = [ordered]@{ templateDir = ($scriptDir -replace '\\', '/') }
     $pointer | ConvertTo-Json | Out-File -FilePath (Join-Path $claudeDir "vibe-template.json") -Encoding utf8NoBOM
     Write-Host "  [OK] ~/.claude/vibe-template.json (templateDir = $($pointer.templateDir))" -ForegroundColor Green

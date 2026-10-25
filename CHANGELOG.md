@@ -7,6 +7,18 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Global media skills: one shared method for videos, motion, 3D and posters.** New
+  `global-setup/skills/video-studio/` (Blender scenes, Kokoro VO, numpy music and SFX,
+  After Effects by script, encode), `motion-design/` (retention structure, VO-timed beats,
+  GSAP recipes and HyperFrames registry items, banned effects, sound cues), `blender-3d/`
+  (headless Blender, the render review gate, the AI-3D flaw catalogue, TRELLIS, toon look,
+  glTF and Blender gotchas) and `poster-design/` (designed covers, one cover safe area,
+  text in code, Flow / Nano Banana Pro prompting, contact-sheet review). `setup.ps1` installs
+  them like `update-template`, backing up the old file as `.bak`. One cover rule for every
+  brand: text inside the centre 1080x1350 of a 1080x1920 cover; one safe-zone set (top 270,
+  bottom 420, right 120 px). Every skill keeps the owner rule that design, graphics and video
+  editing run on Opus 5.5 only. Why: three projects carried the same method in local skills
+  and drifted (two cover crops, four safe-zone sets); each now keeps only its brand rules.
 - **`/security-audit`: a verified, full-repo security audit.** New skill
   `template/.claude/skills/security-audit/` (`SKILL.md`, `CHECKLISTS.md`, `NOTICE.md`)
   and command `.claude/commands/security-audit.md`. Recon writes a system map and a

@@ -1,0 +1,77 @@
+---
+name: poster-design
+description: Covers, thumbnails, carousels and single posters - the designed reel cover (never a frame grab), one cover safe area for every brand, text set by PIL or HTML instead of the image model, Google Flow / Nano Banana Pro prompting and its failure modes, Blender or code for exact geometry, licensed photos, and the contact-sheet and full-size-crop review before anything goes to the approval desk. Use for any cover, thumbnail, carousel slide, poster or Story image in any project. The project's own local media skill holds the brand.
+---
+
+# Poster design: covers, thumbnails, carousels, posters
+
+Brand rules win over this file. The project's own local media skill or CLAUDE.md names its locked style block, palette, fonts, brand mark and handle, cover script, carousel helpers, Chrome profile and approval desk.
+
+## Owner rules (all projects)
+- **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
+- **Every video gets a designed cover, never a random frame** (owner, 2026-10-22/23: "thumbnail video mesti menarik", for good): the strongest image (Flow illustration, a hero render or a licensed photo) plus a short bold title (2–5 words), readable at grid size.
+- **No black-outline text.** Clean type on panels or pills with soft shadows.
+- Google Flow, or free open-source tools, may generate any video or poster material. Keep the licence credits the assets need.
+- The owner approves every post on the project's approval desk. The cover goes there as its own media item, after the video.
+
+## 1. Sizes and safe areas
+**One cover rule for every brand (owner, 2026-10-26: "i want one rule"):** on a 1080x1920 cover, the title and all text stay inside the **centre 1080x1350 (4:5)**. That box sits inside both the IG grid's 3:4 crop and the 4:5 feed crop.
+
+| Item | Size | Keep text inside |
+|---|---|---|
+| Reel cover | 1080x1920 | the centre 1080x1350 (rule above) |
+| Carousel slide / single post | 1080x1350 (4:5) | generous margins; nothing overflows a card edge |
+| Square poster | 1080x1080 | — |
+| Story | 1080x1920 | out of the top 270 px, bottom 420 px and right 120 px (the one safe-zone set, 2026-10-26, `motion-design`) |
+
+- Flow offers portrait 3:4 only for images (Download → 2K = 1792x2400). Ask for "the paper/scene fills the canvas edge to edge" and crop to the target size in code (3:4 → 1080x1350) rather than asking for empty bands.
+
+## 2. Text goes on in code, not in the image model
+- Flow invents labels and gets anatomy wrong. For art, prompt "The image contains no text" and set titles, labels and credits in PIL or HTML.
+- HTML route: a page at the exact pixel size, fonts from Google Fonts, the image as a data URI, screenshotted with headless Chromium (Playwright). A good cover page: background photo with `object-position`, a darkening gradient you can override per cover when the photo is busy behind the title, a vignette, an optional tilted card image, kicker pill, top line, big title, sub line, logo + handle.
+- Video titles and overlays: PIL or HTML at 2–3x (`video-studio`).
+- When a whole poster must be made in the image model (a sketchnote slide, a Nano Banana Pro poster):
+  - write "The ONLY words on the page are: …" and list every line, or Flow adds labels nobody asked for (2026-10-22);
+  - give all text "spelled exactly as written", in one language;
+  - keep image text short; long paragraphs go in the caption;
+  - spelling on the image must match the brief exactly.
+- Nano Banana Pro may still change a QR code or text. For a QR that must scan, paste the real QR in code, and scan it.
+
+## 3. Prompting Flow / Nano Banana Pro
+- Paste the project's **locked style block** into every prompt (style, palette with colour roles, watermark, aspect, NEGATIVE list). Keep the colour grammar consistent across slides.
+- Attached images: say what each one is and how to use it ("IMAGE 1 = the book cover, shown intact and unaltered; do NOT redraw it"). References strongly steer output; say exactly what to copy and what not to. Don't invent things about reference images.
+- Describe shapes literally. Diffusion models cannot hold "rotated 180°" or "mirror" ("arrowhead pointing down", "mountain with flat base on the line"). Spell arrow directions out ("arrow points INTO the cavernous sinus").
+- Curved shapes in cross-section fail repeatedly; straight 45° tips with a dashed guide line worked.
+- Edits in Flow regenerate the whole image, so protected areas can drift. Compare against the approved reference after every edit. When the owner says a part is correct, keep ONLY that part fixed.
+- **Max 3 attempts per failure.** After 3, stop on that item, keep the best, and fix it another way: draw the part in Blender or code and composite it in (a full-slide-size transparent render in slide pixels, then paste it over a clean background patch; take the clean band from rows with no text, since descenders sneak in), or Canva. Only when that still fails, flag exactly what's off for the owner.
+- Never mark clinical or technical geometry done on your own judgement alone; present it to the owner.
+
+### Flow in Chrome (flow.google.com, 2026-10-23)
+- Use only the Chrome browser the project names (its CLAUDE.md or local skill gives the device id).
+- Type into the chat panel: "Create 3 versions of one image, portrait 3:4 …". Wait about 60–90 s. Open each image to review, then Download → 2K.
+- Uploading a reference: there is no file input until "Upload media" is clicked, and that opens a native picker. Patch `HTMLInputElement.prototype.click`/`showPicker` in the page to keep the input, click Upload media, then `file_upload`. Flow then asks you to confirm "Rights to use this image": that is agreeing to terms, so get the owner's OK per project (the local skill records any standing OK).
+- Don't press Flow's back arrow or navigate while a generation runs: it cancels it. Return to the project by its URL.
+- If Chrome screenshots time out on Flow, click an empty area of the page first.
+- Log the tool and prompt in the brief. Turn on the IG AI label where the project says so.
+
+## 4. Photos
+- Only own, the project's, or licensed photos (Wikimedia Commons: check each file; Unsplash; Pexels). Never swap in a different photo from the one the brief lists; if one fails to download, flag it.
+- Credit author and licence on the slide and in the caption ("Photo: <author>, Wikimedia Commons, CC BY 4.0").
+- Never upscale a low-res image.
+
+## 5. Carousels
+- Slide 1 is the hook and says the one message plainly; the last slide is the CTA (save / follow / comment keyword, per project).
+- Pictures first, few words. Every slide carries a real photo, a designed graphic or diagram, or 3D (owner, 2026-10-23: no plain text card).
+- Every slide carries the project's brand mark and handle where its CLAUDE.md says.
+
+## 6. Review before the approval desk
+1. A **contact sheet** of all slides (or cover + video frames) at phone size: message on slide 1, hierarchy readable, nothing in a UI zone.
+2. **Full-size crops** of every number, label and card edge: nothing overflows, no garbled letters, the watermark is there.
+3. Check against the brief's pass checklist; log pass/fail per item in the post's `log.md`.
+4. Copy on the image (titles, labels) passes the project's antislop check like the caption.
+5. Say plainly what you did not check (for example: not viewed on a phone).
+
+## Related skills
+- `video-studio`: video pipeline, Flow covers for reels, encode, upload order.
+- `motion-design`: reel structure, captions, safe zones.
+- `blender-3d`: exact geometry renders to composite into slides.
