@@ -38,7 +38,7 @@ Start from the project's reference build when it has one (its local media skill 
 - **Review also:** full-size crops of eyes, lids, hands and skin seams; frame-to-frame pop-ins; highlighted regions covering the whole structure.
 
 ## Pipeline
-1. **Storyboard** (Opus): shots with story times, the on-screen line per shot, and the VO line per shot. Facts follow the project's source rules.
+1. **Storyboard** (Opus): shots with story times, the on-screen line per shot, and the VO line per shot. Facts follow the project's source rules, and the FYP sound per platform (Music and SFX → FYP music).
 2. **3D** (Blender 5.2, `blender-3d`): build the scene by script, render transparent PNG frames.
 3. **Timeline**: one `timeline.py` maps story time to reel time (piecewise per shot). Every script reads it.
 4. **Voice-over**: Kokoro, one clip per shot. Check that each clip fits its shot; if not, lengthen the shot.
@@ -69,6 +69,16 @@ Running Blender, the stale-transform blank render, Standard view transform, EEVE
 
 ## Music and SFX
 Synthesise them in numpy (pads, plucks, bells, whooshes, thumps, bubbles); there is no licence to track. Duck under the voice with a smoothed speech mask. Mux with `-af loudnorm=I=-14:TP=-1.5:LRA=11`. Projects with licensed music keep their own levels (the local skill names them).
+
+### FYP music: a trending sound, added in the app (owner, 2026-10-26)
+Every reel or TikTok gets a sound that suits the For You page, but **only from the platform's own licensed library, added inside the app**. Never download a trending song and mix it into the file: it gets muted or blocked, and a business account is not licensed for it.
+- **Pick it at the storyboard**, not after the render: a sound trending now on that platform that fits the mood and pace (the beats can sit on its BPM where there is no voice). Instrumental, or lyrics that never fight the VO.
+- **Only sounds cleared for business use.** TikTok: the Commercial Music Library (the TikTok Creative Center's trending songs, filtered to "approved for business use"). Instagram: the audio the account's own Reels audio picker offers, which for a business account is the licensed set; prefer the ones marked trending. Check the account type once and write it in the local skill.
+- **Write it down** in `brief.md`: the sound's name, artist, platform, its link, and the date seen trending (trends last days, so re-check on posting day).
+- **Two audio mixes:** the master keeps VO + SFX + the code-made bed (the fallback); a second mix keeps VO + SFX only, for when the app sound goes on top. In the app, set the added sound low (about 10–20 %) so the voice stays on top.
+- **Where it gets added:** the post is scheduled through the project's scheduler. Before relying on it, check once whether that scheduler can add the platform's sound to a reel, and record the answer in the local skill. If it can't, post with the master mix and flag in the approval desk "add <sound> in the app".
+- Different sound per platform is fine: TikTok and Instagram trend separately.
+- The project's own rules come first (for example a brand that avoids music for some topics).
 
 ## After Effects 2023 by script
 - Run: `"C:/Program Files/Adobe/Adobe After Effects 2023/Support Files/AfterFX.com" -noui -r build_edit.jsx`. About 2 min for a 36 s 1080x1920 comp.
