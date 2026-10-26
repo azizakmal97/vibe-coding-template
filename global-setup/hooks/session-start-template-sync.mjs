@@ -35,6 +35,7 @@ const MANAGED = [
   ['global-setup/skills/motion-design/SKILL.md', 'skills/motion-design/SKILL.md'],
   ['global-setup/skills/blender-3d/SKILL.md', 'skills/blender-3d/SKILL.md'],
   ['global-setup/skills/poster-design/SKILL.md', 'skills/poster-design/SKILL.md'],
+  ['global-setup/skills/social-growth/SKILL.md', 'skills/social-growth/SKILL.md'],
 ];
 
 function hashOf(path) {

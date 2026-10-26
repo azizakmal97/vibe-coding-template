@@ -123,7 +123,7 @@ offers to clone this repo into `~/vibe-coding-template` and run the setup for yo
 | `global-setup/CLAUDE.md` | `~/.claude/CLAUDE.md` | Coding rules + model/effort selection — loads in every project, every session |
 | `global-setup/hooks/post-commit-push.mjs` | `~/.claude/hooks/post-commit-push.mjs` | Auto-pushes to GitHub after every `git commit` |
 | `global-setup/skills/update-template/SKILL.md` | `~/.claude/skills/update-template/SKILL.md` | `/update-template` in every project, even ones created before it existed |
-| `global-setup/skills/{video-studio,motion-design,blender-3d,poster-design}/SKILL.md` | `~/.claude/skills/<name>/SKILL.md` | The shared media method (video pipeline, motion grammar, Blender and AI-3D, covers and posters). Each project adds a short local skill with its brand |
+| `global-setup/skills/{video-studio,motion-design,blender-3d,poster-design,social-growth}/SKILL.md` | `~/.claude/skills/<name>/SKILL.md` | The shared media method (video pipeline, motion grammar, Blender and AI-3D, covers and posters, hooks and outlier research for Instagram and TikTok). Each project adds a short local skill with its brand |
 | (generated) | `~/.claude/vibe-template.json` | Where this clone lives, so `/update-template` never has to ask |
 | (generated) | `~/.claude/settings.json` | Enables auto-approve mode + wires the auto-push hook |
 | (composed) | `~/.zcode/AGENTS.md` | The same global brain + a ZCode addendum — one source, no drift |

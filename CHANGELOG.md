@@ -7,6 +7,17 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Global `social-growth` skill: hooks, outlier research, captions and replies for
+  Instagram and TikTok.** New `global-setup/skills/social-growth/`, adapted from
+  Jakeschincariol/instagram-agent-skill (MIT): the 26 hook formulas and the five-check hook
+  score done by hand, outlier research (views over the account's own median) read in Claude
+  in Chrome with no API or scraping service, the caption line before "more" on each
+  platform (TikTok photo-post title 90 characters, description 4,000, a sound on every
+  photo post), carousel copy, comment-reply triage with every draft approved by the owner
+  and no automated engagement, and reading insights by outlier multiple and sends per reach.
+  It links to `video-studio`, `motion-design` and `poster-design` instead of repeating them.
+  `setup.ps1` installs it with the other media skills and the session-start sync keeps it
+  current. Why: reach was being planned from raw view counts and guesses, not from evidence.
 - **Global media skills: one shared method for videos, motion, 3D and posters.** New
   `global-setup/skills/video-studio/` (Blender scenes, Kokoro VO, numpy music and SFX,
   After Effects by script, encode), `motion-design/` (retention structure, VO-timed beats,

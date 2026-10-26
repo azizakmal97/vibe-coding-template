@@ -68,9 +68,9 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $skillDir "SKILL.md") `
         "~/.claude/skills/update-template/SKILL.md"
 
-    # 3b. Media skills: the shared method for videos, motion, 3D and posters. Each
+    # 3b. Media skills: the shared method for videos, motion, 3D, posters and social growth. Each
     #     project keeps only a short local skill with its brand rules that points here.
-    foreach ($mediaSkill in @("video-studio", "motion-design", "blender-3d", "poster-design")) {
+    foreach ($mediaSkill in @("video-studio", "motion-design", "blender-3d", "poster-design", "social-growth")) {
         $mediaDir = Join-Path $claudeDir "skills\$mediaSkill"
         New-Item -ItemType Directory -Force -Path $mediaDir | Out-Null
         Install-File `
