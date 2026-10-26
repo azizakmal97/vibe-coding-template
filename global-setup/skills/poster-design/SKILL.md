@@ -10,6 +10,7 @@ Brand rules win over this file. The project's own local media skill or CLAUDE.md
 ## Owner rules (all projects)
 - **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
 - **Every video gets a designed cover, never a random frame** (owner, 2026-10-22/23: "thumbnail video mesti menarik", for good): the strongest image (Flow illustration, a hero render or a licensed photo) plus a short bold title (2–5 words), readable at grid size.
+- **Picture-led, never text-majority** (owner, 2026-10-26): every slide, poster and cover is led by a big picture (photo, render, illustration) or an infographic (diagram, chart, map, timeline). Text is a short line or two set on it. A slide whose text panel covers more of it than the picture does gets redone, e.g. a paragraph in a box with a small photo beside it. Long explanations go in the caption.
 - **No black-outline text.** Clean type on panels or pills with soft shadows.
 - Google Flow, or free open-source tools, may generate any video or poster material. Keep the licence credits the assets need.
 - The owner approves every post on the project's approval desk. The cover goes there as its own media item, after the video.
@@ -61,10 +62,11 @@ Brand rules win over this file. The project's own local media skill or CLAUDE.md
 
 ## 5. Carousels
 - Slide 1 is the hook and says the one message plainly; the last slide is the CTA (save / follow / comment keyword, per project).
-- Pictures first, few words. Every slide carries a real photo, a designed graphic or diagram, or 3D (owner, 2026-10-23: no plain text card).
+- Pictures first, few words. Every slide carries a real photo, a designed graphic or diagram, or 3D (owner, 2026-10-23: no plain text card), and that picture or infographic is the biggest thing on the slide (owner rule above, 2026-10-26).
 - Every slide carries the project's brand mark and handle where its CLAUDE.md says.
 
 ## 6. Review before the approval desk
+- At grid size, the picture or infographic reads first and the text second. Text-majority slide: redo it before it goes to the desk.
 1. A **contact sheet** of all slides (or cover + video frames) at phone size: message on slide 1, hierarchy readable, nothing in a UI zone.
 2. **Full-size crops** of every number, label and card edge: nothing overflows, no garbled letters, the watermark is there.
 3. Check against the brief's pass checklist; log pass/fail per item in the post's `log.md`.
