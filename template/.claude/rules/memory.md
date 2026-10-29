@@ -41,6 +41,27 @@ problem, never a guess that looked plausible. A confidently-wrong note sends the
 next reader down a dead end with your authority behind it — this is the
 discipline auto-learning setups skip, and why their memory rots.
 
+## Owner rules: write them where the work reads them
+
+A rule the owner states in chat ("always use X", "never do Y") is lost the moment the
+session ends unless it sits in a file the next job reads. New sessions, scheduled jobs and
+subagents know only what is in files. A memory note in one project's folder never reaches
+a job running in another. Recording it in memory alone is not enough. In the same turn:
+
+1. Find the line that actually decides the behaviour: the command (`.claude/commands/`),
+   the skill, or `CLAUDE.md`. Edit that line, and delete or reword any line that says the
+   opposite. Jobs follow the most specific line they read.
+2. If the rule fits every project, put it in the shared or global skill, not one project.
+3. Commit and push, then tell the owner which file now holds it.
+
+When you brief a subagent, give it every owner rule that applies in the first message,
+not one at a time while it is already working. If an owner note could mean two things,
+ask in one line instead of guessing. A guess in the wrong direction costs a full redo.
+
+**Efficiency.** Start from what the owner already approved. Measure instead of guessing,
+then correct in code. Preview the risky part before the full build. Run the expensive step
+(render, export, deploy) once, after the checks pass.
+
 ## Recall — at session start, and before editing an unfamiliar area
 
 Before re-debugging anything, check what the project already knows:

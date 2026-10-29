@@ -14,6 +14,7 @@ Research behind it (2026-10-22): heygen-com/hyperframes skills `motion-doctrine`
 - **No black-outline text.** Clean type on panels or pills with soft shadows (owner rejected outlined text, 2026-10-22: "looks like noobs design").
 - **"3D" means a real lit scene** with a moving camera. Lines sliding over a picture get rejected (owner, 2026-10-22/23).
 - **Every beat changes something on screen.** Cut a beat that changes nothing.
+- **A different look and motion style for every reel, and the key line brightest** (owner, 2026-10-29: "WHY u always using the same theme/colour palette/video creation style for each content", "why u always using dim colours for important things"). Follow poster-design's `look:` rotation: differ from the last 3 posts in palette, treatment AND motion (e.g. hard cuts on beat vs slow push-ins vs drawn-on lines vs kinetic type vs 3D camera move). The line the reel exists for is the highest-contrast, largest text on screen.
 
 ## 1. Structure (retention)
 | Time | Beat | Notes |

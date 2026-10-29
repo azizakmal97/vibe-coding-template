@@ -7,6 +7,17 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Owner rules go where the work reads them** (`template/.claude/rules/memory.md`). A
+  rule stated in chat is written the same turn into the command, skill or `CLAUDE.md` line
+  that decides the behaviour, with any contradicting line removed. Subagents get every
+  rule in their first brief, and an ambiguous note gets a one-line question. The section
+  also adds efficiency habits: reuse approved work, measure instead of guessing, preview
+  the risky part, run the expensive step once. Why: rules kept only in one session's
+  memory never reached the jobs, so the owner had to repeat them for days.
+- **Media skills synced** (`global-setup/skills/`): Flow first for pictures and video, with
+  a code or Blender fallback; never reuse a photo; a high design bar; close every browser
+  tab you open; download only the Flow result you use; a method for talking cartoons of a
+  real person; and the work-efficiently rule.
 - **Global `social-growth` skill: hooks, outlier research, captions and replies for
   Instagram and TikTok.** New `global-setup/skills/social-growth/`, adapted from
   Jakeschincariol/instagram-agent-skill (MIT): the 26 hook formulas and the five-check hook

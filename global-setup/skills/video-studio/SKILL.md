@@ -14,13 +14,24 @@ Start from the project's reference build when it has one (its local media skill 
 - The project's own local media skill: brand, palette, fonts, voice, sources rule, reference build, Chrome profile, approval desk.
 
 ## Owner rules (all projects)
+- **Work efficiently, always** (owner, 2026-10-29: "make sure to work efficiently forever"; one cartoon took ~600 tool steps and 600k tokens). Start from approved masters and earlier assets, never redraw or regenerate what the owner already approved. Measure instead of guessing (colour hex, size, timing) and correct in code instead of re-rolling Flow. Show the owner one small preview of the risky part (face, look, cover) before building the whole thing. Judge results in Chrome, and download and render only the final pick. Batch browser actions. Render once after the checks pass, not after every tweak. One worker per task, with a brief that already holds every owner rule.
 - **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, the first video of a kind or the storyboard; lower for edits, covers and re-renders of a locked design.
 - **"3D animation" means a real lit 3D scene**: solid models, layered reveals, a moving camera, close-ups, things moving. Lines sliding over a picture get rejected.
 - **No black-outline text.** That looks like a beginner's design. Use clean type on panels or pills with soft shadows, animated in (see After Effects below).
 - **Every video gets a designed cover/thumbnail**, never a random frame. On a 1080x1920 cover the title and all text stay inside the centre 1080x1350 (owner, 2026-10-26: one rule for every brand; `poster-design`).
 - **Voice-over is wanted**, along with music and SFX. Retime the video to the voice; never rush the voice to fit the video.
 - **The owner reviews on the project's approval desk** before anything is scheduled. Push the item the way the project's render/produce command says, and read the owner's change notes on every pass.
-- Free or open-source tools and Google Flow are allowed for any material. Keep the licence credits the assets need (for example "Anatomy: Z-Anatomy (CC BY-SA 4.0)") in the caption or description.
+- **Google Flow FIRST for pictures AND video, then build it yourself where Flow is wrong** (owner, 2026-10-22/23/25, repeated 2026-10-29 because it kept getting lost: "we can use flow to generate images and videos, if video not good or not accurate, u can make yourself using codes, blender and all the repos i gave u"). The order is:
+  1. Generate the hero images and clips in Flow (Chrome, the project's profile). If several posts need Flow, queue them on the one browser; never drop Flow to save time.
+  2. Wherever Flow is inaccurate (anatomy, geometry, text, holy-site details) or the clip looks weak, rebuild that part in code (PIL, SVG, HyperFrames, drawn-by-code), in Blender, or with a tool from the toolbox below, and composite it.
+  3. Licensed photos and pure code drawing are for what Flow can't do truthfully, such as a real place in a factual claim, or charts.
+- **Toolbox the owner gave** (use it; don't fall back to a plain template): HyperFrames (reels), drawn-by-code (line drawing, GPU render), Blender 5.2 with Z-Anatomy and TRELLIS image-to-3D (`blender-3d`), awesome-seedance `timeline-shot-script` (beat sheets), cloveric drawing styles, golden-temple QA checks, Rhubarb Lip Sync (talking cartoon mouths), ElevenLabs (Malay VO), Kokoro (free VO), After Effects 2023 by script. Keep the licence credits the assets need (for example "Anatomy: Z-Anatomy (CC BY-SA 4.0)") in the caption or description.
+- **Talking cartoon reels of a real person** (owner, 2026-10-29). The person's exact look (approved master, skin hex, clothes, eyes) lives in the project's local media skill, never here. Method:
+  1. Never redraw the face. Flow-edit the person's approved cartoon for clothes, pose and gestures only, paste the original face back in code, and change only the mouth (talking states) or eyelids (blink).
+  2. Take the skin colour from a real photo of the person: measure it, set it in code on every frame, and show the person a phone-size preview next to their photo before the build.
+  3. Add hands and body movement (explain, point and count gestures on key words, a gentle sway), and check the fingers at full size.
+  4. No self-introduction and no greeting: the first words are the hook.
+  5. If a note about looks could mean two things ("eyeliner", "hair out of the cap"), ask in one line before changing anything.
 
 ## Prompt method (owner's prompt pack, 2026-10-23)
 - **Storyboard blocks:** write every storyboard as fixed blocks: BRAND (HERO, SET, RESULT), FORMAT, BEATS, CAMERA, LOOK, CHECKS. BRAND is the only block you swap for the next video.
@@ -96,6 +107,8 @@ Every reel or TikTok gets a sound that suits the For You page, but **only from t
 - Caption panels: type on a white ~90% rounded panel with a soft drop shadow and a small accent bar, popping in at 92→100% scale; labels and tags as pills. The house fonts, sizes and colours are in the project's local skill.
 
 ## Google Flow (flow.google.com)
+Reuse your Flow tab for every generation, and close every tab you opened when you finish (`social-posting` → Chrome). Parallel workers may each have their own tab.
+Download only the results that match the request (owner, 2026-10-29: "only download picture that match your request only"). Judge each variant inside Chrome (screenshot, the zoom action, or open it large in Flow; owner: "why u have to download all to see? just see in chrome"), download only the one you use, never every variant, and delete rejected downloads before you report.
 Chrome use, the chat-panel prompt, Download → 2K, the reference-upload patch and the "Rights to use this image" consent are in `poster-design` → Flow in Chrome. Flow invents labels and gets anatomy wrong: put titles on with PIL and keep exact anatomy in Blender.
 
 ## Project bindings

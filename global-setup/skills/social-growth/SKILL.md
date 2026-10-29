@@ -15,6 +15,8 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 - Never invent a number, a case, a result or a quote. If a hook needs a number nobody gave you, leave `{{number}}` and flag it.
 - The project's source and accuracy rules beat every growth rule here.
 
+- **Malay copy: no comma before "dan", "serta", "untuk" or "oleh"** (owner, 2026-10-29: "why still have the ai-slop. no ',' before 'dan', 'serta', 'untuk', 'oleh'"). It's an English-style serial comma that reads as AI. Write "wad dan klinik", "Maksilofasial oleh Dr Ahmad". Before any BM caption, slide text or reply goes to HQ or live, check it: `grep -nE ", (dan|serta|untuk|oleh)\b"` must find nothing.
+
 ## 1. Hooks
 A post has two hooks that fire together: the **spoken line** (about 2 s) and the **on-screen line** (about 1 s, read before it is heard). Write them separately. On screen: 6 words or fewer.
 
