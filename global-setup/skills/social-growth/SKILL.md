@@ -136,7 +136,7 @@ Reply rules:
 - To a critic: concede the true part in their words, then hold the line. Never delete a fair critic, never reply twice on one thread.
 - Clinical or religious questions follow the project's source rules; when unsure, say so and point to a proper source, never guess.
 
-**Drafts go to the owner for approval before anything is posted.** Never automate bulk liking, following, commenting or DMs, on our posts or anyone else's: it breaks Instagram's and TikTok's terms and gets the account restricted. Outreach comments on other people's posts are written for the owner to post by hand.
+**Engagement follows the project's owner-approved routine.** A project may run a daily engagement job (replies on our posts, follows, comments on others' posts, one Story) when the owner has approved it with numbers, as `/engage` in that project. Keep it human-paced: caps per day, small bursts, stop for the day at any "try again later" or action block, raise caps only after a clean week, and use no third-party bots or scraping services. Follow only where the owner allows it (some accounts: Instagram only, never TikTok). Without an approved routine, drafts go to the owner first. Never DM in bulk.
 
 ## 6. Reading our own insights
 Raw views mostly measure follower count. Rank our posts by:

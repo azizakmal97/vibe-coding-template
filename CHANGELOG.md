@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **`social-growth`: owner-approved daily engagement.** A project can run a paced daily engagement job (replies, follows where the owner allows them, comments, one Story) once the owner sets the numbers. It keeps caps, stops at an action block and uses no bots. This replaces "never automate engagement", which contradicted the owner's explicit request.
 - **Owner rules go where the work reads them** (`template/.claude/rules/memory.md`). A
   rule stated in chat is written the same turn into the command, skill or `CLAUDE.md` line
   that decides the behaviour, with any contradicting line removed. Subagents get every
