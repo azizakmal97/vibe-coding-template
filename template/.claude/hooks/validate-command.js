@@ -29,7 +29,9 @@ process.stdin.on('end', () => {
     // this stops the common/casual paths, not a determined actor.
     { test: (c) => {
         const reader = /\b(cat|tac|nl|more|less|head|tail|strings|xxd|od|hexdump|base64|gc|Get-Content|type|cp|copy|mv|move|scp|rsync|openssl|sed|awk|grep|rg|dd|node|deno|bun|python3?|ruby|perl|php|pwsh|powershell)\b/i;
-        const secretFile = /(^|[\s'"=:/\\])(\.env(?!\.(example|sample|template|dist))(\.[\w-]+)?|[^\s'"]*\.dev\.vars(\.[\w-]+)?|[^\s'"]*\.(pem|key|p12|pfx)\b|secrets[\/\\])/i;
+        // A secret file name is made of path characters only, so a JSON path like '$[4].key' or prose
+        // mentioning `.key` is not one (both were blocked on 2026-10-29).
+        const secretFile = /(^|[\s'"=:/\\])(\.env(?!\.(example|sample|template|dist))(\.[\w-]+)?|[\w.~\/\\-]*\.dev\.vars(\.[\w-]+)?|[\w.~\/\\-]*[\w-]\.(pem|key|p12|pfx)\b|secrets[\/\\])/i;
         const redirectRead = /<\s*[^\s|;&)]*\.(env|dev\.vars|pem|key|p12|pfx)\b/i;
         if (redirectRead.test(c)) return true;
         return reader.test(c) && secretFile.test(c);
