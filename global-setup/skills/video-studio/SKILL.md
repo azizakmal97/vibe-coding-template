@@ -59,6 +59,8 @@ Start from the project's reference build when it has one (its local media skill 
 8. **Cover**: Google Flow illustration (or a hero render) plus a title via PIL (`poster-design`).
 9. **Review gate**: an 8-frame contact sheet across all shots, then a full-size crop of every label, valve or critical detail, plus `ffprobe` and loudness. Fix before sending to the desk. Say plainly that you didn't watch it on a phone.
 
+**Reel cut of a carousel** (2026-10-30): on Instagram, carousels reach mostly followers and reels reach non-followers (two accounts: carousels 5 to 101 reach, reels 40 to 1,847). `python scripts/slideshow_reel.py out/reel-cut.mp4 <slides in order> --seconds 18 [--audio <licensed track>]` puts each approved slide, untouched, over a blurred copy of itself (never flat borders, which Instagram suppresses), about 2 s a slide (`--seconds` = 3 × slides for dense slides), and fades back to slide 1 so it loops. Without `--audio` the track is silent, so add the platform's trending sound in the app. Skip the cut when most slides are mostly text, since majority-text reels are suppressed. Check frames at 0.5 s, the middle and the end.
+
 ## Blender for video scenes
 Running Blender, the stale-transform blank render, Standard view transform, EEVEE transparency, solidify spikes, chunked long renders and Z-Anatomy baking are in `blender-3d`. Video-only notes:
 - Run: `blender.exe --background --factory-startup --python scene.py -- --frames 0-787 --scale 100 --samples 48`.
