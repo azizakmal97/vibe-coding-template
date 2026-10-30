@@ -60,6 +60,7 @@ Particles, lens flares, glow, bloom, RGB split, glitch, white flashes, crossfade
 ## 4. Captions and layout
 - **Safe zones (one set for every brand, 2026-10-26, the strictest of all earlier notes):** no text in the top 270 px, bottom 420 px or right 120 px of a 1080x1920 frame. Never let a line run off screen.
 - **Never cover a face.** Put the caption above the head, or below the chin in close-ups.
+- **A presenter's hands stay whole.** For a talking character or host, both shoulders, elbows and whole hands sit inside the frame with a margin (at least 6% of the width at the sides and below the lowest hand), in every gesture pose and in every frame after scaling, panning and sway. Make poses on a wider canvas (zoom out or outpaint) instead of cropping. Check one frame per gesture at full size: 10 fingers, no arm touching an edge.
 - Story reels with characters: 1–4 words per group on the voice, each group pops in (small → slightly bigger → normal), the spoken word highlighted, one accent colour per character, the punchline bigger.
 - Make text, panels and labels outside the 3D scene: HTML screenshotted at 2–3x, or PIL. Changing a word is then a 30 s re-composite, not a re-render.
 - Keep one palette with fixed roles across a reel (for example one neutral colour, one for "wrong", one for "correct"); the project's local skill names the colours.
