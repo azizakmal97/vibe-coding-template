@@ -152,6 +152,11 @@ Raw views mostly measure follower count. Rank our posts by:
 
 - **Views and no follows is a profile problem; no views is a hook problem.** Separate them before changing anything. For the profile: the Instagram name field (30 characters) is searchable, so put the searched words there; pin the three best posts; give grid covers a short readable title (`poster-design`).
 - Compare the top five and bottom five on hold at 3 s, formula, format, length, theme and whether comments got replies in the first hour. Check day and hour **last**: it is almost never the cause.
+- **Measured on a new TikTok account (2026-10-30, 17 posts, about 25K views):**
+  - **Practical "how do I" posts beat interesting-fact posts.** Two practical planning posts got 9.2K and 3.5K views, half of all views. Fact posts got 500 to 1,700. Personal or "about the book" posts got 18 to 285. A practical post that hits gets a numbered follow-up series within days.
+  - **A follow-gated freebie converts and "Save this" does not.** "Follow + comment <WORD>, we DM you X" got 7 follows per 1,000 views. A "save this" ask got 1.1 per 1,000 on 5× the views. End every post with a freebie that matches its topic.
+  - **Long reels lose people at second 2.** A 52 s reel averaged 16.7 s watched, 4.3% finished it, and most viewers left at 0:02. Keep growth-stage reels to 20–30 s with one fact. Put the payoff on frame 1 with no map or "where" intro, and end on a line that loops back to frame 1. Photo posts beat reels here because swiping keeps people in the post.
+  - TikTok Studio → Analytics → a post → Overview shows average watch time, % watched to the end, new followers and the exact search queries. Read those, not raw views.
 - Say how sure you are. 30 posts show a pattern; 6 do not.
 - Feed the findings into the plan: more of the formulas and themes that over-index, a mix of proof, teaching, opinion and story posts, never two of one type back to back.
 

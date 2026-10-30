@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **`social-growth`: what a new TikTok account's numbers showed.** Practical "how do I" posts beat fact posts by 3 to 15 times; a follow-gated freebie converts about 6 times better than "save this"; growth-stage reels are 20 to 30 s with the payoff on frame 1, because long reels lost most viewers at second 2; read watch time, completion and new followers per post.
 - **`blender-3d`: check where the anatomy is mapped, and make labels land on their structure.** An orthographic check against the model's own structures, and leader-line anchors taken from each structure's geometry, zoom-checked. **`poster-design`:** Flow can't follow a described anatomic path, so generate the hero without it and draw the structures in code.
 - **`video-studio`: research a viral sound for every post.** Topic search, use count from the sound page, never one of the last 5 posts, written in the brief; the For You list and saved favourites are only a fallback.
 - **`poster-design`: Flow's "unusual activity" message is a usage cap, so retry**, and how to widen a picture with an outpaint plus a feathered merge of the original pixels.
