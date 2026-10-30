@@ -58,6 +58,8 @@ Brand rules win over this file. The project's own local media skill or CLAUDE.md
 - Uploading a reference: there is no file input until "Upload media" is clicked, and that opens a native picker. Patch `HTMLInputElement.prototype.click`/`showPicker` in the page to keep the input, click Upload media, then `file_upload`. Flow then asks you to confirm "Rights to use this image": that is agreeing to terms, so get the owner's OK per project (the local skill records any standing OK).
 - Don't press Flow's back arrow or navigate while a generation runs: it cancels it. Return to the project by its URL.
 - If Chrome screenshots time out on Flow, click an empty area of the page first.
+- "We noticed some unusual activity" after pressing generate is Flow's usage cap, not bot detection (owner, 2026-10-30: it happens to them by hand too). Wait a minute and try again; the earlier attempt often finished anyway, so check the image's history panel first.
+- Widening a picture (outpaint): paste the original on a bigger white canvas, upload it, prompt "Outpaint only: fill the plain white margins … keep everything already drawn exactly identical". Flow returns its own size: resize back, then paste the original pixels over it with a feathered edge. If Flow redrew a limb the original cut off, keep the original only above that limb, or he gets two hands (2026-10-30).
 - Log the tool and prompt in the brief. Turn on the IG AI label where the project says so.
 
 ## 4. Photos
