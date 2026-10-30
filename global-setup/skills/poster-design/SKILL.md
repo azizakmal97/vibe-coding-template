@@ -34,6 +34,8 @@ Brand rules win over this file. The project's own local media skill or CLAUDE.md
 
 ## 2. Text goes on in code, not in the image model
 - Flow invents labels and gets anatomy wrong. For art, prompt "The image contains no text" and set titles, labels and credits in PIL or HTML.
+- **Flow cannot follow a described anatomic path** (2026-10-30): asked twice for a nerve passing over two vessels, Nano Banana Pro drew it under them and ran the vessels along the border. Generate the hero WITHOUT those structures (an edit "remove every vessel, nerve and line, keep everything else" works), read the landmarks off a grid overlay, and draw the structures in code with rounded shading and tapered ends.
+- **Uploading an image to Flow** raises a "Rights to use this image" dialog that the agent may not accept. Use text-only prompts, or ask the owner to accept it once.
 - HTML route: a page at the exact pixel size, fonts from Google Fonts, the image as a data URI, screenshotted with headless Chromium (Playwright). A good cover page: background photo with `object-position`, a darkening gradient you can override per cover when the photo is busy behind the title, a vignette, an optional tilted card image, kicker pill, top line, big title, sub line, logo + handle.
 - Video titles and overlays: PIL or HTML at 2–3x (`video-studio`).
 - When a whole poster must be made in the image model (a sketchnote slide, a Nano Banana Pro poster):
