@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **`video-studio`: research a viral sound for every post.** Topic search, use count from the sound page, never one of the last 5 posts, written in the brief; the For You list and saved favourites are only a fallback.
 - **`poster-design`: Flow's "unusual activity" message is a usage cap, so retry**, and how to widen a picture with an outpaint plus a feathered merge of the original pixels.
 - **`motion-design`: a presenter's hands stay whole.** A talking character keeps both arms and all ten fingers inside the frame with a margin in every pose and frame; poses are made on a wider canvas, never cropped.
 - **`social-growth`: owner-approved daily engagement.** A project can run a paced daily engagement job (replies, follows where the owner allows them, comments, one Story) once the owner sets the numbers. It keeps caps, stops at an action block and uses no bots. This replaces "never automate engagement", which contradicted the owner's explicit request.
