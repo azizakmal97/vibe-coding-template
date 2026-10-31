@@ -79,6 +79,18 @@ Particles, lens flares, glow, bloom, RGB split, glitch, white flashes, crossfade
 7. **Cover:** a designed cover, never a grabbed frame (`poster-design`).
 8. Write each round in the post's `log.md` as short numeric fixes ("hook text 96 → 120 px"). Expect about three rounds. Say plainly if nobody watched it on a phone.
 
+## 6b. Long-form video (YouTube, 5 to 15 min): what got a whole episode rejected (2026-10-31)
+- **Variety of picture, not one renderer.** A procedural 3D terrain used as filler for most of the film reads "noob and basic". Mix generated stills and clips (the project's image model first), real licensed photos for "the place today", maps, cards, the brand presenter, and 3D only where the camera move or the figures carry meaning. No visual source runs for more than ~3 shots in a row.
+- **People on screen.** History told with empty landscapes is dead. Use simple scale figures (faceless manikins) for crowds, marches and councils, and follow the project's rules for depicting holy or revered figures (the local media skill holds them). Distinguish groups by colour and light, never by faces.
+- **The brand presenter appears.** Hook, chapter openers and outro carry the project's host or cartoon, with gestures on the key words (the local media skill holds the set).
+- **Overlays never fight.** One text block per screen region at a time; a card fully clears before the next card or chapter title enters; labels keep 90 px from every frame edge; map labels never sit under a panel.
+- **Contrast on every text.** Small reference lines and kickers sit on a dark panel or pill and pass 4.5:1 against what is behind them, checked on the actual frame, not on the design.
+- **Text on the word.** A quote or key line lands within 0.2 s of the voice saying its first word (use the word timings), and the on-screen words match the spoken words.
+- **Maps show who travels.** One route per journey, drawn in the order the voice tells them; two separate journeys get two moments (and their years), not two arrows at once.
+- **No dead air.** More than ~1.5 s without voice, music swell or movement is a defect; a deliberate held beat still has a slow move.
+- **Cuts are checked frame by frame.** Every cut and transition boundary is pulled ±3 frames: no flash frame, no mirrored or repeated frame, no stray frame from another shot, no shape (outline, line art) breaking across the cut.
+- **The full-watch gate before the approval desk.** Watch the whole render at 1x (or sample a frame every 0.5 s on contact sheets plus every cut boundary), tick a written checklist of the items above, and fix before sending. The owner is not the reviewer.
+
 ## 7. HyperFrames gotchas (verified 2026-10-22)
 - Env for every call: `HYPERFRAMES_SKIP_SKILLS=1 DO_NOT_TRACK=1`. Pin the version the project uses.
 - Render with `-w 2`: the auto worker count got the render killed for low memory; 2 workers took 3 min for 62 s.
