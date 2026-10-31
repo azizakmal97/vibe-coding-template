@@ -14,6 +14,7 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 - Nothing is posted, liked, followed or messaged by an agent without the owner's yes on the approval desk.
 - Never invent a number, a case, a result or a quote. If a hook needs a number nobody gave you, leave `{{number}}` and flag it.
 - The project's source and accuracy rules beat every growth rule here.
+- **No posts on an app's or authority's current procedure** (booking steps in an official app, permit rules, opening times, visa rules, prices; owner, 2026-10-31: "that's why i don't like posting things that need frequent update"). They change without notice, followers correct you in the comments, and the post goes stale. A high-reach post on such a topic is not a reason for a follow-up series. Teach what stays true.
 
 - **Malay copy: no comma before "dan", "serta", "untuk" or "oleh"** (owner, 2026-10-29: "why still have the ai-slop. no ',' before 'dan', 'serta', 'untuk', 'oleh'"). It's an English-style serial comma that reads as AI. Write "wad dan klinik", "Maksilofasial oleh Dr Ahmad". Before any BM caption, slide text or reply goes to HQ or live, check it: `grep -nE ", (dan|serta|untuk|oleh)\b"` must find nothing.
 
@@ -132,6 +133,8 @@ Reply rules:
 - Specific to what they said. If the reply could sit under any post, rewrite it.
 - No generic openers ("Great question!", "Thanks for sharing!", "Love this").
 - No emoji as the first character, no emoji-only replies.
+- No heart emojis in replies (owner, 2026-10-31: "tak payah la love2 tu").
+- A posted reply with a small flaw stays up: never delete and repost to fix it (owner, 2026-10-31). Check length before typing: TikTok replies stop at 150 characters.
 - No pitching: no offer, no link, no "check my page".
 - To a critic: concede the true part in their words, then hold the line. Never delete a fair critic, never reply twice on one thread.
 - Clinical or religious questions follow the project's source rules; when unsure, say so and point to a proper source, never guess.
