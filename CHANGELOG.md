@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- video-studio: every video also ships a layered After Effects project or Premiere FCP XML timeline so the owner can hand-fix small slips; the hand fix still passes the review gate and its lesson goes back into the job files.
 - motion-design: §6b long-form video rules (mixed picture sources, scale figures, presenter, overlay and contrast checks, word-synced text, one route per journey, no dead air, frame-by-frame cut check, full-watch gate before approval).
 - **`video-studio`: `scripts/slideshow_reel.py` turns carousel slides into a looping 9:16 reel cut** (slides untouched over a blurred copy, no flat borders), and **`social-growth`: Instagram rules** (post carousels as reel cuts, a send line naming the person, sticker Stories, hashtag counts per platform).
 - **`social-growth`: what a new TikTok account's numbers showed.** Practical "how do I" posts beat fact posts by 3 to 15 times; a follow-gated freebie converts about 6 times better than "save this"; growth-stage reels are 20 to 30 s with the payoff on frame 1, because long reels lost most viewers at second 2; read watch time, completion and new followers per post. Also the FYP research rules: a 70% completion gate before longer reels, never deleting live posts, own files only, no same topic twice a day, replies in the first hour.
