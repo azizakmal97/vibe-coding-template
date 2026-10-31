@@ -77,7 +77,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/session-start-resume.js"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start-resume.js\""
           },
           {
             "type": "command",
@@ -92,7 +92,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/config-protection.cjs"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/config-protection.cjs\""
           }
         ]
       },
@@ -101,15 +101,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/validate-command.js"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-command.js\""
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/pre-db-migrate.cjs"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre-db-migrate.cjs\""
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/pre-commit-checkpoint.js"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-checkpoint.js\""
           }
         ]
       },
@@ -118,7 +118,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/pre-artifact-antislop.cjs",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre-artifact-antislop.cjs\"",
             "statusMessage": "antislop gate"
           }
         ]
@@ -130,15 +130,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/post-edit-check.cjs"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-check.cjs\""
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/check-file-size.js"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-file-size.js\""
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/post-edit-antislop.cjs"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-antislop.cjs\""
           }
         ]
       },
@@ -147,11 +147,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/post-commit-push.js"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-commit-push.js\""
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/post-commit-update-progress.js"
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-commit-update-progress.js\""
           }
         ]
       }
