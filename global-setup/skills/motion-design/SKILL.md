@@ -66,9 +66,7 @@ Particles, lens flares, glow, bloom, RGB split, glitch, white flashes, crossfade
 - Keep one palette with fixed roles across a reel (for example one neutral colour, one for "wrong", one for "correct"); the project's local skill names the colours.
 
 ## 5. Sound cues
-- Whoosh peak exactly on the cut (place by the sound's peak, not its file start).
-- Riser 1–2 s → 0.3 s silence → key line / reveal.
-- Low hit on the evidence reveal and pin drop; soft tick on word pops; nothing on every graphic.
+- **No harsh, loud or sudden transition sounds** (owner, 2026-10-31: "I don't prefer the harsh, loud and sudden transition sound effects"). No whooshes, risers, hits, impacts or ticks on cuts and pops. Let the music and the voice carry the cuts. If a moment needs a sound, use one soft texture (a low pad swell or a gentle chime). Fade it in over at least 80 ms and keep it at least 12 dB under the voice.
 - Music always under the voice, ducked; check on a phone speaker at half volume. Levels: `video-studio` → Music and SFX, or the project's own rule.
 
 ## 6. Process
