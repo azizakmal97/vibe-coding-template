@@ -30,6 +30,8 @@ Brand rules win over this file. The project's own local media skill or CLAUDE.md
 | Square poster | 1080x1080 | — |
 | Story | 1080x1920 | out of the top 270 px, bottom 420 px and right 120 px (the one safe-zone set, 2026-10-26, `motion-design`) |
 
+**TikTok photo posts cover the slide** (owner, 2026-10-31: "qr placement is bad. it's covered with this people like"). On a 1080x1350 slide shown on TikTok, keep anything people must read or scan out of: the **bottom-left 300x420** (the stack of liker avatars), the **right 150 px** (like, comment, save, share buttons) and the **bottom 220 px** (caption). Put a QR code or CTA in the **upper-middle** of the slide: QR centred horizontally, between y 420 and y 900. Credits and fine print may sit low; they are allowed to be covered.
+
 - Flow offers portrait 3:4 only for images (Download → 2K = 1792x2400). Ask for "the paper/scene fills the canvas edge to edge" and crop to the target size in code (3:4 → 1080x1350) rather than asking for empty bands.
 
 ## 2. Text goes on in code, not in the image model
