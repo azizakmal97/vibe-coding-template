@@ -110,6 +110,14 @@ Every reel or TikTok gets a sound that suits the For You page, but **only from t
 - Moving labels: per-frame `setValuesAtTimes` from the Blender camera's projected anchors (`world_to_camera_view`, exported to JSON).
 - Caption panels: type on a white ~90% rounded panel with a soft drop shadow and a small accent bar, popping in at 92→100% scale; labels and tags as pills. The house fonts, sizes and colours are in the project's local skill.
 
+## Editable project for the owner's own fixes (owner, 2026-10-31)
+Small slips (a cut half a second off, a caption typo, a label off its structure, music too loud) cost a full rebuild, render and review each time; the owner fixes them faster by hand. So every video ships two things:
+- **The render** from this pipeline, as today.
+- **A layered project** beside it in `out/edit/`: an After Effects project built by the AE script (save it with `app.project.save(File(...))`), or for an ffmpeg edit an FCP XML timeline that Premiere Pro opens as a sequence. Voice-over, music, SFX and every clip on their own tracks; captions, labels and tags as live text layers, never burned in; source media referenced from the post folder, not re-encoded copies, so one final export is the only compression.
+- **After a hand fix:** the owner's export still goes through the review gate (Pipeline step 9) before the approval desk. Ask the owner for a one-line note of what they changed, and write that lesson into the job files the same turn, so the next build does not repeat the slip.
+- Structural problems (wrong scene, fact, source or animation) are never left to a hand fix: rebuild them.
+- Before an AE or Premiere export, check free RAM; close other jobs first when it is under about 4 GB.
+
 ## Google Flow (flow.google.com)
 Reuse your Flow tab for every generation, and close every tab you opened when you finish (`social-posting` → Chrome). Parallel workers may each have their own tab.
 Download only the results that match the request (owner, 2026-10-29: "only download picture that match your request only"). Judge each variant inside Chrome (screenshot, the zoom action, or open it large in Flow; owner: "why u have to download all to see? just see in chrome"), download only the one you use, never every variant, and delete rejected downloads before you report.
