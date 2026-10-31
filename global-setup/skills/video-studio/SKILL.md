@@ -61,6 +61,8 @@ Start from the project's reference build when it has one (its local media skill 
 
 **Reel cut of a carousel** (2026-10-30): on Instagram, carousels reach mostly followers and reels reach non-followers (two accounts: carousels 5 to 101 reach, reels 40 to 1,847). `python scripts/slideshow_reel.py out/reel-cut.mp4 <slides in order> --seconds 18 [--audio <licensed track>]` puts each approved slide, untouched, over a blurred copy of itself (never flat borders, which Instagram suppresses), about 2 s a slide (`--seconds` = 3 × slides for dense slides), and fades back to slide 1 so it loops. Without `--audio` the track is silent, so add the platform's trending sound in the app. Skip the cut when most slides are mostly text, since majority-text reels are suppressed. Check frames at 0.5 s, the middle and the end.
 
+**The reel cut comes out silent: never post it as it is** (owner, 2026-10-31: "why u post without sound in Instagram?"). Mux a licensed track under it: `ffmpeg -i reel-cut.mp4 -i <track>.mp3 -filter_complex "[1:a]atrim=0:18,asetpts=PTS-STARTPTS,loudnorm=I=-20:TP=-3,afade=t=in:d=1,afade=t=out:st=16:d=2[m]" -map 0:v -map "[m]" -c:v copy -c:a aac -b:a 160k -shortest reel-cut-ig.mp4`. Rotate tracks between posts. Check `-af volumedetect`: max_volume must be above -20 dB.
+
 ## Blender for video scenes
 Running Blender, the stale-transform blank render, Standard view transform, EEVEE transparency, solidify spikes, chunked long renders and Z-Anatomy baking are in `blender-3d`. Video-only notes:
 - Run: `blender.exe --background --factory-startup --python scene.py -- --frames 0-787 --scale 100 --samples 48`.
