@@ -55,7 +55,7 @@ Start from the project's reference build when it has one (its local media skill 
 4. **Voice-over**: Kokoro, one clip per shot. Check that each clip fits its shot; if not, lengthen the shot.
 5. **Soundtrack**: music bed + SFX synthesised in numpy, ducked about 8 dB under the voice, loudnorm to -14 LUFS.
 6. **Edit** (ffmpeg + PIL overlays, or After Effects by script; any editor is fine): the frames over a background, captions, labels, tags, the end card.
-7. **Encode**: ffmpeg, H.264 about 3 Mbps + AAC 160k, faststart. Keep it under the approval desk's asset limit (the project names it). For Meta Business Suite upload through Claude in Chrome the file must be under 10 MB: make a second two-pass encode (~1.9 Mbps for 36 s) from the editor's master, not from the 3 Mbps file.
+7. **Encode**: ffmpeg, H.264 about 3 Mbps + AAC 160k, faststart. Keep it under the approval desk's asset limit (the project names it). For Meta Business Suite upload through Claude in Chrome the file must be under 10 MB: make a second two-pass encode (~1.9 Mbps for 36 s) from the editor's master, not from the 3 Mbps file. **YouTube long videos:** 1080p Full HD is enough (owner, 2026-10-31: no 4K). Upload a copy, never the edit master (YouTube re-encodes every upload): x264 `-preset slow -crf 18 -maxrate 12M -bufsize 24M`, AAC 192k, faststart, about 8 to 12 Mbps; keep the master.
 8. **Cover**: Google Flow illustration (or a hero render) plus a title via PIL (`poster-design`).
 9. **Review gate**: an 8-frame contact sheet across all shots, then a full-size crop of every label, valve or critical detail, plus `ffprobe` and loudness. Fix before sending to the desk. Say plainly that you didn't watch it on a phone.
 
