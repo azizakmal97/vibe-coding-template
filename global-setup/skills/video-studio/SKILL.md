@@ -120,6 +120,7 @@ Small slips (a cut half a second off, a caption typo, a label off its structure,
 
 ## Google Flow (flow.google.com)
 Reuse your Flow tab for every generation, and close every tab you opened when you finish (`social-posting` → Chrome). Parallel workers may each have their own tab.
+**Flow limit reached = switch account, never fall back to stills** (owner, 2026-11-01). When Flow says the credits or the daily limit are used up, carry on in the other Chrome profile that is signed in to a different Google account (the project's CLAUDE.md names its profiles), open Flow there and finish the remaining shots. Upload the references again if that account lacks them. Only when every account has hit its limit, keep the shot list open and say which shots still need Flow.
 Download only the results that match the request (owner, 2026-10-29: "only download picture that match your request only"). Judge each variant inside Chrome (screenshot, the zoom action, or open it large in Flow; owner: "why u have to download all to see? just see in chrome"), download only the one you use, never every variant, and delete rejected downloads before you report.
 Chrome use, the chat-panel prompt, Download → 2K, the reference-upload patch and the "Rights to use this image" consent are in `poster-design` → Flow in Chrome. Flow invents labels and gets anatomy wrong: put titles on with PIL and keep exact anatomy in Blender.
 

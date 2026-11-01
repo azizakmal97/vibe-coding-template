@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- video-studio: when Google Flow hits its credit or daily limit, carry on in another Chrome profile signed in to a different Google account instead of falling back to stills.
 - video-studio: every video also ships a layered After Effects project or Premiere FCP XML timeline so the owner can hand-fix small slips; the hand fix still passes the review gate and its lesson goes back into the job files.
 - motion-design: §6b long-form video rules (mixed picture sources, scale figures, presenter, overlay and contrast checks, word-synced text, one route per journey, no dead air, frame-by-frame cut check, full-watch gate before approval).
 - **`video-studio`: `scripts/slideshow_reel.py` turns carousel slides into a looping 9:16 reel cut** (slides untouched over a blurred copy, no flat borders), and **`social-growth`: Instagram rules** (post carousels as reel cuts, a send line naming the person, sticker Stories, hashtag counts per platform).
