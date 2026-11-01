@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- social-growth: first reply within 30 minutes of a post (a reply pass 30 minutes after each slot), and comments are read from the inbox, the comment manager and each post, because a TikTok profile grid leaves out photo posts.
 - video-studio: when Google Flow hits its credit or daily limit, carry on in another Chrome profile signed in to a different Google account instead of falling back to stills.
 - video-studio: every video also ships a layered After Effects project or Premiere FCP XML timeline so the owner can hand-fix small slips; the hand fix still passes the review gate and its lesson goes back into the job files.
 - motion-design: §6b long-form video rules (mixed picture sources, scale figures, presenter, overlay and contrast checks, word-synced text, one route per journey, no dead air, frame-by-frame cut check, full-watch gate before approval).

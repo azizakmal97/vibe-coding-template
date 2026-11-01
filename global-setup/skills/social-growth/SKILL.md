@@ -16,7 +16,7 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 - The project's source and accuracy rules beat every growth rule here.
 - **No posts on an app's or authority's current procedure** (booking steps in an official app, permit rules, opening times, visa rules, prices; owner, 2026-10-31: "that's why i don't like posting things that need frequent update"). They change without notice, followers correct you in the comments, and the post goes stale. A high-reach post on such a topic is not a reason for a follow-up series. Teach what stays true.
 
-- **Malay copy: no comma before "dan", "serta", "untuk" or "oleh"** (owner, 2026-10-29: "why still have the ai-slop. no ',' before 'dan', 'serta', 'untuk', 'oleh'"). It's an English-style serial comma that reads as AI. Write "wad dan klinik", "Maksilofasial oleh Dr Ahmad". Before any BM caption, slide text or reply goes to HQ or live, check it: `grep -nE ", (dan|serta|untuk|oleh)\b"` must find nothing.
+- **Malay copy: no comma before "dan", "serta", "untuk" or "oleh"** (owner, 2026-10-29: "why still have the ai-slop. no ',' before 'dan', 'serta', 'untuk', 'oleh'"). It's an English-style serial comma that reads as AI. Write "wad dan klinik", "Maksilofasial oleh Dr Aziz". Before any BM caption, slide text or reply goes to HQ or live, check it: `grep -nE ", (dan|serta|untuk|oleh)\b"` must find nothing.
 
 ## 1. Hooks
 A post has two hooks that fire together: the **spoken line** (about 2 s) and the **on-screen line** (about 1 s, read before it is heard). Write them separately. On screen: 6 words or fewer.
@@ -115,7 +115,7 @@ Slides, sizes and the picture-led rule are in `poster-design`. The copy:
 - Use a carousel when the idea has sequence or needs re-reading; a reel when it has motion, a face or a payoff that must be seen. One claim is a reel.
 
 ## 5. Replies to comments on our own posts
-Replies in the first hour do the most work. **Read every post's comments on the post itself**: TikTok Studio's comment list can miss comments, so never treat an inbox or a list as complete.
+Replies in the first hour do the most work. Aim for the first reply within 30 minutes of a post going live: schedule a reply pass for 30 minutes after each posting slot (owner, 2026-11-01). **No single comment source is complete:** check the notifications inbox, the platform's comment manager and each post's own comments. Take post lists from the creator tool, because a TikTok profile grid leaves out photo posts (`social-posting` → Engagement). A comment counts as answered only when the last reply in its thread is ours.
 
 Sort first, and report the counts:
 
