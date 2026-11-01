@@ -86,7 +86,8 @@ The source tested this on 74 real hooks: it separates real hooks from bad ones w
 5. **Report three things only:** which formulas over-index in the top third (with counts), what the top third share structurally (hook length, first frame moves, visual payoff, where the ask is), and the unclassified rows. State the sample size. 40 posts across 6 accounts supports a claim; 12 does not.
 6. **Turn it into our version:** for the top three formulas, a hook line this account could say tomorrow, from its own material. Copy the formula, never the script, voice or edit. Attribute every swipe row to its account.
 
-Keep the swipe file in the project (its local media skill names where). Re-run monthly; formulas last a season. Our own past posts get the same treatment (section 6).
+Keep the swipe file in the project (its local media skill names where). Re-run monthly; formulas last a season.
+To study an outlier frame by frame, save it with yt-dlp (`python -m yt_dlp -o "<project>/research/refs/%(uploader)s-%(id)s.%(ext)s" <url>`) and read its hook, cut timing, text and length with ffprobe or contact sheets. Copy the method only (owner, 2026-11-01): never re-upload, crop or remix someone else's footage, and delete the file once its notes are in the swipe file. Our own past posts get the same treatment (section 6).
 
 ## 3. Captions
 **Decide the job first.**
@@ -115,7 +116,7 @@ Slides, sizes and the picture-led rule are in `poster-design`. The copy:
 - Use a carousel when the idea has sequence or needs re-reading; a reel when it has motion, a face or a payoff that must be seen. One claim is a reel.
 
 ## 5. Replies to comments on our own posts
-Replies in the first hour do the most work. Aim for the first reply within 30 minutes of a post going live: schedule a reply pass for 30 minutes after each posting slot (owner, 2026-11-01). **No single comment source is complete:** check the notifications inbox, the platform's comment manager and each post's own comments. Take post lists from the creator tool, because a TikTok profile grid leaves out photo posts (`social-posting` → Engagement). A comment counts as answered only when the last reply in its thread is ours.
+Replies in the first hour do the most work. Schedule two reply passes for every posting slot, 30 and 60 minutes after the post goes live (owner, 2026-11-01). Keep them replies-only so they finish fast, and let the scheduler skip a pass while the previous one is still running. **No single comment source is complete:** check the notifications inbox, the platform's comment manager and each post's own comments. Take post lists from the creator tool, because a TikTok profile grid leaves out photo posts (`social-posting` → Engagement). A comment counts as answered only when the last reply in its thread is ours.
 
 Sort first, and report the counts:
 
