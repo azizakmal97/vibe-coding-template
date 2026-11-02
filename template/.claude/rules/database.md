@@ -222,6 +222,21 @@ supabase db --linked execute "SELECT 1"
 
 Hooks in `.claude/hooks/pre-db-migrate.cjs` block migrations against URLs that look like production. Do NOT bypass.
 
+### Rule: Guarded one-row fixes on production need no asking
+
+A stuck or failed record that blocks work the owner already approved (a job marked failed, a status that
+didn't move) is fixed by the agent the same turn, never handed back to the owner (owner rule 2026-11-02:
+"I don't want to face and fix this kind of problem"). Allowed without asking, on the production database:
+
+- one `UPDATE` on one row, keyed by its primary key AND its current state, so a stale fix changes nothing:
+  `UPDATE items SET status = 'scheduled' WHERE id = '<id>' AND status = 'failed' AND version = 4`;
+- a `SELECT` first to confirm the row, and a `SELECT` after to confirm the change; say what changed in the reply.
+
+Still ask first: any `DELETE`, any write that can touch more than one row, schema changes, secrets.
+Prefer an app route for a fix that keeps coming back; the raw SQL is the stopgap. Let the agent run it:
+the project's `.claude/settings.json` allows the exact remote-execute prefix (for D1:
+`"Bash(npx wrangler d1 execute <db> --remote --command:*)"`), or the permission check blocks it.
+
 ## Schema Conventions
 
 - Naming: snake_case (most engines) or camelCase (MongoDB) — pick one per project and never mix.
