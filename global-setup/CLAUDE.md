@@ -247,6 +247,11 @@ have to remember it. Notes:
   typecheck + build before committing where the project has them.
 - Fix mistakes with `git revert`, never `reset --hard` + force push. Force push
   only when the user explicitly asks. Never amend an already-pushed commit.
+- Clean your own leftovers (rejected drafts, rebuildable render output, stray
+  downloads) without asking, but never with `rm`: send them to the Recycle Bin with
+  `powershell -NoProfile -File ~/.claude/scripts/trash.ps1 <paths>` (Windows; copy
+  `global-setup/scripts/trash.ps1` there and set `TRASH_ROOTS` to your project folders).
+  Restorable by design. Never recycle tracked source files or another session's work.
 
 ## 6. Learn From Errors — Capture & Recall (this IS "gets faster over time")
 
