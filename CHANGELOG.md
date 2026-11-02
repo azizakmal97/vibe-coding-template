@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- motion-design: glow, particles and bloom are allowed when they carry meaning at film quality; only cheap versions (flat sprite dots, a halo round everything, idle specks) stay banned.
 - video-studio, poster-design and the simplicity rule: stop every local server, watcher or background render you started before reporting, failures included, and prefer opening a local file directly over serving it.
 - social-growth: reply passes 30 and 60 minutes after each post, yt-dlp to study outlier reels frame by frame (method only, never re-uploaded), and comments are read from the inbox, the comment manager and each post, because a TikTok profile grid leaves out photo posts.
 - video-studio: when Google Flow hits its credit or daily limit, carry on in another Chrome profile signed in to a different Google account instead of falling back to stills.

@@ -13,6 +13,7 @@ Research behind it (2026-10-22): heygen-com/hyperframes skills `motion-doctrine`
 - **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
 - **No black-outline text.** Clean type on panels or pills with soft shadows (owner rejected outlined text, 2026-10-22: "looks like noobs design").
 - **"3D" means a real lit scene** with a moving camera. Lines sliding over a picture get rejected (owner, 2026-10-22/23).
+- **Glow, particles and bloom are allowed when they look good** (owner, 2026-11-02: "i only don't want it if it bad quality or bad presentation"). Use them where they mean something (a nerve signal, heat, sparks off a break) at film quality: soft falloff, lit by the scene, never hiding the subject. Cheap versions still get cut: flat sprite dots, a blur halo round everything, idle floating specks.
 - **Every beat changes something on screen.** Cut a beat that changes nothing.
 - **A different look and motion style for every reel, and the key line brightest** (owner, 2026-10-29: "WHY u always using the same theme/colour palette/video creation style for each content", "why u always using dim colours for important things"). Follow poster-design's `look:` rotation: differ from the last 3 posts in palette, treatment AND motion (e.g. hard cuts on beat vs slow push-ins vs drawn-on lines vs kinetic type vs 3D camera move). The line the reel exists for is the highest-contrast, largest text on screen.
 
@@ -55,7 +56,7 @@ Use **at most 3 transition types per reel**, chosen up front, and one travel dir
 Eases: `.out` for entries, `.in` for exits, `.inOut` for camera. Allowed: power2–4, expo, sine, `back.out(1.4–1.7)`. **Banned**: `bounce`, `elastic`, linear camera moves.
 
 ## 3. Banned (looks cheap)
-Particles, lens flares, glow, bloom, RGB split, glitch, white flashes, crossfades between every shot, camera shake (except one ≤8 px hit on the single biggest impact), spinning 3D cards, glassmorphism, paragraphs on screen, every word animated, idle breathe/float loops, the same zoom on every photo, upscaled low-res images, `will-change` on anything the camera scales (blurry text), opacity/filter on `preserve-3d` elements.
+Cheap glow, particles or bloom (see Owner rules), lens flares, RGB split, glitch, white flashes, crossfades between every shot, camera shake (except one ≤8 px hit on the single biggest impact), spinning 3D cards, glassmorphism, paragraphs on screen, every word animated, idle breathe/float loops, the same zoom on every photo, upscaled low-res images, `will-change` on anything the camera scales (blurry text), opacity/filter on `preserve-3d` elements.
 
 ## 4. Captions and layout
 - **Safe zones (one set for every brand, 2026-10-26, the strictest of all earlier notes):** no text in the top 270 px, bottom 420 px or right 120 px of a 1080x1920 frame. Never let a line run off screen.
