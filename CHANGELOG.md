@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- video-studio, poster-design and the simplicity rule: stop every local server, watcher or background render you started before reporting, failures included, and prefer opening a local file directly over serving it.
 - social-growth: reply passes 30 and 60 minutes after each post, yt-dlp to study outlier reels frame by frame (method only, never re-uploaded), and comments are read from the inbox, the comment manager and each post, because a TikTok profile grid leaves out photo posts.
 - video-studio: when Google Flow hits its credit or daily limit, carry on in another Chrome profile signed in to a different Google account instead of falling back to stills.
 - video-studio: every video also ships a layered After Effects project or Premiere FCP XML timeline so the owner can hand-fix small slips; the hand fix still passes the review gate and its lesson goes back into the job files.

@@ -82,6 +82,7 @@ Simple is not the same as optimistic. Before "done":
 - Remove dead code, unused imports and variables, commented-out blocks, debug
   prints and scaffolding before you finish.
 - No orphaned TODO without an owner or an issue behind it.
+- Stop every server, watcher or background process you started before you report, failures included. An orphaned dev server keeps holding RAM and a port.
 - Formatting comes from the project's formatter/linter. Don't fight it, and
   don't reformat lines your change did not touch — it buries the real diff.
 
