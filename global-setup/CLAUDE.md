@@ -194,8 +194,10 @@ models have a 1M window; use the 200k column only for a model that names 200k.
 | 350-500k | 100-140k | orange | finish current phase, do NOT start the next |
 | > 500k | > 140k | red | bail at next safe checkpoint; commit; exit |
 
-A 1M session still bails at 500k: every turn resends the whole context, so past
-that a fresh session from `PROGRESS.md` is cheaper. A large next phase is not a
+A 1M session still bails at 500k: cached turns are cheap but grow with size, and
+after a break past the cache lifetime (1 h on a plan, 5 min on credits) the next
+turn reprocesses everything. Past 500k, or after an overnight break, a fresh
+session from `PROGRESS.md` is cheaper. A large next phase is not a
 reason to bail while green.
 
 Habits: graph/grep before broad reads; spawn a subagent for any file > 500 LOC or

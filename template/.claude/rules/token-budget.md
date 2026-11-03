@@ -20,9 +20,11 @@ Claude models (Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5) all have 1M; use the
 | 350-500k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
 | > 500k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
 
-Why a 1M window still bails at 500k, not 700k: every turn resends the whole
-context, so a long session costs more per turn, and recall of early details gets
-weaker. A fresh session that starts from `PROGRESS.md` is cheaper past that point.
+Why a 1M window still bails at 500k, not 700k: cached turns are cheap, but their
+cost still grows with context size; after a break longer than the cache lifetime
+(1 hour on a plan, 5 minutes on usage credits) the next turn reprocesses the whole
+context; and recall of early details gets weaker. A fresh session that starts from
+`PROGRESS.md` is cheaper past that point, and after any overnight break.
 
 The size of a phase is no reason to bail by itself. In green, start the next phase
 even if it is large; the tiers stop it safely if it runs long.
