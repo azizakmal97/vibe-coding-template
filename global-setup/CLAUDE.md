@@ -76,12 +76,14 @@ session effort is set in the app (ZCode: Settings → Model Providers → Advanc
 Claude Code: `/model`) and is what the model really runs at. Your declaration
 classifies and checks — it never overrides.
 
-**Never write `✓` you have not verified.** Neither agent can read the session's
-configured effort reliably. ZCode does not expose it, and Claude Code may show no
-effort or one that differs from what the owner set in `/model` (owner-reported
-2026-10-24), so an effort value in your own context is not proof either. Unless the
-owner stated the effort in this conversation, say `session effort not visible` and
-assume the owner's setting governs. Format:
+**Never write `✓` you have not verified.** An effort value in your own context is
+not proof: Claude Code may show none, or one that differs from what the owner set in
+`/model` (owner-reported 2026-10-24). In the Claude desktop app, read it instead:
+call `mcp__ccd_session_mgmt__get_session` with `"self"` (load it with ToolSearch if
+deferred) and use its `effort` field, marked `(app-reported) ✓`. Elsewhere (CLI,
+ZCode) nothing exposes it: unless the owner stated the effort in this conversation,
+say `session effort not visible` and assume the owner's setting governs. Format:
+> `Task: **Sonnet 5.5 · medium** · Running: **Sonnet 5.5** ✓ · Session effort: **medium** (app-reported) ✓` — proceed.
 > `Task: **Sonnet 5.5 · medium** · Running: **Sonnet 5.5** ✓ · Session effort: **medium** (owner-stated) ✓` — proceed.
 > `Task: **GLM-5.3 · medium** · Running: **GLM-5.3** ✓ · Session effort: **max** (owner-stated, more than needed)` — proceed.
 > `Task: **Opus 5.5 · high** · Running: **Opus 5.5** ✓ · Session effort not visible — assuming user-configured effort` — proceed.
@@ -89,7 +91,7 @@ assume the owner's setting governs. Format:
 > `Task: **Sonnet 5.5 · medium** · Running: **Opus 5.5** — handing down (Rule 4) · Session effort not visible` — proceed.
 > `Task: **Opus 5.5 · high** · Running: **Sonnet 5.5** — switch first` — then stop.
 
-Mismatch rule, for an owner-stated effort: session effort HIGHER than the task
+Mismatch rule, for an app-reported or owner-stated effort: session effort HIGHER than the task
 needs → proceed and note it (extra thinking is cheap insurance next to a broken
 session). Session effort LOWER than the task needs → stop and ask the user to raise
 it before starting. The model, unlike the effort, is visible: check it every time.

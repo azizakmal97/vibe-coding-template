@@ -349,11 +349,13 @@ repair, not five: failed cheap runs cost more than an early step up.
 - After a model step up fixes it, save a one-line routing lesson
   (`rules/memory.md`): `<task pattern> → <model · effort that worked>`.
 
-### Session effort is not visible
+### Reading the session effort
 
-Claude Code may show no session effort, or one that differs from what the owner
-set in `/model`. Treat it as not visible unless the owner stated it in this
-conversation, and never mark an effort `✓` you have not been told.
+Claude Code may show no session effort in context, or one that differs from what
+the owner set in `/model`. In the Claude desktop app, call
+`mcp__ccd_session_mgmt__get_session` with `"self"` and use its `effort` field,
+marked `(app-reported) ✓`. Elsewhere, treat it as not visible unless the owner
+stated it in this conversation, and never mark an effort `✓` you have not verified.
 
 ### Project pin
 

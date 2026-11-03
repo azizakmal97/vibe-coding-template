@@ -34,7 +34,7 @@ model. Inside this loop a mismatch defers the work instead of stopping the loop.
 **This session's model** is the one named in your system prompt (e.g. Opus 5.5,
 GLM-5.3). If it isn't named, ask once before the first bullet; never guess. Say it
 once at loop start:
-`Model gate: this session is **<model>** · effort **<owner-stated effort, or "not visible">**`.
+`Model gate: this session is **<model>** · effort **<app-reported or owner-stated effort, or "not visible">**`.
 Claude Code's own reading of the session effort can be missing or wrong, so an
 effort the owner did not state counts as not visible.
 
