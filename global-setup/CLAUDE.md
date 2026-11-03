@@ -4,6 +4,12 @@
 > apply everywhere. A project's own `CLAUDE.md` extends or overrides this.
 > Keep it short. Project-specific facts belong in that project's CLAUDE.md or memory.
 
+## 0. Talking to the Owner (Always)
+
+Owner rule, 2026-11-02 ("remember forever"): every reply is short, simple and packed.
+Lead with the answer, no recaps or filler. Ask every question in plain, easy words,
+one decision at a time, naming things the way the owner sees them.
+
 ## 1. Model Selection per Task (Always)
 
 Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task
