@@ -36,7 +36,7 @@ model. Inside this loop a mismatch defers the work instead of stopping the loop.
 **This session's model** is the one named in your system prompt (e.g. Opus 5.5,
 GLM-5.3). If it isn't named, ask once before the first bullet; never guess. Say it
 once at loop start:
-`Model gate: this session is **<model>** · effort **<owner-stated effort, or "not visible">**`.
+`Model gate: this session is **<model>** · effort **<app-reported or owner-stated effort, or "not visible">**`.
 Claude Code's own reading of the session effort can be missing or wrong, so an
 effort the owner did not state counts as not visible.
 
@@ -183,8 +183,8 @@ NEXT SESSION SHOULD: <one specific action>
 
 ## Token-Budget Estimation
 
-Use the tiers in `.claude/rules/token-budget.md` (1M window: green < 200k, orange
-from 350k, red from 500k; 200k window: orange from 100k, red from 140k):
+Use the tiers in `rules/token-budget.md` (1M window: green < 200k, orange from
+350k, red from 500k; 200k window: orange from 100k, red from 140k):
 - green / yellow → safe, continue. A large next phase is not a reason to bail.
 - orange → finish current phase, do NOT start next.
 - red → bail at next safe checkpoint NOW.

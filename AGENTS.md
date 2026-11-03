@@ -33,6 +33,7 @@ ZCode hook registration.
 | `global-setup/hooks/post-commit-push.mjs` | `~/.claude/hooks/post-commit-push.mjs` | Auto-pushes to GitHub after every `git commit` |
 | `global-setup/skills/update-template/SKILL.md` | `~/.claude/skills/update-template/SKILL.md` | `/update-template` in every project. A personal skill outranks the project command of the same name; it forwards to this clone's `template/.claude/commands/update-template.md`, so it never goes stale |
 | `global-setup/skills/{video-studio,motion-design,blender-3d,poster-design,social-growth}/SKILL.md` | `~/.claude/skills/<name>/SKILL.md` | The shared media method: video pipeline, motion grammar, Blender and AI-3D review gate, covers and posters, hooks, outlier research, captions and comment replies for Instagram and TikTok. General rules only; each project keeps a short local skill with its brand, paths and approval desk, which wins |
+| `global-setup/skills/close/SKILL.md` | `~/.claude/skills/close/SKILL.md` | `/close` in every project: commit and push every repo touched, update PROGRESS/CHANGELOG/docs and memory, stop background jobs, report what is still owed. Forwards to `template/.claude/commands/close.md` like `/update-template` |
 | (generated) | `~/.claude/vibe-template.json` | `{ "templateDir": "<this clone>" }`, the pointer that skill reads |
 | (generated) | `~/.claude/settings.json` | Auto-approve mode + the auto-push hook |
 

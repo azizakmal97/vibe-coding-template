@@ -57,16 +57,18 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $hooksDir "session-start-template-sync.mjs") `
         "~/.claude/hooks/session-start-template-sync.mjs"
 
-    # 3. /update-template in every project. A personal skill outranks a project
-    #    command of the same name, and the skill only forwards to the template
-    #    clone's own command, so it never goes stale. The pointer file tells it
-    #    where this clone lives.
-    $skillDir = Join-Path $claudeDir "skills\update-template"
-    New-Item -ItemType Directory -Force -Path $skillDir | Out-Null
-    Install-File `
-        (Join-Path $scriptDir "global-setup\skills\update-template\SKILL.md") `
-        (Join-Path $skillDir "SKILL.md") `
-        "~/.claude/skills/update-template/SKILL.md"
+    # 3. /update-template and /close in every project. A personal skill outranks a
+    #    project command of the same name, and each skill only forwards to the
+    #    template clone's own command, so it never goes stale. The pointer file
+    #    tells it where this clone lives.
+    foreach ($forwardSkill in @("update-template", "close")) {
+        $skillDir = Join-Path $claudeDir "skills\$forwardSkill"
+        New-Item -ItemType Directory -Force -Path $skillDir | Out-Null
+        Install-File `
+            (Join-Path $scriptDir "global-setup\skills\$forwardSkill\SKILL.md") `
+            (Join-Path $skillDir "SKILL.md") `
+            "~/.claude/skills/$forwardSkill/SKILL.md"
+    }
 
     # 3b. Media skills: the shared method for videos, motion, 3D, posters and social growth. Each
     #     project keeps only a short local skill with its brand rules that points here.
