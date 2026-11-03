@@ -66,9 +66,15 @@ async function pick(argv) {
   return choice;
 }
 
+// Never overwrite: on an existing project these targets (CLAUDE.md above all) are
+// project-owned, and setup.ps1 promises "exists, skipping".
 function copyIfExists(from, to) {
   if (!existsSync(from)) {
     console.warn(`[pick-preset] missing source: ${from}`);
+    return false;
+  }
+  if (existsSync(to)) {
+    console.log(`[pick-preset] ${to} exists, skipping`);
     return false;
   }
   mkdirSync(dirname(to), { recursive: true });

@@ -6,6 +6,10 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Fixed
+- **Applying the template to an existing project no longer overwrites its `CLAUDE.md` or `PROGRESS.md`.** `pick-preset.mjs` copied the preset `CLAUDE.md` (and `file-budgets.json`, `commands.json`, CI files) over existing ones, and `init-progress.mjs` rewrote any `PROGRESS.md`, despite setup's "exists, skipping". Both now skip project-owned files. Found while adopting the template in omfshsr-ig, reel-engine and smart-trading (restored from git before commit).
+- **`sync-zcode.mjs` strips `$CLAUDE_PROJECT_DIR/` from hook paths**, so ZCode runs the project's own hook instead of falling back to the global copy.
+
 ### Added
 - **`/close` in every project** (`template/.claude/commands/close.md`, global skill `global-setup/skills/close/`): one word instead of a long closing prompt. It commits and pushes every repo the session touched, updates PROGRESS.md, CHANGELOG and docs, saves memory, stops background jobs and ends with a SAFE TO CLOSE line. Why: the owner's closing prompt kept catching changelog and memory updates that ordinary task endings skipped.
 - **Session effort read from the desktop app.** Rule 1 (`global-setup/CLAUDE.md`, `template/CLAUDE.md`, `/autonomous`) now calls `mcp__ccd_session_mgmt__get_session("self")` and marks its `effort` `(app-reported) ✓`. Only the CLI and ZCode still say `session effort not visible`.

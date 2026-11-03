@@ -21,6 +21,13 @@ if (!existsSync(PROGRESS)) {
 const today = new Date().toISOString().slice(0, 10);
 let body = readFileSync(PROGRESS, 'utf8');
 
+// Only the template's blank copy carries this placeholder. An existing project's own
+// PROGRESS.md must never be rewritten when the template is applied to it.
+if (!body.includes('**Active phase:** _none — fill when first phase starts_')) {
+  console.log('[init-progress] PROGRESS.md already belongs to this project. Skipping.');
+  process.exit(0);
+}
+
 body = body
   .replace(/\*\*Active phase:\*\* .*/m, '**Active phase:** `INIT-P00` — Project bootstrap (🟡 in-progress)')
   .replace(/\*\*Last update:\*\* .*/m, `**Last update:** ${today} by setup script`)
