@@ -183,15 +183,20 @@ step up.
 
 ## 2. Token Budget (Always)
 
-Estimate context use from turns elapsed, files read, response length. You don't
-see exact %; act on the tier.
+Estimate context use from turns elapsed, files read, screenshots, response length
+(about 90k is fixed setup). You don't see exact usage; act on the tier. Current
+models have a 1M window; use the 200k column only for a model that names 200k.
 
-| Used | State | Behavior |
-|---|---|---|
-| 0-30% | green | normal; spawn subagents freely |
-| 30-50% | yellow | prefer subagents for big reads |
-| 50-70% | orange | finish current phase, do NOT start the next |
-| > 70% | red | bail at next safe checkpoint; commit; exit |
+| Used (1M) | Used (200k) | State | Behavior |
+|---|---|---|---|
+| < 200k | < 60k | green | normal; spawn subagents freely |
+| 200-350k | 60-100k | yellow | prefer subagents for big reads |
+| 350-500k | 100-140k | orange | finish current phase, do NOT start the next |
+| > 500k | > 140k | red | bail at next safe checkpoint; commit; exit |
+
+A 1M session still bails at 500k: every turn resends the whole context, so past
+that a fresh session from `PROGRESS.md` is cheaper. A large next phase is not a
+reason to bail while green.
 
 Habits: graph/grep before broad reads; spawn a subagent for any file > 500 LOC or
 multi-file investigation (it keeps the big read in its own context); never re-read

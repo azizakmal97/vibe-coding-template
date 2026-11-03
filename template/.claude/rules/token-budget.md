@@ -7,16 +7,27 @@ paths:
 
 Always loaded. Applies to all sessions. Critical during `/autonomous` loops where session-death = lost work.
 
-## Context Capacity Tiers (Claude Sonnet 200k)
+## Context Capacity Tiers
 
-| Used | State | Behavior |
-|---|---|---|
-| 0-30% | green | normal speed; can spawn subagents freely |
-| 30-50% | yellow | prefer subagents for big reads; switch caveman to full |
-| 50-70% | orange | finish current phase, do NOT start next; caveman ultra for narration |
-| > 70% | red | BAIL at next safe checkpoint; commit pause; exit |
+Tiers are in tokens and depend on the session's context window. The current
+Claude models (Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5) all have 1M; use the
+200k column only for a model that names 200k (Haiku 4.5, or a GLM/other plan).
 
-You do not know exact %. Estimate from: turns elapsed, files read so far, total response length.
+| Used (1M window) | Used (200k window) | State | Behavior |
+|---|---|---|---|
+| < 200k | < 60k | green | normal speed; can spawn subagents freely |
+| 200-350k | 60-100k | yellow | prefer subagents for big reads; switch caveman to full |
+| 350-500k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
+| > 500k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
+
+Why a 1M window still bails at 500k, not 700k: every turn resends the whole
+context, so a long session costs more per turn, and recall of early details gets
+weaker. A fresh session that starts from `PROGRESS.md` is cheaper past that point.
+
+The size of a phase is no reason to bail by itself. In green, start the next phase
+even if it is large; the tiers stop it safely if it runs long.
+
+You do not know exact usage. Estimate from: turns elapsed, files read so far, screenshots taken, total response length. About 90k of any session is fixed setup (system prompt, tools, memory), so count from there.
 
 ## Mandatory Token-Saving Habits
 

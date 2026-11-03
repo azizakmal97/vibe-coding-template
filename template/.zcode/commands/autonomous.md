@@ -183,9 +183,10 @@ NEXT SESSION SHOULD: <one specific action>
 
 ## Token-Budget Estimation
 
-Rough rule (Claude Sonnet 200k context):
-- < 50% context → safe, continue.
-- 50-70% → finish current phase, do NOT start next.
-- > 70% → bail at next safe checkpoint NOW.
+Use the tiers in `.claude/rules/token-budget.md` (1M window: green < 200k, orange
+from 350k, red from 500k; 200k window: orange from 100k, red from 140k):
+- green / yellow → safe, continue. A large next phase is not a reason to bail.
+- orange → finish current phase, do NOT start next.
+- red → bail at next safe checkpoint NOW.
 
 If unsure, bail early. Restart cheaper than mid-task death.
