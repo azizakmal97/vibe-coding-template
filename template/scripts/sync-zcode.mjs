@@ -182,10 +182,15 @@ function toZcodeGroup(group, notes) {
   };
 }
 
-/** `node .claude/hooks/x.js` -> `.claude/hooks/x.js`; anything else -> null. */
+/**
+ * `node .claude/hooks/x.js` -> `.claude/hooks/x.js`; anything else -> null.
+ * A `$CLAUDE_PROJECT_DIR/` prefix is dropped: ZCode passes args unexpanded, and the
+ * adapter already resolves relative paths against the project root.
+ */
 function nodeScriptPath(command) {
   const match = /^node\s+["']?(.+?)["']?$/.exec((command || '').trim());
-  return match ? match[1] : null;
+  if (!match) return null;
+  return match[1].replace(/^["']?\$\{?CLAUDE_PROJECT_DIR\}?["']?[\\/]/, '');
 }
 
 function splitFrontmatter(text) {
