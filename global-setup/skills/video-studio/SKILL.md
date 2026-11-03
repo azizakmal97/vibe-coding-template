@@ -60,9 +60,15 @@ Start from the project's reference build when it has one (its local media skill 
 8. **Cover**: Google Flow illustration (or a hero render) plus a title via PIL (`poster-design`).
 9. **Review gate**: an 8-frame contact sheet across all shots, then a full-size crop of every label, valve or critical detail, plus `ffprobe` and loudness. Fix before sending to the desk. Say plainly that you didn't watch it on a phone.
 
+**Mux with `-t`, never `-shortest`** (scenario-labs/skills, MIT, read 2026-11-03). When the audio is a little shorter than the picture, `-shortest` drops the last video frame. Pad the audio (`apad`) and cut to the length with `-t <seconds>`.
+
+**Alpha video** (scenario-labs/skills, MIT, read 2026-11-03). Only WebM (VP9) and ProRes 4444 MOV keep alpha. H.264 in an mp4 has none, so a transparent clip must ship in one of those two.
+
+**Colour grade the finished master once** (scenario-labs/skills, MIT, read 2026-11-03). Apply a `.cube` LUT with ffmpeg `lut3d` to the final cut, never to each clip. Test the look on 3–4 stills first. Useful ranges: contrast 0.15–0.45; black lift 0.03–0.08 for a faded look; saturation 1.1–1.35 rich, 0.4 bleach; grain 4–10.
+
 **Reel cut of a carousel** (2026-10-30; not the default since 2026-11-02, when cuts reached 9 to 31 against 8 to 17 for the swipe carousel: a carousel goes to Instagram as a carousel, and a cut is made only when the owner asks): on Instagram, carousels reach mostly followers and reels reach non-followers (two accounts: carousels 5 to 101 reach, reels 40 to 1,847). `python scripts/slideshow_reel.py out/reel-cut.mp4 <slides in order> --seconds 18 [--audio <licensed track>]` puts each approved slide, untouched, over a blurred copy of itself (never flat borders, which Instagram suppresses), about 2 s a slide (`--seconds` = 3 × slides for dense slides), and fades back to slide 1 so it loops. Without `--audio` the track is silent, so add the platform's trending sound in the app. Skip the cut when most slides are mostly text, since majority-text reels are suppressed. Check frames at 0.5 s, the middle and the end.
 
-**The reel cut comes out silent: never post it as it is** (owner, 2026-10-31: "why u post without sound in Instagram?"). Mux a licensed track under it: `ffmpeg -i reel-cut.mp4 -i <track>.mp3 -filter_complex "[1:a]atrim=0:18,asetpts=PTS-STARTPTS,loudnorm=I=-20:TP=-3,afade=t=in:d=1,afade=t=out:st=16:d=2[m]" -map 0:v -map "[m]" -c:v copy -c:a aac -b:a 160k -shortest reel-cut-ig.mp4`. Rotate tracks between posts. Check `-af volumedetect`: max_volume must be above -20 dB.
+**The reel cut comes out silent: never post it as it is** (owner, 2026-10-31: "why u post without sound in Instagram?"). Mux a licensed track under it: `ffmpeg -i reel-cut.mp4 -i <track>.mp3 -filter_complex "[1:a]atrim=0:18,asetpts=PTS-STARTPTS,loudnorm=I=-20:TP=-3,afade=t=in:d=1,afade=t=out:st=16:d=2,apad[m]" -map 0:v -map "[m]" -c:v copy -c:a aac -b:a 160k -t 18 reel-cut-ig.mp4`. Rotate tracks between posts. Check `-af volumedetect`: max_volume must be above -20 dB.
 
 ## Blender for video scenes
 Running Blender, the stale-transform blank render, Standard view transform, EEVEE transparency, solidify spikes, chunked long renders and Z-Anatomy baking are in `blender-3d`. Video-only notes:

@@ -40,7 +40,7 @@ The owner has had to point out flaws Claude missed three times (2026-10-19 coat 
 
 ## 1. Running Blender
 - Default Windows path: `C:/Program Files/Blender Foundation/Blender 5.2/blender.exe`.
-- Headless: `blender.exe --background --factory-startup --python scene.py -- <args>`. Add `--disable-autoexec` when opening third-party blends. Scripts that need MPFB must run WITHOUT `--factory-startup`.
+- Headless: `blender.exe --background --factory-startup --python scene.py -- <args>`. Add `--python-exit-code 1` to every headless run: without it a script that raises still exits 0, so a failed export reads as success (scenario-labs/skills, MIT, read 2026-11-03). Add `--disable-autoexec` when opening third-party blends. Scripts that need MPFB must run WITHOUT `--factory-startup`.
 - `-b` resolves relative paths against Blender's own folder (one `--out` landed in `C:\`): pass absolute paths.
 - Engine id is `BLENDER_EEVEE`. Actions are layered (`action.layers[].strips[].channelbags[].fcurves`) when you set interpolation. `use_nodes` only raises a deprecation warning.
 - Live view: the Blender MCP `look` tool shows the open scene from any angle; check each step there (rendered shading) before rendering files. Open .blend files live; **glTF import through the MCP fails** (`'Context' object has no attribute 'object'` in armature_display), so import headless.
@@ -54,12 +54,14 @@ The owner has had to point out flaws Claude missed three times (2026-10-19 coat 
 - **Shape-key pieces** (lids, mouth) poke through skin in EEVEE: hide them with a driver when the key is near 0.
 - **Moved .blend files** lose their textures (absolute paths from the other PC): relink by file name.
 - **Solidify:** keep `use_even_offset` off on swept or noisy meshes. It threw a 28 mm spike that showed as a thin coloured line across shots. To find a stray line, ray-cast from the camera through the pixel (`scene.ray_cast`, stepping past transparent hits) and compare the evaluated mesh's bounds with the raw vertices.
+- **Headless `paint.mask_flood_fill` and `sculpt.mesh_filter` crash Blender** (scenario-labs/skills, MIT, read 2026-11-03). Do that work with bmesh or the data API.
 - **Look:** `view_transform='Standard'`. AgX washes brand colours out over light backgrounds, and with strong lights it washed skin pale and navy to light blue. With Standard, area lights at 0.5–0.9 m need only about 10–30 W. Use `film_transparent=True` and put the background on in the edit.
 - **EEVEE transparency:** `surface_render_method='DITHERED'`, with the Principled Alpha driven by node math (burn-away wipes, fresnel "glass"). Stacked translucent layers turn milky, so fade layers out fully instead.
 
 ### glTF export
 - **Flat-shaded bases split every vertex** (13 MB instead of 2.6): `mesh.shade_smooth()` and drop unused UVs before export. Export morphs with `export_try_sparse_sk=True`.
 - **Morph weights load switched on** in three.js for this export: zero `morphTargetInfluences` when a body is made.
+- **Check a GLB before it goes to a three.js or Remotion scene** (scenario-labs/skills, MIT, read 2026-11-03). Re-import it headless and look for inside-out normals, loose floating parts, missing UVs on textured parts, and a size that is not in metres.
 
 ## 3. Third-party blends (Z-Anatomy and similar)
 - Never render inside the big source file (the whole-body Z-Anatomy blend gave a blank image: metres, around Z 1.5 m, hidden collections, an auto-run script). Either bake the needed parts into a small clean blend (`meshes.new_from_object` of the evaluated object plus `matrix_world`, then `bpy.data.libraries.write`; drop helper objects that come along as dependencies), or dump the vertices to JSON and rebuild in an empty scene.

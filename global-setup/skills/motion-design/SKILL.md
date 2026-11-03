@@ -56,18 +56,20 @@ Use **at most 3 transition types per reel**, chosen up front, and one travel dir
 Eases: `.out` for entries, `.in` for exits, `.inOut` for camera. Allowed: power2–4, expo, sine, `back.out(1.4–1.7)`. **Banned**: `bounce`, `elastic`, linear camera moves.
 
 ## 3. Banned (looks cheap)
-Cheap glow, particles or bloom (see Owner rules), lens flares, RGB split, glitch, white flashes, crossfades between every shot, camera shake (except one ≤8 px hit on the single biggest impact), spinning 3D cards, glassmorphism, paragraphs on screen, every word animated, idle breathe/float loops, the same zoom on every photo, upscaled low-res images, `will-change` on anything the camera scales (blurry text), opacity/filter on `preserve-3d` elements.
+Cheap glow, particles or bloom (see Owner rules), lens flares, RGB split, glitch, white flashes (and never more than 3 full-frame brightness flips per second; scenario-labs/skills, MIT, read 2026-11-03), crossfades between every shot, camera shake (except one ≤8 px hit on the single biggest impact), spinning 3D cards, glassmorphism, paragraphs on screen, every word animated, idle breathe/float loops, the same zoom on every photo, upscaled low-res images, `will-change` on anything the camera scales (blurry text), opacity/filter on `preserve-3d` elements.
 
 ## 4. Captions and layout
 - **Safe zones (one set for every brand, 2026-10-26, the strictest of all earlier notes):** no text in the top 270 px, bottom 420 px or right 120 px of a 1080x1920 frame. Never let a line run off screen.
 - **Never cover a face.** Put the caption above the head, or below the chin in close-ups.
 - **A presenter's hands stay whole.** For a talking character or host, both shoulders, elbows and whole hands sit inside the frame with a margin (at least 6% of the width at the sides and below the lowest hand), in every gesture pose and in every frame after scaling, panning and sway. Make poses on a wider canvas (zoom out or outpaint) instead of cropping. Check one frame per gesture at full size: 10 fingers, no arm touching an edge.
+- **Caption QA at the changes** (scenario-labs/skills, MIT, read 2026-11-03). Pull the frames on both sides of every caption change, not a sweep at 2 frames per second: a flash under 100 ms slips between sweep frames. Never end a caption burst on a one-letter word; it shows for only about 70 ms.
 - Story reels with characters: 1–4 words per group on the voice, each group pops in (small → slightly bigger → normal), the spoken word highlighted, one accent colour per character, the punchline bigger.
 - Make text, panels and labels outside the 3D scene: HTML screenshotted at 2–3x, or PIL. Changing a word is then a 30 s re-composite, not a re-render.
 - Keep one palette with fixed roles across a reel (for example one neutral colour, one for "wrong", one for "correct"); the project's local skill names the colours.
 
 ## 5. Sound cues
 - **No harsh, loud or sudden transition sounds** (owner, 2026-10-31: "I don't prefer the harsh, loud and sudden transition sound effects"). No whooshes, risers, hits, impacts or ticks on cuts and pops. Let the music and the voice carry the cuts. If a moment needs a sound, use one soft texture (a low pad swell or a gentle chime). Fade it in over at least 80 ms and keep it at least 12 dB under the voice.
+- **Sound to picture sync is measured on the final file, not the timeline** (scenario-labs/skills, MIT, read 2026-11-03). Cross-correlate the final audio with the source voice. Drifts of 57–110 ms showed up after concat. Keep it under 1 frame (33 ms at 30 fps).
 - Music always under the voice, ducked; check on a phone speaker at half volume. Levels: `video-studio` → Music and SFX, or the project's own rule.
 
 ## 6. Process

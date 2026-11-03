@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- motion-design, video-studio, blender-3d: method notes from scenario-labs/skills (MIT): at most 3 full-frame flashes a second, caption QA on both sides of each change, sync measured on the final file; mux with `-t` not `-shortest`, alpha only in WebM or ProRes 4444, one LUT grade on the master; `--python-exit-code 1` on headless Blender, no headless mask fill or mesh filter, and a GLB check before a three.js scene.
 - social-growth: the send line names a group most viewers are in or know, never a narrow one tied to a date, permit, booking or one event, which gets almost no sends.
 - motion-design: glow, particles and bloom are allowed when they carry meaning at film quality; only cheap versions (flat sprite dots, a halo round everything, idle specks) stay banned.
 - video-studio, poster-design and the simplicity rule: stop every local server, watcher or background render you started before reporting, failures included, and prefer opening a local file directly over serving it.
