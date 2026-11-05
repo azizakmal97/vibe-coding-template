@@ -18,6 +18,8 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 
 - **Malay copy: no comma before "dan", "serta", "untuk" or "oleh"** (owner, 2026-10-29: "why still have the ai-slop. no ',' before 'dan', 'serta', 'untuk', 'oleh'"). It's an English-style serial comma that reads as AI. Write "wad dan klinik", "Maksilofasial oleh Dr Aziz". Before any BM caption, slide text or reply goes to HQ or live, check it: `grep -nE ", (dan|serta|untuk|oleh)\b"` must find nothing.
 
+- **Viral gate on every post.** A brief is not ready until it has: (1) **an outlier** from the last 30 days in its niche (3x or more over that account's median, section 2) named in the brief, with what we borrow from it (hook, first frame, format); (2) **three hooks from three formulas, scored** (section 1), and the winner at **70+ with no check under 55**; under 70, write new hooks before making anything; (3) **the payoff on screen in the first second**, readable on mute (6 words or fewer); (4) **one idea**, an ending that loops or a send line naming a person, and one follow ask. Write the scores and the outlier link in `brief.md`.
+
 ## 1. Hooks
 A post has two hooks that fire together: the **spoken line** (about 2 s) and the **on-screen line** (about 1 s, read before it is heard). Write them separately. On screen: 6 words or fewer.
 
