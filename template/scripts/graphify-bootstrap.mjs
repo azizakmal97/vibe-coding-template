@@ -2,7 +2,8 @@
 /**
  * Graphify bootstrap.
  *
- * Counts source files under common roots (src, lib, app, worker, packages).
+ * Counts source files anywhere in the repo (junk dirs skipped), not just under
+ * guessed roots: a package named `animforge/` or `engine/` is source too.
  * If >= 50 files and the `graphifyy` Python package is importable, runs the
  * scoped rebuild:
  *
@@ -13,18 +14,26 @@
  * empty directory. Success is therefore verified by checking that
  * GRAPH_REPORT.md was actually (re)written, never by the exit code alone.
  *
- * Idempotent: skips if graphify-out/GRAPH_REPORT.md is < 7 days old.
+ * Idempotent: skips when GRAPH_REPORT.md is < 7 days old AND the list of
+ * source files is the same as at the last build (graphify-out/.source-files).
+ * A file added, renamed or deleted therefore always triggers a rebuild, which
+ * is the "rebuild after structural change" rule made automatic. The
+ * post-commit-graphify hook calls this script after every commit.
  *
  * Exit 0 always (never blocks setup).
  */
 
-import { existsSync, readdirSync, statSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
 const ROOT = process.cwd();
-const SOURCE_ROOTS = ['src', 'lib', 'app', 'worker', 'packages', 'apps'];
+const SKIP_DIRS = new Set([
+  'node_modules', 'dist', 'build', 'out', 'target', 'graphify-out', '__pycache__',
+  'venv', 'vendor', 'coverage', 'Pods',
+]);
 const STALE_DAYS = 7;
 const MIN_FILES = 50;
 const SOURCE_EXT = new Set(['.ts', '.tsx', '.js', '.jsx', '.dart', '.rs', '.py', '.go', '.java', '.kt', '.swift']);
@@ -37,7 +46,7 @@ function* walk(dir) {
     return;
   }
   for (const entry of entries) {
-    if (entry.name === 'node_modules' || entry.name === '.git' || entry.name.startsWith('.')) continue;
+    if (SKIP_DIRS.has(entry.name) || entry.name.startsWith('.')) continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
       yield* walk(full);
@@ -48,12 +57,11 @@ function* walk(dir) {
   }
 }
 
-let sourceFileCount = 0;
-for (const root of SOURCE_ROOTS) {
-  const abs = join(ROOT, root);
-  if (!existsSync(abs)) continue;
-  for (const _ of walk(abs)) sourceFileCount++;
-}
+const sourceFiles = [...walk(ROOT)].map((file) => relative(ROOT, file).replaceAll(sep, '/')).sort();
+const sourceFileCount = sourceFiles.length;
+const fingerprint = createHash('sha1').update(sourceFiles.join(String.fromCharCode(10))).digest('hex');
+const fingerprintFile = join(ROOT, 'graphify-out', '.source-files');
+const lastFingerprint = existsSync(fingerprintFile) ? readFileSync(fingerprintFile, 'utf8').trim() : '';
 
 if (sourceFileCount < MIN_FILES) {
   console.log(`[graphify-bootstrap] ${sourceFileCount} source files (< ${MIN_FILES}). Skipping graph. Rerun when codebase grows.`);
@@ -74,12 +82,13 @@ const report = join(ROOT, 'graphify-out', 'GRAPH_REPORT.md');
 const before = existsSync(report) ? statSync(report).mtimeMs : 0;
 if (before) {
   const ageDays = (Date.now() - before) / 86400000;
-  if (ageDays < STALE_DAYS) {
-    console.log(`[graphify-bootstrap] Graph fresh (${ageDays.toFixed(1)}d old). Skipping.`);
+  if (ageDays < STALE_DAYS && fingerprint === lastFingerprint) {
+    console.log(`[graphify-bootstrap] Graph fresh (${ageDays.toFixed(1)}d old, same source files). Skipping.`);
     warnIfGraphNotIgnored();
     process.exit(0);
   }
-  console.log(`[graphify-bootstrap] Graph stale (${ageDays.toFixed(1)}d). Regenerating.`);
+  const why = fingerprint === lastFingerprint ? `stale (${ageDays.toFixed(1)}d)` : 'source files added, renamed or deleted';
+  console.log(`[graphify-bootstrap] Graph ${why}. Regenerating.`);
 }
 
 // Prefer the project's own copy; fall back to the one sitting next to this
@@ -114,6 +123,7 @@ const after = existsSync(report) ? statSync(report).mtimeMs : 0;
 if (run.status !== 0 || after === before) {
   console.error('[graphify-bootstrap] rebuild did not produce a graph; continuing setup.');
 } else {
+  writeFileSync(fingerprintFile, fingerprint + String.fromCharCode(10));
   console.log('[graphify-bootstrap] Done. GRAPH_REPORT.md written.');
   warnIfGraphNotIgnored();
   if (existsSync(join(ROOT, 'graphify-out', 'obsidian'))) {

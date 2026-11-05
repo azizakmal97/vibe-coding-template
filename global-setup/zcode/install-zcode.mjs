@@ -63,7 +63,7 @@ const HOOK_EVENTS = {
     },
     {
       tools: 'Bash|Shell|Terminal|RunCommand',
-      scripts: ['.claude/hooks/post-commit-push.js', '.claude/hooks/post-commit-update-progress.js'],
+      scripts: ['.claude/hooks/post-commit-push.js', '.claude/hooks/post-commit-update-progress.js', '.claude/hooks/post-commit-graphify.js'],
     },
   ],
 };

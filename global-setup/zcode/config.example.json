@@ -77,7 +77,8 @@
               "args": [
                 "C:/Users/YOUR_USERNAME/.zcode/hooks/zcode-hook.mjs",
                 ".claude/hooks/post-commit-push.js",
-                ".claude/hooks/post-commit-update-progress.js"
+                ".claude/hooks/post-commit-update-progress.js",
+                ".claude/hooks/post-commit-graphify.js"
               ],
               "enabled": true
             }

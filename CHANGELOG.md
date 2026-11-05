@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Fixed
+- **The graph no longer goes missing or stale after structural changes.** `graphify-bootstrap.mjs` only counted files under `src/ lib/ app/ worker/ packages/ apps/`, so a project whose code lives in another folder (anim-forge: `animforge/`) never reached 50 and never got a graph, and a graph under 7 days old was never rebuilt after files were added. It now counts source files anywhere in the repo and rebuilds when the source-file list changes (`graphify-out/.source-files`). New `post-commit-graphify.js` (Claude settings, ZCode hooks, ZCode installer) re-runs it after every commit, detached, so nothing depends on anyone remembering. Existing projects get it via `/update-template`.
 - **Applying the template to an existing project no longer overwrites its `CLAUDE.md` or `PROGRESS.md`.** `pick-preset.mjs` copied the preset `CLAUDE.md` (and `file-budgets.json`, `commands.json`, CI files) over existing ones, and `init-progress.mjs` rewrote any `PROGRESS.md`, despite setup's "exists, skipping". Both now skip project-owned files. Found while adopting the template in omfshsr-ig, reel-engine and smart-trading (restored from git before commit).
 - **`sync-zcode.mjs` strips `$CLAUDE_PROJECT_DIR/` from hook paths**, so ZCode runs the project's own hook instead of falling back to the global copy.
 

@@ -209,7 +209,7 @@ After structural changes (file add/rename/move/delete), run `/graphify` to updat
 
 For "where is X" / "what calls Y" / "list uses of Z" questions, prefer the `graph-navigator` subagent — its output is caveman-compressed so main-thread context lasts longer.
 
-`scripts/graphify-bootstrap.mjs` runs automatically on every SessionStart (wired in `.claude/settings.json`). It self-skips when source files < 50 OR when the existing graph is < 7 days old, so it's cheap when nothing needs doing. First session after the codebase crosses 50 files: graph generates without you asking. If `graphify` (the Python tool) isn't installed, the bootstrap prints the install hint and exits cleanly — surface that to the user so they can `pip install graphifyy`.
+`scripts/graphify-bootstrap.mjs` runs automatically on every SessionStart (wired in `.claude/settings.json`). It counts source files anywhere in the repo (not only `src/`), and self-skips when they are < 50 OR when the graph is < 7 days old AND the source-file list is unchanged, so it's cheap when nothing needs doing. `post-commit-graphify.js` re-runs it after every successful `git commit`, so a file added, renamed or deleted gets a fresh graph without anyone asking (off with `AUTO_GRAPHIFY=0`). First session after the codebase crosses 50 files: graph generates without you asking. If `graphify` (the Python tool) isn't installed, the bootstrap prints the install hint and exits cleanly — surface that to the user so they can `pip install graphifyy`.
 
 ## 18. Test-Before-Commit Gate
 
