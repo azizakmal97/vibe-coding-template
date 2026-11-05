@@ -267,6 +267,10 @@ have to remember it. Notes:
   `powershell -NoProfile -File ~/.claude/scripts/trash.ps1 <paths>` (Windows; copy
   `global-setup/scripts/trash.ps1` there and set `TRASH_ROOTS` to your project folders).
   Restorable by design. Never recycle tracked source files or another session's work.
+- Media you download: the same turn it is copied into its project, recycle the
+  Downloads copy; at every close, recycle any of your downloads with a hash-identical
+  copy in a project or whose post is live or dropped. Never touch the owner's own
+  files there (recordings, chat folders, installers).
 
 ## 6. Learn From Errors — Capture & Recall (this IS "gets faster over time")
 
