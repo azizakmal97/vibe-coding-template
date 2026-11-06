@@ -34,7 +34,7 @@ Every brand repo has the same five. The engine has the one that builds reels.
 look: <name>, <palette hexes>, <treatment>, <motion>
 ```
 
-Read the `look:` line in the briefs of the account's last 3 posts, and pick one that differs in palette AND treatment AND motion. For a carousel also read the last 3 carousels, and the brand's look list. No `look:` line or a repeat means the brief is not ready. The brand is the logo, handle, voice and fonts, never one palette. A style block marked "locked" in an old post folder describes that post only. Colour meanings (wrong, correct) stay, in the palette of the chosen look.
+Read the `look:` line in the briefs of the account's last 3 posts, and pick one that differs in palette AND treatment AND motion. For a carousel also read the last 3 carousels, and the brand's look list. No `look:` line or a repeat means the brief is not ready. The brand is the logo, handle, voice and fonts, never one palette. A look is a picture idea, never a colour swap (`poster-design`). A style block marked "locked" in an old post folder describes that post only. Colour meanings (wrong, correct) stay, in the palette of the chosen look.
 
 **5. Brief, caption, script.** All written in `/research`, so `/produce` only makes pictures. Facts follow the brand's source rule. A reel's voice-over is complete and final here.
 
