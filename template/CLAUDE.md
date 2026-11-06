@@ -292,10 +292,10 @@ reads as if Haiku were running. Format:
 > `Task: **Sonnet 5.5 · medium** · Running: **Opus 5.5** — handing down (Rule 4)` — then proceed.
 > `Task: **Opus 5.5 · high** · Running: **Sonnet 5.5** — switch first` — then stop.
 
-**A `high` tag covers the new part only** (owner rule, 2026-11-06, to save tokens). Repeat work on
-something settled, such as another reel on a locked look or the next page on a set design, runs
-`medium`; fixes and re-renders run `low` to `medium`. `high` stays for a new look and for work where
-being wrong is expensive (clinical, money, auth). Set the session's effort to match before starting.
+**A `high` tag covers the new part only.** Repeating work on something already settled, such as
+another page on a set design or another feature on an agreed pattern, runs `medium`; fixes run `low`
+to `medium`. `high` stays for new decisions and for work where being wrong is expensive. Set the
+session's effort to match before starting.
 
 This applies to EVERY task: feature work, bug fix, a single file edit, a question
 that leads to code, a refactor, a review, anything. The declaration comes before the

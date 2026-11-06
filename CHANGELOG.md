@@ -7,7 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Changed
-- **Effort follows the work, not the phase tag.** A `high` tag covers the new part only: repeat work on something settled runs `medium`, fixes and re-renders `low` to `medium`, and `high` stays for a new look or work where being wrong is expensive.
+- **Effort follows the work, not the phase tag.** A `high` tag covers the new part only: repeat work on something settled runs `medium`, fixes and re-renders `low` to `medium`, and `high` stays for new decisions and work where being wrong is expensive.
 
 ### Added
 - **`docs/HEADLESS_JOBS.template.md`: how to run unattended agent work.** One fresh `claude -p` per job, started by a scheduler, with the nine rules that keep it reliable.
