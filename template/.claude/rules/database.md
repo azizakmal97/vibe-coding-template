@@ -237,6 +237,11 @@ Prefer an app route for a fix that keeps coming back; the raw SQL is the stopgap
 the project's `.claude/settings.json` allows the exact remote-execute prefix (for D1:
 `"Bash(npx wrangler d1 execute <db> --remote --command:*)"`), or the permission check blocks it.
 
+## Cloudflare D1 Traps
+
+- **Never build a `UNION` whose branches grow with the input.** D1 caps compound SELECT terms far below SQLite's default: three terms worked, six failed with `too many terms in compound SELECT`. Send one indexed query per value through `env.DB.batch([...])` and merge in code. Test each query shape at its largest real size, not with two values.
+- **Changing a `CHECK` on a table other tables reference means rebuilding the children too.** Copying the parent, dropping it and renaming the copy fails at commit on a deferred foreign key violation, and `defer_foreign_keys` does not help. Create new child tables whose `REFERENCES` point at the new parent, copy every row with its id, drop the old tables children first, rename, then recreate indexes and triggers. Test it: apply up to N-1, seed parent and children, apply N, compare rows, run `PRAGMA foreign_key_check`.
+
 ## Schema Conventions
 
 - Naming: snake_case (most engines) or camelCase (MongoDB) — pick one per project and never mix.

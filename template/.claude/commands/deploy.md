@@ -29,6 +29,8 @@ On-demand local deploy. Preset-aware. Always preceded by verification gate.
 
 For Cloudflare-deployed apps (web/fullstack): `npx wrangler deploy` with `--remote` data flag respected.
 
+Chain the deploy with `&&` after the gate and the commit, never `;`, and check `git status` is clean first. A failed step (the size check exits 1 on a soft warning too) must stop the deploy, or uncommitted work goes live.
+
 ## Post-Deploy Verification
 
 1. **Fetch the live URL** — `curl -s -o /dev/null -w "%{http_code}" <url>` should return 200.
