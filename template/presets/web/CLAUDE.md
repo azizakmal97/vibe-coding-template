@@ -171,6 +171,6 @@ See `rules/methodology.md`.
 | `docs/PRODUCTION_READINESS_PLAIN.md` | Plain-English production checklist + this app's status |
 | `git log` | Commit hashes per phase |
 
-Run `/spec` before a new user-visible feature or anything touching money, auth or personal data, and `/done-check` before marking it done.
+The agent runs `/spec` itself before a new user-visible feature or anything touching money, auth or personal data, and `/done-check` itself before marking it done. The owner never types them.
 Run `/audit` to refresh AUDIT_AND_ROADMAP.md. Run `/handover` to refresh plain-English docs.
 Run `/security-audit` before launch and after big auth / money / sharing changes.

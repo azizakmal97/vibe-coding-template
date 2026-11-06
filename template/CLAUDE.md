@@ -271,7 +271,7 @@ See `rules/methodology.md` for concrete examples.
 | `docs/PRODUCTION_READINESS_PLAIN.md` | Plain-language production checklist: all 111 topics, this app's status (for non-coder). |
 | `git log` | Commit hashes per phase. |
 
-Run `/spec` before a new user-visible feature or anything touching money, auth or personal data. Run `/done-check` before marking that phase done.
+The agent runs `/spec` itself before a new user-visible feature or anything touching money, auth or personal data, and `/done-check` itself before marking that phase done. The owner never types them.
 Run `/audit` to generate / refresh AUDIT_AND_ROADMAP.md at project-maturity milestones.
 Run `/security-audit` before launch, after big auth / money / sharing changes, and quarterly (Opus 5.5 · high; report in `docs/security/`).
 Run `/handover` to generate / refresh the 5 plain-language docs.

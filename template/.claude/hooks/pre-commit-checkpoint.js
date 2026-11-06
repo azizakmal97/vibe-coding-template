@@ -7,6 +7,9 @@
  * Warns but does NOT block (would frustrate users). Configure to block via env var
  * STRICT_CHECKPOINT=1 if desired.
  *
+ * One hard block: `done(<phase-id>):` on a phase with a spec needs a passed
+ * /done-check. The owner is not a coder and can't catch a skipped check.
+ *
  * Hook input: { tool_input: { command: "..." } }
  */
 
@@ -34,7 +37,8 @@ try {
   command = data.tool_input?.command || '';
 } catch {}
 
-if (!command || !/^\s*git\s+commit/.test(command)) {
+// Not anchored: the phase-completion step is `git add ... && git commit ...`.
+if (!command || !/\bgit\s+commit\b/.test(command)) {
   process.exit(0);
 }
 
@@ -46,6 +50,32 @@ for (const name of PROGRESS_CANDIDATES) {
 if (!progressPath) process.exit(0);
 
 const body = readFileSync(progressPath, 'utf8');
+
+function phaseBlock(phaseId) {
+  const heading = body.match(new RegExp(`^### \\S+\\s+${phaseId}(?=[\\s:]|$)`, 'm'));
+  if (!heading) return '';
+  const blockStart = heading.index + heading[0].length;
+  const nextHeading = body.indexOf('\n### ', blockStart);
+  return body.slice(blockStart, nextHeading === -1 ? undefined : nextHeading);
+}
+
+function blockedDoneReason() {
+  const donePhaseId = command.match(/\bdone\(([A-Za-z0-9-]+)\):/)?.[1];
+  if (!donePhaseId) return null;
+  const block = phaseBlock(donePhaseId);
+  const specPath = block.match(/\*\*Spec:\*\*\s*`?(specs\/[^\s`*]+\.md)/)?.[1];
+  if (!specPath || !existsSync(join(ROOT, specPath))) return null;
+  if (/\*\*Done-check:\*\*\s*PASS\b/.test(block)) return null;
+  return `Phase ${donePhaseId} has a spec (${specPath}) but no passed check. ` +
+         'Run /done-check, fix any gaps, then commit done again.';
+}
+
+const blockedReason = blockedDoneReason();
+if (blockedReason) {
+  process.stderr.write(`${blockedReason}\n`);
+  process.exit(2);
+}
+
 // The **Active phase:** header wins over a 🟡 left on a paused phase's heading
 // (same rule as session-start-resume.js). "none" comes first: a header like
 // "none running; several phases are half done (🟡)" names no active phase.

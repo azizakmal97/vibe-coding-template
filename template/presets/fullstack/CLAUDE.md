@@ -163,6 +163,6 @@ See `rules/methodology.md`. For fullstack: Zod contract first → test against P
 | `docs/PRODUCTION_READINESS_PLAIN.md` | Production checklist + status |
 | `git log` | Commit hashes per phase |
 
-Run `/spec` before a new user-visible feature or anything touching money, auth or personal data, and `/done-check` before marking it done.
+The agent runs `/spec` itself before a new user-visible feature or anything touching money, auth or personal data, and `/done-check` itself before marking it done. The owner never types them.
 Run `/audit` to refresh audit. Run `/handover` to refresh plain docs.
 Run `/security-audit` before launch and after big auth / money / sharing changes.

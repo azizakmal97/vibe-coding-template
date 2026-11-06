@@ -106,6 +106,7 @@ $fileMappings = [ordered]@{
     ".claude\commands\migrate.md"                     = ".claude\commands\migrate.md"
     ".claude\commands\deploy.md"                      = ".claude\commands\deploy.md"
     ".claude\commands\update-template.md"             = ".claude\commands\update-template.md"
+    ".claude\commands\close.md"                       = ".claude\commands\close.md"
     # hooks
     ".claude\hooks\validate-command.js"               = ".claude\hooks\validate-command.js"
     ".claude\hooks\post-edit-check.cjs"                = ".claude\hooks\post-edit-check.cjs"
@@ -116,6 +117,7 @@ $fileMappings = [ordered]@{
     ".claude\hooks\post-commit-push.js"               = ".claude\hooks\post-commit-push.js"
     ".claude\hooks\config-protection.cjs"             = ".claude\hooks\config-protection.cjs"
     ".claude\hooks\post-commit-update-progress.js"    = ".claude\hooks\post-commit-update-progress.js"
+    ".claude\hooks\post-commit-graphify.js"           = ".claude\hooks\post-commit-graphify.js"
     ".claude\hooks\post-edit-antislop.cjs"            = ".claude\hooks\post-edit-antislop.cjs"
     ".claude\hooks\pre-artifact-antislop.cjs"         = ".claude\hooks\pre-artifact-antislop.cjs"
     # rules
@@ -267,8 +269,8 @@ Write-Host ""
 Write-Host "Start coding:" -ForegroundColor Yellow
 Write-Host "  /new-feature [feature name] — [description]" -ForegroundColor Yellow
 Write-Host "  /fix-bug [error or description]" -ForegroundColor Yellow
-Write-Host "  /spec [name] — [description]  — write the spec before a new feature" -ForegroundColor Yellow
-Write-Host "  /done-check      — compare the code to its spec before marking done" -ForegroundColor Yellow
+Write-Host "  /spec           — runs by itself before a new feature" -ForegroundColor Yellow
+Write-Host "  /done-check     — runs by itself before a feature is called finished" -ForegroundColor Yellow
 Write-Host "  /pr-review [branch or PR number]" -ForegroundColor Yellow
 Write-Host "  /resume          — restore session state from PROGRESS.md" -ForegroundColor Yellow
 Write-Host "  /checkpoint      — verify + commit current work" -ForegroundColor Yellow

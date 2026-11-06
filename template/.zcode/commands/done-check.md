@@ -1,5 +1,5 @@
 ---
-description: Compare the code as it is now to the feature's spec before a phase is marked done. Reports gaps, never edits source.
+description: Run this yourself, unasked, before telling the owner a feature with a spec is finished. Compares the code as it is now to the spec. Reports gaps, never edits source.
 argument-hint: "[spec file, default: the active phase's Spec line]"
 ---
 
@@ -8,12 +8,13 @@ argument-hint: "[spec file, default: the active phase's Spec line]"
 # /done-check: $ARGUMENTS
 
 Passing tests say the code runs, not that it does what the spec asked. This
-checks the second thing. Run it before `done(<phase-id>)`.
+checks the second thing. Run it yourself, never ask the owner to. A hook blocks
+`done(<phase-id>)` for a phase with a spec until this has passed.
 
 ## Find the spec
 
-Use the argument, else the active phase's `**Spec:**` line in `PROGRESS.md`. No
-spec, or `none`: say "no spec, nothing to check" and stop. That is not a failure.
+Use the argument, else the active phase's `**Spec:**` line in `PROGRESS.md`, else
+the file in `specs/` for the feature you just built. No spec, or `none`: say "no spec, nothing to check" and stop. That is not a failure.
 
 ## Steps
 
@@ -43,8 +44,13 @@ spec, or `none`: say "no spec, nothing to check" and stop. That is not a failure
 DONE-CHECK: PASS
 ```
 
-The last line is `DONE-CHECK: PASS` or `DONE-CHECK: <n> GAPS`. Only PASS allows
-the `done(<phase-id>)` commit. After gaps are fixed, run this again.
+The last line is `DONE-CHECK: PASS` or `DONE-CHECK: <n> GAPS`. Write the same
+result into the phase's `**Done-check:**` line in `PROGRESS.md`, as `PASS <date>`
+or `<n> GAPS`. Only PASS allows the `done(<phase-id>)` commit. After gaps are
+fixed, run this again.
+
+The table is for the record. Tell the owner the result in plain words: what
+works, and what you are fixing next.
 
 ## Inside /autonomous
 

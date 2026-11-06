@@ -1,5 +1,5 @@
 ---
-description: Write a short spec (what to build, never how) before a new feature, so "done" can be checked against it. Ideas adapted from github/spec-kit (MIT).
+description: Run this yourself, unasked, when the owner asks for a new feature or anything touching money, logins or personal data. Writes a short spec (what to build, never how) so "done" can be checked against it. Ideas adapted from github/spec-kit (MIT).
 argument-hint: "[feature name] — [one sentence description]"
 ---
 
@@ -9,6 +9,9 @@ argument-hint: "[feature name] — [one sentence description]"
 
 Write ONE file, `specs/<slug>.md` (create `specs/` if missing). It says what to
 build and how we know it works. Never tech choices, file names or code.
+
+The owner is not a coder and should never have to know this command exists. Run
+it yourself when they describe what they want, in their own words.
 
 **Skip it** for small changes: a one-file fix, a copy tweak, a bug, a refactor that
 keeps behaviour. **Use it** for a new user-visible feature, or anything touching
@@ -23,11 +26,14 @@ money, auth or personal data.
    services failing, vague words ("fast", "easy") with no number, tests nobody
    could check.
 4. Keep only questions whose answer would change what gets built. Ask at most 5,
-   ONE at a time, in plain words, each with your recommended answer.
+   ONE at a time. Ask only about what people will see and do, never about
+   technology. Give 2 or 3 simple choices with your pick first. If the owner says
+   they don't know, take your pick and move on.
 5. Write each answer into the spec right away and delete its marker. Anything
    you chose not to ask goes under Assumptions as a default.
-6. Set `Status: agreed` only when no `[NEEDS CLARIFICATION]` marker is left and
-   the owner has okayed the spec. Until then it stays `draft`.
+6. Tell the owner what you will build in 3 to 5 plain lines. Don't show them the
+   file. Set `Status: agreed` when no `[NEEDS CLARIFICATION]` marker is left and
+   they say okay. Until then it stays `draft`.
 7. Commit: `docs(spec): <slug>`.
 
 ## Skeleton
