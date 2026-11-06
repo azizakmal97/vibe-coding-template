@@ -15,12 +15,13 @@ Claude models (Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5) all have 1M; use the
 
 | Used (1M window) | Used (200k window) | State | Behavior |
 |---|---|---|---|
-| < 200k | < 60k | green | normal speed; can spawn subagents freely |
-| 200-350k | 60-100k | yellow | prefer subagents for big reads; switch caveman to full |
-| 350-500k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
-| > 500k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
+| < 130k | < 60k | green | normal speed; can spawn subagents freely |
+| 130-165k | 60-100k | yellow | prefer subagents for big reads; switch caveman to full |
+| 165-200k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
+| > 200k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
 
-Why a 1M window still bails at 500k, not 700k: cached turns are cheap, but their
+Why a 1M window still bails at 200k (owner rule, 2026-11-07: chats past 200k were half of all calls but 69% of the
+burn on the plan limit, 19 Oct to 6 Nov): cached turns are cheap, but their
 cost still grows with context size; after a break longer than the cache lifetime
 (1 hour on a plan, 5 minutes on usage credits) the next turn reprocesses the whole
 context; and recall of early details gets weaker. A fresh session that starts from
