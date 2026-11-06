@@ -6,6 +6,9 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+- **`docs/HEADLESS_JOBS.template.md`: how to run unattended agent work.** One fresh `claude -p` per job, started by a scheduler, with the nine rules that keep it reliable.
+
 ### Fixed
 - **Hooks no longer crash in a project whose `package.json` says `"type": "commonjs"`.** The `.js` hooks use `import`, so Node refused to load them and every one failed quietly, including auto-push and the session resume banner. New `.claude/hooks/package.json` marks that folder as ES modules.
 - **New projects get `/close` and the graph hook.** `close.md` and `post-commit-graphify.js` were in neither setup list, so `settings.json` called a hook that was never copied.

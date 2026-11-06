@@ -172,6 +172,7 @@ declare -A FILES=(
   ["docs/FINDINGS_AND_PLAN_PLAIN.template.md"]="docs/FINDINGS_AND_PLAN_PLAIN.template.md"
   ["docs/LEARN_FULLSTACK.template.md"]="docs/LEARN_FULLSTACK.template.md"
   ["docs/PRODUCTION_READINESS_PLAIN.template.md"]="docs/PRODUCTION_READINESS_PLAIN.template.md"
+  ["docs/HEADLESS_JOBS.template.md"]="docs/HEADLESS_JOBS.template.md"
 )
 
 echo ""
