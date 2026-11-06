@@ -22,7 +22,7 @@ Every brand repo has the same five. The engine has the one that builds reels.
 
 ## How a post is made
 
-**1. Date.** One post a day. Run `hq dates <project>` before giving a post a date, and again at the end of the run: it must print no CLASH. Look four days ahead, so a reel has time for the owner's yes and a night's build.
+**1. Date.** Follow the brand's cadence. Run `hq dates <project>` before giving a post a date, and again at the end of the run: it must print no CLASH. Look four days ahead, so a reel has time for the owner's yes and a night's build.
 
 **2. Viral gate**. An outlier from the last 30 days named, three hooks from three formulas scored, the winner 70+ with no check under 55, the payoff on screen in the first second. A brief without them is not ready.
 
