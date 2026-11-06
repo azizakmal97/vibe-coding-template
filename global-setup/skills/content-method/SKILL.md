@@ -24,6 +24,8 @@ Every brand repo has the same five. The engine has the one that builds reels.
 
 **1. Date.** Follow the brand's cadence. Run `hq dates <project>` before giving a post a date, and again at the end of the run: it must print no CLASH. Look four days ahead, so a reel has time for the owner's yes and a night's build.
 
+**1b. No repeats.** Before writing a brief, list what is posted, scheduled and awaiting, and search earlier briefs and captions for the topic. The same condition with the same lesson or hook is a repeat, even in another format or language. A repeat is not written: flag it and take the next planned post.
+
 **2. Viral gate**. An outlier from the last 30 days named, three hooks from three formulas scored, the winner 70+ with no check under 55, the payoff on screen in the first second. A brief without them is not ready.
 
 **3. Keep-or-send reason**. The brief names who keeps or sends the post and why: Stress, Awe, Surprise, Story, Mistake, Belonging or Useful. Read the last two briefs: never the same reason three posts in a row. Slide 1 or the first frame and the caption's first words carry it. No honest answer means change the angle.
