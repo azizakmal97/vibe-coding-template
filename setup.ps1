@@ -57,6 +57,12 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $hooksDir "session-start-template-sync.mjs") `
         "~/.claude/hooks/session-start-template-sync.mjs"
 
+    # 2c. Usage guard: the 11:30pm stop plus long-chat, open-chat and weekly-pace warnings.
+    Install-File `
+        (Join-Path $scriptDir "global-setup\hooks\usage-guard.mjs") `
+        (Join-Path $hooksDir "usage-guard.mjs") `
+        "~/.claude/hooks/usage-guard.mjs"
+
     # 3. /update-template and /close in every project. A personal skill outranks a
     #    project command of the same name, and each skill only forwards to the
     #    template clone's own command, so it never goes stale. The pointer file

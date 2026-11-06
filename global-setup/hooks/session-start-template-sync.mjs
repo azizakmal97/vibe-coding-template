@@ -30,6 +30,7 @@ const MANAGED = [
   ['global-setup/CLAUDE.md', 'CLAUDE.md'],
   ['global-setup/hooks/post-commit-push.mjs', 'hooks/post-commit-push.mjs'],
   ['global-setup/hooks/session-start-template-sync.mjs', 'hooks/session-start-template-sync.mjs'],
+  ['global-setup/hooks/usage-guard.mjs', 'hooks/usage-guard.mjs'],
   ['global-setup/skills/update-template/SKILL.md', 'skills/update-template/SKILL.md'],
   ['global-setup/skills/video-studio/SKILL.md', 'skills/video-studio/SKILL.md'],
   ['global-setup/skills/motion-design/SKILL.md', 'skills/motion-design/SKILL.md'],

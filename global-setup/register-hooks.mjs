@@ -17,6 +17,7 @@ const hooksDir = join(claudeDir, 'hooks').replace(/\\/g, '/');
 const WANTED = [
   { event: 'PostToolUse', matcher: 'Bash', file: 'post-commit-push.mjs' },
   { event: 'SessionStart', matcher: '', file: 'session-start-template-sync.mjs' },
+  { event: 'UserPromptSubmit', matcher: '', file: 'usage-guard.mjs' },
 ];
 
 const settings = existsSync(settingsPath) ? JSON.parse(readFileSync(settingsPath, 'utf8')) : {};
