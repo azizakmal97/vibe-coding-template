@@ -29,6 +29,12 @@ test('never blocks a night job or anything it cannot identify', () => {
   assert.equal(shouldBlock({ now: at(2, 0), env: { CLAUDE_CODE_ENTRYPOINT: 'claude-desktop' }, prompt }), false);
 });
 
+test('lets /close through at night, but not a message that only mentions it', () => {
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: '/close' }), false);
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'should I run /close' }), true);
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: '/closet' }), true);
+});
+
 test('lets the override word and app messages through', () => {
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'Urgent: the site is down' }), false);
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'this is not urgent' }), true);

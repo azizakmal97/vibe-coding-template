@@ -15,7 +15,8 @@ import { pathToFileURL } from 'node:url';
 
 const STOP_MINUTE = 23 * 60 + 30;
 const START_MINUTE = 6 * 60;
-const OVERRIDE_WORD = /^\s*urgent\b/i;
+// /close saves the day's work, so stopping it at night would defeat the point.
+const ALLOWED_AT_NIGHT = /^\s*(urgent\b|\/close\b)/i;
 const FRESH_CHAT_TOKENS = 200_000;
 const MAX_OPEN_CHATS = 2;
 const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
@@ -29,7 +30,7 @@ const projectsDir = join(claudeDir, 'projects');
 const statePath = join(claudeDir, '.usage-guard.json');
 
 export const BLOCK_MESSAGE = `It's past 11:30pm, so Claude has stopped new work until 6am. Time to sleep.
-Night jobs still run. If this really can't wait, start your message with the word urgent.`;
+Night jobs still run, and /close still works. If this really can't wait, start your message with the word urgent.`;
 
 export function isQuietHours(now) {
   const minute = now.getHours() * 60 + now.getMinutes();
@@ -47,7 +48,7 @@ export function shouldBlock({ now, env, prompt }) {
   if (!isOwnerChat(env) || !isQuietHours(now)) return false;
   // Messages from the app and from other sessions arrive wrapped in a tag.
   if (prompt.trimStart().startsWith('<')) return false;
-  return !OVERRIDE_WORD.test(prompt);
+  return !ALLOWED_AT_NIGHT.test(prompt);
 }
 
 function readBytes(path, start, length) {
