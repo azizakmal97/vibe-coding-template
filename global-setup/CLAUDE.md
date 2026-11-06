@@ -116,6 +116,11 @@ needs, not how important it feels:
 **A phase may split its effort.** If half a task is design and half is mechanical, say so
 and give each half its own line — do not average them into one number.
 
+**A `high` tag covers the new part only** (owner rule, 2026-11-06, to save tokens). Repeat work on
+something settled, such as another reel on a locked look or the next page on a set design, runs
+`medium`; fixes and re-renders run `low` to `medium`. `high` stays for a new look and for work where
+being wrong is expensive (clinical, money, auth). Set the session's effort to match before starting.
+
 This applies to EVERY task: feature work, bug fix, a single file edit, a question
 that leads to code, a refactor, a review, anything. No exceptions. The declaration
 must come before the first tool call or line of output.
