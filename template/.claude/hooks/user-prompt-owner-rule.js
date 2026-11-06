@@ -13,5 +13,8 @@ is /spec (.claude/commands/spec.md), before reading code or editing anything.
 Small fixes, bugs, questions and answers to your own questions skip it.
 Before saying a feature with a spec is finished, run /done-check
 (.claude/commands/done-check.md) yourself.
+Session effort: in the Claude desktop app, read it with
+mcp__ccd_session_mgmt__get_session "self" (load it with ToolSearch if deferred).
+Never write "not visible" without trying that first.
 `);
 process.exit(0);

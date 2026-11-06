@@ -37,8 +37,9 @@ model. Inside this loop a mismatch defers the work instead of stopping the loop.
 GLM-5.3). If it isn't named, ask once before the first bullet; never guess. Say it
 once at loop start:
 `Model gate: this session is **<model>** · effort **<app-reported or owner-stated effort, or "not visible">**`.
-Claude Code's own reading of the session effort can be missing or wrong, so an
-effort the owner did not state counts as not visible.
+In the Claude desktop app, read it first: call `mcp__ccd_session_mgmt__get_session`
+with `"self"` (load it with ToolSearch if deferred) and use its `effort` field. Say
+"not visible" only where that tool does not exist and the owner has not stated it.
 
 **Owner override.** The gate is lifted only when the message that started the
 loop says so ("run everything on this model", `/autonomous any-model`). Write
