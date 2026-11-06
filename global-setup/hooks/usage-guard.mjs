@@ -21,7 +21,8 @@ const MAX_OPEN_CHATS = 2;
 const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
 const PACE_CHECK_EVERY_MS = 4 * 60 * 60 * 1000;
 const TRANSCRIPT_TAIL_BYTES = 512 * 1024;
-const TRANSCRIPT_HEAD_BYTES = 4096;
+// The first entrypoint field sits about 4.5 KB into a transcript, after the setup lines.
+const TRANSCRIPT_HEAD_BYTES = 16 * 1024;
 
 const claudeDir = join(homedir(), '.claude');
 const projectsDir = join(claudeDir, 'projects');
@@ -78,6 +79,10 @@ export function lastContextTokens(transcriptPath) {
   return 0;
 }
 
+export function isOwnerTranscript(transcriptHead) {
+  return /"entrypoint":"(cli|claude-desktop)"/.test(transcriptHead);
+}
+
 function countOtherOpenChats(sessionId, now) {
   let openChats = 0;
   for (const folder of readdirSync(projectsDir, { withFileTypes: true })) {
@@ -87,7 +92,7 @@ function countOtherOpenChats(sessionId, now) {
       if (!fileName.endsWith('.jsonl') || fileName === `${sessionId}.jsonl`) continue;
       const filePath = join(folderPath, fileName);
       if (now.getTime() - statSync(filePath).mtimeMs > OPEN_CHAT_WINDOW_MS) continue;
-      if (!readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES).includes('"entrypoint":"sdk-cli"')) openChats += 1;
+      if (isOwnerTranscript(readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES))) openChats += 1;
     }
   }
   return openChats;

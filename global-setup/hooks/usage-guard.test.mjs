@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { isQuietHours, lastContextTokens, shouldBlock } from './usage-guard.mjs';
+import { isOwnerTranscript, isQuietHours, lastContextTokens, shouldBlock } from './usage-guard.mjs';
 
 const at = (hour, minute) => new Date(2026, 10, 7, hour, minute);
 const desktopChat = { CLAUDE_CODE_ENTRYPOINT: 'claude-desktop', CLAUDE_CODE_SESSION_ATTENDED: '1' };
@@ -33,6 +33,13 @@ test('lets the override word and app messages through', () => {
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'Urgent: the site is down' }), false);
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'this is not urgent' }), true);
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: '<side-sessions-event>done' }), false);
+});
+
+test('counts only chats, not jobs or setup-only transcripts, as open', () => {
+  assert.equal(isOwnerTranscript('{"entrypoint":"claude-desktop"}'), true);
+  assert.equal(isOwnerTranscript('{"entrypoint":"cli"}'), true);
+  assert.equal(isOwnerTranscript('{"entrypoint":"sdk-cli"}'), false);
+  assert.equal(isOwnerTranscript('{"type":"setup"}'), false);
 });
 
 test('reads the latest context size and survives a broken or missing transcript', () => {
