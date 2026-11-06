@@ -57,7 +57,8 @@ process.stdin.on('end', () => {
 
   process.stderr.write(
     `Code changed after these specs were last checked: ${waiting.join(', ')}. ` +
-    'Run /done-check on each now (.claude/commands/done-check.md), then tell the owner the result in plain words.\n',
+    'Run /done-check on each now (.claude/commands/done-check.md). Then answer what the owner asked, ' +
+    'and add the result in one plain sentence, no table.\n',
   );
   process.exit(2);
 });
