@@ -18,7 +18,22 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 
 - **Malay copy: no comma before "dan", "serta", "untuk" or "oleh"** (owner, 2026-10-29: "why still have the ai-slop. no ',' before 'dan', 'serta', 'untuk', 'oleh'"). It's an English-style serial comma that reads as AI. Write "wad dan klinik", "Maksilofasial oleh Dr Aziz". Before any BM caption, slide text or reply goes to HQ or live, check it: `grep -nE ", (dan|serta|untuk|oleh)\b"` must find nothing.
 
-- **Viral gate on every post.** A brief is not ready until it has: (1) **an outlier** from the last 30 days in its niche (3x or more over that account's median, section 2) named in the brief, with what we borrow from it (hook, first frame, format); (2) **three hooks from three formulas, scored** (section 1), and the winner at **70+ with no check under 55**; under 70, write new hooks before making anything; (3) **the payoff on screen in the first second**, readable on mute (6 words or fewer); (4) **one idea**, an ending that loops or a send line naming a person, and one follow ask. Write the scores and the outlier link in `brief.md`.
+- **Viral gate on every post.** A brief is not ready until it has: (1) **an outlier** from the last 30 days in its niche (3x or more over that account's median, section 2) named in the brief, with what we borrow from it (hook, first frame, format); (2) **three hooks from three formulas, scored** (section 1), and the winner at **70+ with no check under 55**; under 70, write new hooks before making anything; (3) **the payoff on screen in the first second**, readable on mute (6 words or fewer); (4) **one idea**, an ending that loops or a send line naming a person, and one follow ask; (5) **a keep-or-send reason** (next rule). Write the scores and the outlier link in `brief.md`.
+- **Keep-or-send reason on every post.** Viral gate item (5): before anything is made, write in `brief.md` who would keep or send this post and why, using one reason below. Measured on one account (26 TikTok posts): views followed saves plus shares per view (correlation 0.61), not likes per view (-0.01).
+
+  | Reason | What the viewer feels | Hook shape |
+  |---|---|---|
+  | Surprise | "Really? Look at this" | A fact that breaks what they assumed |
+  | Emotion | Moved, longing, proud | A person's loss, love or sacrifice, told plainly |
+  | Story | "What happened next?" | A person, a problem and a turn, held open to the end |
+  | Mistake | "I nearly got that wrong" | A wrong belief, or something people walk past |
+  | Belonging | "That's us" | What the audience says, feels or goes through |
+  | Useful | "I'll need this" | A plan, a list or a place to find |
+
+  - Rotate: never the same reason 3 posts in a row. Useful is one reason among six, never the default. A post that only informs has no reason yet.
+  - The cover and the first words carry the reason. A name the viewer doesn't know never leads; it comes after the hook. Series labels and numbers stay off the cover and out of the first words.
+  - No honest answer: change the angle before making anything.
+  - Short isn't the same as shared: a 28 s reel lifted finishes from 4.3% to 15.2% and still stopped at 154 views with 2 saves. A reel's main visual moves (footage, AI clips, 3D); a flat drawn scene is one diagram beat at most.
 
 ## 1. Hooks
 A post has two hooks that fire together: the **spoken line** (about 2 s) and the **on-screen line** (about 1 s, read before it is heard). Write them separately. On screen: 6 words or fewer.
@@ -70,7 +85,7 @@ Write **three hooks from three different formulas**, then score each spoken line
 | Specificity | A number, a name, a place, a price | Nothing checkable |
 | Stakes | Cost, loss, negation, "wrong", "only", "instead", a price | A plain statement |
 | Front-load | The payload word in the first 4 words | Weak opener ("so", "hey", "today", "in this video"); payload after word 7 |
-| Address | Speaks to the viewer ("you"), or opens on an imperative | Third person, nobody in the room |
+| Address | Speaks to the viewer ("you"), opens on an imperative, or (Story and Emotion hooks) puts a person at stake | Third person, nobody in the room |
 
 Overall = 0.6 × mean + 0.4 × lowest, minus 15 per dealbreaker. Dealbreakers: "stop scrolling", a video preamble, a greeting, a hashtag or an emoji in the hook. **Strong** = 70+ with no check under 55. **Under 50: you do not have the hook yet**; editing will not fix it.
 
@@ -154,6 +169,7 @@ Raw views mostly measure follower count. Rank our posts by:
 | Hold at 3 s | viewers at 3 s ÷ viewers who started | the hook's grade |
 | Average watch time | from insights | whether the middle worked |
 | Sends per reach | shares ÷ reach | the strongest signal a post can earn |
+| Keep-or-send rate | (saves + shares) ÷ views | whether people wanted it after seeing it; the best single guide to reach on one measured account |
 | Follows per reach | follows ÷ reach | whether the profile converted |
 
 - **Views and no follows is a profile problem; no views is a hook problem.** Separate them before changing anything. For the profile: the Instagram name field (30 characters) is searchable, so put the searched words there; pin the three best posts; give grid covers a short readable title (`poster-design`).
