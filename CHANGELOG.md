@@ -7,9 +7,11 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Changed
+- **Fresh chat at 200k, not 500k.** The token tiers on a 1M window now reach red at 200k, because chats past that size were half of all calls but 69% of the burn on the plan limit.
 - **Effort follows the work, not the phase tag.** A `high` tag covers the new part only: repeat work on something settled runs `medium`, fixes and re-renders `low` to `medium`, and `high` stays for new decisions and work where being wrong is expensive.
 
 ### Added
+- **Optional usage guard.** `.\setup.ps1 -UsageGuard` stops new messages from 11:30pm to 6am (start with "urgent" to override; night jobs pass) and warns on long chats, too many open chats and weekly pace. Off by default.
 - **`content-method` skill.** One method for every brand repo: the same commands, the viral gate, a required `look:` line per post, the owner's yes on a reel script, and a nightly job that builds approved reels on the engine.
 - **`poster-design`: every cover comes from Google Flow.** A new picture per cover, with the text set in code.
 - **`database.md`: two Cloudflare D1 traps.** The compound SELECT limit, and how to change a `CHECK` on a referenced table.

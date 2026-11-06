@@ -6,13 +6,15 @@
 #   .\setup.ps1                  # Claude Code + ZCode (default)
 #   .\setup.ps1 -Agent claude    # Claude Code only
 #   .\setup.ps1 -Agent zcode     # ZCode only
+#   .\setup.ps1 -UsageGuard      # also turn on the optional usage guard (Claude Code)
 #
 # On macOS / Linux the ZCode half runs on its own:
 #   node global-setup/zcode/install-zcode.mjs
 
 param(
     [ValidateSet("both", "claude", "zcode")]
-    [string]$Agent = "both"
+    [string]$Agent = "both",
+    [switch]$UsageGuard
 )
 
 $ErrorActionPreference = "Stop"
@@ -57,11 +59,13 @@ if ($Agent -in @("both", "claude")) {
         (Join-Path $hooksDir "session-start-template-sync.mjs") `
         "~/.claude/hooks/session-start-template-sync.mjs"
 
-    # 2c. Usage guard: the 11:30pm stop plus long-chat, open-chat and weekly-pace warnings.
-    Install-File `
-        (Join-Path $scriptDir "global-setup\hooks\usage-guard.mjs") `
-        (Join-Path $hooksDir "usage-guard.mjs") `
-        "~/.claude/hooks/usage-guard.mjs"
+    # 2c. Optional usage guard: the 11:30pm stop plus long-chat, open-chat and weekly-pace warnings.
+    if ($UsageGuard) {
+        Install-File `
+            (Join-Path $scriptDir "global-setup\hooks\usage-guard.mjs") `
+            (Join-Path $hooksDir "usage-guard.mjs") `
+            "~/.claude/hooks/usage-guard.mjs"
+    }
 
     # 3. /update-template and /close in every project. A personal skill outranks a
     #    project command of the same name, and each skill only forwards to the
@@ -99,7 +103,8 @@ if ($Agent -in @("both", "claude")) {
             ConvertTo-Json -Depth 10 | Out-File -FilePath $destSettings -Encoding utf8NoBOM
         Write-Host "  [OK] ~/.claude/settings.json (minimal — auto mode)" -ForegroundColor Green
     }
-    node (Join-Path $scriptDir "global-setup\register-hooks.mjs")
+    $registerArgs = if ($UsageGuard) { @("--usage-guard") } else { @() }
+    node (Join-Path $scriptDir "global-setup\register-hooks.mjs") @registerArgs
 }
 
 # ZCode ignores hooks declared in a workspace config, so its guardrails have to be

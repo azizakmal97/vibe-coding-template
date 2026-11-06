@@ -4,6 +4,7 @@
  * Run by setup.ps1; safe to run again (a hook already registered is left as it is).
  *
  *     node global-setup/register-hooks.mjs
+ *     node global-setup/register-hooks.mjs --usage-guard    (also the optional usage guard)
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -17,8 +18,12 @@ const hooksDir = join(claudeDir, 'hooks').replace(/\\/g, '/');
 const WANTED = [
   { event: 'PostToolUse', matcher: 'Bash', file: 'post-commit-push.mjs' },
   { event: 'SessionStart', matcher: '', file: 'session-start-template-sync.mjs' },
-  { event: 'UserPromptSubmit', matcher: '', file: 'usage-guard.mjs' },
 ];
+
+// Opt-in: it blocks messages at night, which is a personal choice, not a template default.
+if (process.argv.includes('--usage-guard')) {
+  WANTED.push({ event: 'UserPromptSubmit', matcher: '', file: 'usage-guard.mjs' });
+}
 
 const settings = existsSync(settingsPath) ? JSON.parse(readFileSync(settingsPath, 'utf8')) : {};
 settings.hooks = settings.hooks || {};
