@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart hook. Four independent checks plus the owner rule, all printed
- * to the agent:
+ * SessionStart hook. Four independent checks, all printed to the agent:
  *   1. This computer lacks the vibe-coding-template global setup → tell the
  *      agent to offer it, with the exact steps, so the owner never has to
  *      remember them on a new machine.
@@ -146,16 +145,5 @@ switch to (Claude Code: /model <name>) and continue with what they asked.
 `;
 }
 
-// Printed every session because presets ship different CLAUDE.md files, and the
-// owner can't ask for commands they don't know exist.
-const OWNER_RULE = `
-THE OWNER IS NOT A CODER and never types commands. They describe what they want.
-  - New feature, or anything touching money, logins or personal data: run /spec
-    yourself before any code.
-  - Before saying a feature with a spec is finished: run /done-check yourself.
-  - Ask only about what people will see and do, with simple choices and your pick
-    first. If they don't know, take your pick and carry on.
-`;
-
-process.stdout.write(machineSetupNotice() + ignoredConfigNotice() + resumeBanner() + waitingForModelNotice() + OWNER_RULE);
+process.stdout.write(machineSetupNotice() + ignoredConfigNotice() + resumeBanner() + waitingForModelNotice());
 process.exit(0);

@@ -177,7 +177,6 @@ Every Friday:
 **Completed:** _YYYY-MM-DD_
 **Commits:** _hash → hash_
 **Spec:** _specs/<slug>.md, or none_
-**Done-check:** _PASS <date> or <n> GAPS, written by /done-check_
 **Model:** _Sonnet | Opus | Haiku | DeepSeek Pro | DeepSeek Flash | Gemini Pro | Gemini Flash — see AGENTS.md "Model & Tool Selection per Task"_
 
 **Plan for this phase:**

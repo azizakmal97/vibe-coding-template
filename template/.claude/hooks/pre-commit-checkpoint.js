@@ -65,7 +65,7 @@ function blockedDoneReason() {
   const block = phaseBlock(donePhaseId);
   const specPath = block.match(/\*\*Spec:\*\*\s*`?(specs\/[^\s`*]+\.md)/)?.[1];
   if (!specPath || !existsSync(join(ROOT, specPath))) return null;
-  if (/\*\*Done-check:\*\*\s*PASS\b/.test(block)) return null;
+  if (/^Done-check:\s*PASS\b/m.test(readFileSync(join(ROOT, specPath), 'utf8'))) return null;
   return `Phase ${donePhaseId} has a spec (${specPath}) but no passed check. ` +
          'Run /done-check, fix any gaps, then commit done again.';
 }

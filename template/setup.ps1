@@ -118,6 +118,9 @@ $fileMappings = [ordered]@{
     ".claude\hooks\config-protection.cjs"             = ".claude\hooks\config-protection.cjs"
     ".claude\hooks\post-commit-update-progress.js"    = ".claude\hooks\post-commit-update-progress.js"
     ".claude\hooks\post-commit-graphify.js"           = ".claude\hooks\post-commit-graphify.js"
+    ".claude\hooks\user-prompt-owner-rule.js"         = ".claude\hooks\user-prompt-owner-rule.js"
+    ".claude\hooks\stop-done-check.js"                = ".claude\hooks\stop-done-check.js"
+    ".claude\hooks\package.json"                      = ".claude\hooks\package.json"
     ".claude\hooks\post-edit-antislop.cjs"            = ".claude\hooks\post-edit-antislop.cjs"
     ".claude\hooks\pre-artifact-antislop.cjs"         = ".claude\hooks\pre-artifact-antislop.cjs"
     # rules

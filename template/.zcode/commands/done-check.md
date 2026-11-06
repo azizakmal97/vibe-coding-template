@@ -8,8 +8,8 @@ argument-hint: "[spec file, default: the active phase's Spec line]"
 # /done-check: $ARGUMENTS
 
 Passing tests say the code runs, not that it does what the spec asked. This
-checks the second thing. Run it yourself, never ask the owner to. A hook blocks
-`done(<phase-id>)` for a phase with a spec until this has passed.
+checks the second thing. Run it yourself, never ask the owner to. Hooks hold your
+turn open while code is unchecked, and block `done(<phase-id>)` until this passes.
 
 ## Find the spec
 
@@ -45,9 +45,10 @@ DONE-CHECK: PASS
 ```
 
 The last line is `DONE-CHECK: PASS` or `DONE-CHECK: <n> GAPS`. Write the same
-result into the phase's `**Done-check:**` line in `PROGRESS.md`, as `PASS <date>`
-or `<n> GAPS`. Only PASS allows the `done(<phase-id>)` commit. After gaps are
-fixed, run this again.
+result into the spec as its own line under the date, `Done-check: PASS <date>` or
+`Done-check: <n> GAPS <date>`, and commit it: `docs(spec): done-check <slug>`. The
+hooks read that line and that commit. Only PASS allows the `done(<phase-id>)`
+commit. After gaps are fixed, run this again.
 
 The table is for the record. Tell the owner the result in plain words: what
 works, and what you are fixing next.

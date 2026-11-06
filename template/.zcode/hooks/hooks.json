@@ -17,6 +17,36 @@
         ]
       }
     ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "process",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              ".claude/hooks/stop-done-check.js"
+            ],
+            "enabled": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "process",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/zcode-hook.mjs",
+              ".claude/hooks/user-prompt-owner-rule.js"
+            ],
+            "enabled": true
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "hooks": [
