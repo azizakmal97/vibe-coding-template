@@ -109,7 +109,7 @@ function collectNotices({ payload, env, now }) {
   const notices = [];
   const contextTokens = lastContextTokens(payload.transcript_path);
   if (contextTokens > FRESH_CHAT_TOKENS) {
-    notices.push(`This chat is ${Math.round(contextTokens / 1000)}k long, past the 200k limit. Tell the owner in one line to start a fresh chat once this task is done.`);
+    notices.push(`This chat is ${Math.round(contextTokens / 1000)}k long, past the 200k limit. Never stop mid-task for this. When the current task is finished and checked, end that reply with one line telling the owner this is a good moment to run /close and open a fresh chat. If work is still going, say how much is left before that moment.`);
   }
   const openChats = countOtherOpenChats(payload.session_id, now) + 1;
   if (openChats > MAX_OPEN_CHATS) {
