@@ -23,13 +23,17 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 
   | Reason | What the viewer feels | Hook shape |
   |---|---|---|
+  | Stress | "That could happen to me" | A real risk, loss or deadline, with the way out in the post |
+  | Awe | Goosebumps, "subhanallah" | Love, sacrifice or scale bigger than us |
   | Surprise | "Really? Look at this" | A fact that breaks what they assumed |
-  | Emotion | Moved, longing, proud | A person's loss, love or sacrifice, told plainly |
   | Story | "What happened next?" | A person, a problem and a turn, held open to the end |
   | Mistake | "I nearly got that wrong" | A wrong belief, or something people walk past |
   | Belonging | "That's us" | What the audience says, feels or goes through |
   | Useful | "I'll need this" | A plan, a list or a place to find |
 
+  - Why these: awe, anger and anxiety make content spread, and sadness makes it spread less (Berger and Milkman, 2012). A sad story turns to awe or pride by the end, and the last line before the follow ask is worth sending on its own.
+  - Stress must be true: never invent a danger, and always give the way out. Source and accuracy rules beat every hook.
+  - Curiosity needs a small, specific gap: a fact that breaks what they expected. A name they have never heard makes no gap.
   - Rotate: never the same reason 3 posts in a row. Useful is one reason among six, never the default. A post that only informs has no reason yet.
   - The cover and the first words carry the reason. A name the viewer doesn't know never leads; it comes after the hook. Series labels and numbers stay off the cover and out of the first words.
   - No honest answer: change the angle before making anything.
@@ -73,6 +77,8 @@ Rules for every formula:
 | 24 | The Reveal | This is the new {thing} | "This is the new one, and it fixes X." |
 | 25 | Someone Else's Result | There was one {person} who {outcome} in {time} | "One student passed in six weeks." |
 | 26 | The Superlative | The {fastest/only} {thing} is {answer} | "The fastest way is evidence." |
+| 27 | The Dread | One day you will {unavoidable thing} | "One day you will bury your father." |
+| 28 | One Chance | You get one {chance}. {what goes wrong} | "One chance a year, so book it right." |
 
 Traps worth remembering: #8 and #3 die when the "secret" is common knowledge; #23 needs a source said in the post; #19 with fake urgency discounts every later deadline; #26 with a soft answer ("consistency") says nothing; #12 and #16 lose their power when the words are tidied up.
 
@@ -85,7 +91,7 @@ Write **three hooks from three different formulas**, then score each spoken line
 | Specificity | A number, a name, a place, a price | Nothing checkable |
 | Stakes | Cost, loss, negation, "wrong", "only", "instead", a price | A plain statement |
 | Front-load | The payload word in the first 4 words | Weak opener ("so", "hey", "today", "in this video"); payload after word 7 |
-| Address | Speaks to the viewer ("you"), opens on an imperative, or (Story and Emotion hooks) puts a person at stake | Third person, nobody in the room |
+| Address | Speaks to the viewer ("you"), opens on an imperative, or (Story and Awe hooks) puts a person at stake | Third person, nobody in the room |
 
 Overall = 0.6 × mean + 0.4 × lowest, minus 15 per dealbreaker. Dealbreakers: "stop scrolling", a video preamble, a greeting, a hashtag or an emoji in the hook. **Strong** = 70+ with no check under 55. **Under 50: you do not have the hook yet**; editing will not fix it.
 
