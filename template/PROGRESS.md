@@ -80,6 +80,7 @@ Worst case if session dies mid-edit = ONE file half-modified. `git status` shows
 
 ```bash
 # Phase-completion sequence:
+0. If the phase has a spec: run `/done-check`. Only `DONE-CHECK: PASS` continues.
 1. Run all verification (typecheck && build && test).
 2. Edit this file → mark phase ✅ done + summary + last commit hash.
 3. git add PROGRESS.md && git commit -m "done(<phase-id>): <summary>"
@@ -122,6 +123,7 @@ Trade-off: commits broken intermediate states. Easy to `git reset` later. Use on
 | `PROGRESS.md` | Live state of all phases | After every phase status change |
 | `AUDIT_AND_ROADMAP.md` (if exists) | Full plan — referenced by progress tracker | Rarely (only on plan revisions) |
 | `audit-history/` (optional) | Frozen records of closed audits (e.g. `audit-history/2026-05-10-security.md`) | Never edit after closing |
+| `specs/<slug>.md` | WHAT one feature must do and how we know it's done | When the feature is agreed; `/done-check` reads it |
 | `git log` | Commit hashes per phase | Every commit |
 
 ### Audit-history convention
@@ -174,6 +176,7 @@ Every Friday:
 **Started:** _YYYY-MM-DD_
 **Completed:** _YYYY-MM-DD_
 **Commits:** _hash → hash_
+**Spec:** _specs/<slug>.md, or none_
 **Model:** _Sonnet | Opus | Haiku | DeepSeek Pro | DeepSeek Flash | Gemini Pro | Gemini Flash — see AGENTS.md "Model & Tool Selection per Task"_
 
 **Plan for this phase:**

@@ -9,6 +9,14 @@ argument-hint: "[feature name] — [one sentence description of what it does]"
 
 Follow this exact sequence. Do not skip steps.
 
+## Phase 0: Spec
+
+Run `/spec $ARGUMENTS` first, unless it is a small change (one-file fix, copy
+tweak, a bug, a refactor that keeps behaviour). Wait for `Status: agreed`, except
+inside `/autonomous`, which carries on with a draft (see `/spec`). If
+`specs/<slug>.md` exists, Phase 2 and Phase 8 work from its acceptance tests
+(`A1`, `A2`, ...): each one needs a test, and Phase 8 walks each one.
+
 ## Phase 1: Research (Read before writing anything)
 
 1. Read `CLAUDE.md` — stack, conventions, patterns
@@ -75,6 +83,11 @@ Before committing, confirm:
 ## Phase 6: Code Review
 
 Run the `code-reviewer` agent on changed files.
+
+## Phase 6b: Spec Check
+
+If a spec exists, run `/done-check`. Fix every gap it lists, then run it again.
+Commit only on `DONE-CHECK: PASS`.
 
 ## Phase 7: Commit
 

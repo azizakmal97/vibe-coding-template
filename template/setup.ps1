@@ -89,6 +89,8 @@ $fileMappings = [ordered]@{
     # commands
     ".claude\commands\new-feature.md"                 = ".claude\commands\new-feature.md"
     ".claude\commands\fix-bug.md"                     = ".claude\commands\fix-bug.md"
+    ".claude\commands\spec.md"                        = ".claude\commands\spec.md"
+    ".claude\commands\done-check.md"                  = ".claude\commands\done-check.md"
     ".claude\commands\pr-review.md"                   = ".claude\commands\pr-review.md"
     ".claude\commands\resume.md"                      = ".claude\commands\resume.md"
     ".claude\commands\checkpoint.md"                  = ".claude\commands\checkpoint.md"
@@ -265,6 +267,8 @@ Write-Host ""
 Write-Host "Start coding:" -ForegroundColor Yellow
 Write-Host "  /new-feature [feature name] — [description]" -ForegroundColor Yellow
 Write-Host "  /fix-bug [error or description]" -ForegroundColor Yellow
+Write-Host "  /spec [name] — [description]  — write the spec before a new feature" -ForegroundColor Yellow
+Write-Host "  /done-check      — compare the code to its spec before marking done" -ForegroundColor Yellow
 Write-Host "  /pr-review [branch or PR number]" -ForegroundColor Yellow
 Write-Host "  /resume          — restore session state from PROGRESS.md" -ForegroundColor Yellow
 Write-Host "  /checkpoint      — verify + commit current work" -ForegroundColor Yellow

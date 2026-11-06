@@ -21,6 +21,7 @@ Pick the next phase from PROGRESS.md and start it safely.
 3. **Tool call 1: write intent on disk.** Edit PROGRESS.md:
    - Change `⬜ <phase-id>` → `🟡 <phase-id>` in the phase log AND in the header `Active phase:` line.
    - Update `Last update:` to today + agent name.
+   - Fill the phase's `**Spec:**` line with `specs/<slug>.md` when the phase has one (run `/spec` first if a new user-visible feature has none), else `none`.
    - Fill in the "Plan for this phase" block with explicit bullet list of edits (3-8 items typical). Include a bullet for every tier 2 trigger the phase fires (`rules/production-readiness.md`), so safeguards are planned, not improvised.
 4. **Tool call 2: commit intent.**
    ```

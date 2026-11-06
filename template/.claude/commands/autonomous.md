@@ -113,6 +113,8 @@ LOOP:
         - /checkpoint        # typecheck + build + test + commit wip(phase-id) [skip ci]
   4. IF all plan bullets done:
         - Run full verification.
+        - IF the phase has a spec: /done-check. Gaps become plan bullets and the
+          loop continues with them; mark done only on DONE-CHECK: PASS.
         - Edit PROGRESS.md → mark phase ✅ done + hash.
         - git commit -m "done(<phase-id>): <summary>"   # NO [skip ci] — this run CI-verifies the phase
         - Verify a CI run triggered (docs-only done commit → paths-ignore skips it;

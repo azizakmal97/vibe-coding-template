@@ -193,7 +193,7 @@ your-project/
 │  ├─ settings.json               # Permission allow/deny-list + hook wiring
 │  ├─ hooks/                      # Pre/post tool hooks (destructive-cmd + secret block, file-size, DB guard, auto-push)
 │  ├─ rules/                      # Deep rules (api, database, testing, refactor, production-readiness, …)
-│  ├─ commands/                   # Slash commands (/resume, /checkpoint, /next-phase, /autonomous, …)
+│  ├─ commands/                   # Slash commands (/resume, /checkpoint, /next-phase, /autonomous, /spec, /done-check, …)
 │  ├─ agents/                     # Subagents (code-reviewer, debugger, security-auditor, …)
 │  └─ skills/                     # caveman-default (token-saving), design-system
 ├─ .zcode/                        # Same thing for ZCode — generated from .claude/

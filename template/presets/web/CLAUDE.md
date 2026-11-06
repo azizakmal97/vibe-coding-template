@@ -163,6 +163,7 @@ See `rules/methodology.md`.
 |---|---|
 | `AUDIT_AND_ROADMAP.md` | WHAT + WHY |
 | `PROGRESS.md` | WHERE + HOW |
+| `specs/<slug>.md` | WHAT one feature must do, and how we know it's done |
 | `docs/HANDOVER.md` | Non-coder owner doc |
 | `docs/ARCHITECTURE_PLAIN.md` | Plain-English architecture |
 | `docs/FINDINGS_AND_PLAN_PLAIN.md` | Plain-English audit |
@@ -170,5 +171,6 @@ See `rules/methodology.md`.
 | `docs/PRODUCTION_READINESS_PLAIN.md` | Plain-English production checklist + this app's status |
 | `git log` | Commit hashes per phase |
 
+Run `/spec` before a new user-visible feature or anything touching money, auth or personal data, and `/done-check` before marking it done.
 Run `/audit` to refresh AUDIT_AND_ROADMAP.md. Run `/handover` to refresh plain-English docs.
 Run `/security-audit` before launch and after big auth / money / sharing changes.
