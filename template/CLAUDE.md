@@ -361,7 +361,9 @@ repair, not five: failed cheap runs cost more than an early step up.
 Claude Code may show no session effort in context, or one that differs from what
 the owner set in `/model`. In the Claude desktop app, call
 `mcp__ccd_session_mgmt__get_session` with `"self"` and use its `effort` field,
-marked `(app-reported) ✓`. Elsewhere, treat it as not visible unless the owner
+marked `(app-reported) ✓`. Trust it only if its `model` matches your system prompt.
+A mismatch means it is stale: your system prompt's model is the real one, so say
+not visible and never ask the owner which model is running. Elsewhere, treat it as not visible unless the owner
 stated it in this conversation, and never mark an effort `✓` you have not verified.
 
 ### Project pin

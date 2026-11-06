@@ -15,6 +15,7 @@ All notable changes to this project are documented here. The format is based on
 - **`docs/HEADLESS_JOBS.template.md`: how to run unattended agent work.** One fresh `claude -p` per job, started by a scheduler, with the nine rules that keep it reliable.
 
 ### Fixed
+- **A session no longer trusts a stale model readout.** `get_session` can lag behind the real model when a session is started or changed from the phone: a session running Haiku read back Opus at high, then stopped to ask the owner which model it was on. The system prompt's model now wins, a mismatch means the effort is not visible, and the owner is never asked.
 - **Sessions read their effort in the desktop app instead of saying "not visible".** `/autonomous` still told agents that any effort the owner did not state counts as not visible, so those sessions never called `get_session`. It now says to read it first, and `user-prompt-owner-rule.js` repeats that on every message.
 - **Hooks no longer crash in a project whose `package.json` says `"type": "commonjs"`.** The `.js` hooks use `import`, so Node refused to load them and every one failed quietly, including auto-push and the session resume banner. New `.claude/hooks/package.json` marks that folder as ES modules.
 - **New projects get `/close` and the graph hook.** `close.md` and `post-commit-graphify.js` were in neither setup list, so `settings.json` called a hook that was never copied.
@@ -146,6 +147,7 @@ All notable changes to this project are documented here. The format is based on
   ZCode reads it in the regenerated `.zcode/agents/` copies is not verified.
 
 ### Fixed
+- **A session no longer trusts a stale model readout.** `get_session` can lag behind the real model when a session is started or changed from the phone: a session running Haiku read back Opus at high, then stopped to ask the owner which model it was on. The system prompt's model now wins, a mismatch means the effort is not visible, and the owner is never asked.
 - **Renamed hooks ran twice after `/update-template`.** Commit a7de2eb renamed
   `config-protection`, `post-edit-check` and `pre-db-migrate` from `.js` to `.cjs`. The update
   only ever added registrations, so projects kept both and every edit or command ran each hook
@@ -451,6 +453,7 @@ All notable changes to this project are documented here. The format is based on
   `~/.claude/CLAUDE.md` with the older rules.
 
 ### Fixed
+- **A session no longer trusts a stale model readout.** `get_session` can lag behind the real model when a session is started or changed from the phone: a session running Haiku read back Opus at high, then stopped to ask the owner which model it was on. The system prompt's model now wins, a mismatch means the effort is not visible, and the owner is never asked.
 - **Auto-push silently never fired on the two most common commit forms.** The
   hook matched only a standalone `git commit ...`, so `git add . && git commit`
   — the form the docs themselves teach — was ignored; and it confirmed success

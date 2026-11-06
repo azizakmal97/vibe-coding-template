@@ -86,7 +86,11 @@ classifies and checks — it never overrides.
 not proof: Claude Code may show none, or one that differs from what the owner set in
 `/model` (owner-reported 2026-10-24). In the Claude desktop app, read it instead:
 call `mcp__ccd_session_mgmt__get_session` with `"self"` (load it with ToolSearch if
-deferred) and use its `effort` field, marked `(app-reported) ✓`. Elsewhere (CLI,
+deferred) and use its `effort` field, marked `(app-reported) ✓`. Trust it only if its
+`model` matches the model in your system prompt. A mismatch means the readout is stale
+(it lags when the session is started or changed from the phone, seen 2026-11-06): your
+system prompt's model is the real one, so use it, say `session effort not visible`, and
+never ask the owner which model is running. Elsewhere (CLI,
 ZCode) nothing exposes it: unless the owner stated the effort in this conversation,
 say `session effort not visible` and assume the owner's setting governs. Format:
 > `Task: **Sonnet 5.5 · medium** · Running: **Sonnet 5.5** ✓ · Session effort: **medium** (app-reported) ✓` — proceed.

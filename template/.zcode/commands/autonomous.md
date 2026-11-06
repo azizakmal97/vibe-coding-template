@@ -38,7 +38,9 @@ GLM-5.3). If it isn't named, ask once before the first bullet; never guess. Say 
 once at loop start:
 `Model gate: this session is **<model>** · effort **<app-reported or owner-stated effort, or "not visible">**`.
 In the Claude desktop app, read it first: call `mcp__ccd_session_mgmt__get_session`
-with `"self"` (load it with ToolSearch if deferred) and use its `effort` field. Say
+with `"self"` (load it with ToolSearch if deferred) and use its `effort` field, but
+only if its `model` matches your system prompt; a mismatch means it is stale, and
+your system prompt's model is the real one, so never ask the owner. Otherwise say
 "not visible" only where that tool does not exist and the owner has not stated it.
 
 **Owner override.** The gate is lifted only when the message that started the

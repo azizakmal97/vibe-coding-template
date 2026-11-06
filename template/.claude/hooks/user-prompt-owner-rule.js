@@ -15,6 +15,8 @@ Before saying a feature with a spec is finished, run /done-check
 (.claude/commands/done-check.md) yourself.
 Session effort: in the Claude desktop app, read it with
 mcp__ccd_session_mgmt__get_session "self" (load it with ToolSearch if deferred).
-Never write "not visible" without trying that first.
+Trust it only if its model matches your system prompt. If not, it is stale: your
+system prompt's model is the real one, say effort is not visible, and never ask
+the owner which model is running. Never write "not visible" without trying first.
 `);
 process.exit(0);
