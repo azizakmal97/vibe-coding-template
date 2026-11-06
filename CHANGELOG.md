@@ -10,6 +10,7 @@ All notable changes to this project are documented here. The format is based on
 - **Effort follows the work, not the phase tag.** A `high` tag covers the new part only: repeat work on something settled runs `medium`, fixes and re-renders `low` to `medium`, and `high` stays for new decisions and work where being wrong is expensive.
 
 ### Added
+- **`content-method` skill.** One method for every brand repo: the same commands, the viral gate, a required `look:` line per post, the owner's yes on a reel script, and a nightly job that builds approved reels on the engine.
 - **`poster-design`: every cover comes from Google Flow.** A new picture per cover, with the text set in code.
 - **`database.md`: two Cloudflare D1 traps.** The compound SELECT limit, and how to change a `CHECK` on a referenced table.
 - **`/deploy`: chain the deploy with `&&`.** A failed gate or commit can no longer be followed by a deploy.
