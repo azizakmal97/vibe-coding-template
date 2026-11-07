@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { isOwnerTranscript, isQuietHours, lastContextTokens, shouldBlock } from './usage-guard.mjs';
+import { countOtherChats, isOwnerTranscript, isQuietHours, isStartedBySession, lastContextTokens, shouldBlock } from './usage-guard.mjs';
 
 const at = (hour, minute) => new Date(2026, 10, 7, hour, minute);
 const desktopChat = { CLAUDE_CODE_ENTRYPOINT: 'claude-desktop', CLAUDE_CODE_SESSION_ATTENDED: '1' };
@@ -46,6 +46,36 @@ test('counts only chats, not jobs or setup-only transcripts, as open', () => {
   assert.equal(isOwnerTranscript('{"entrypoint":"cli"}'), true);
   assert.equal(isOwnerTranscript('{"entrypoint":"sdk-cli"}'), false);
   assert.equal(isOwnerTranscript('{"type":"setup"}'), false);
+});
+
+test('reads who started a session from its first turn only', () => {
+  const started = (firstTurn, laterTurn) => `{"turnOrigin":"${firstTurn}"}\n{"turnOrigin":"${laterTurn}"}`;
+  assert.equal(isStartedBySession(started('sdk', 'human')), true);
+  assert.equal(isStartedBySession(started('human', 'sdk')), false);
+  assert.equal(isStartedBySession('{"type":"setup"}'), false);
+});
+
+test('skips sessions started by another session, in all their transcripts', () => {
+  const chats = [
+    { id: 'me', title: 'Mine', isOpen: true, startedBySession: false },
+    { id: 'owner', title: 'Owner chat', isOpen: true, startedBySession: false },
+    { id: 'child-start', title: 'Logo', isOpen: false, startedBySession: true },
+    { id: 'child-later', title: 'Logo', isOpen: true, startedBySession: false },
+    { id: 'child-open', title: 'Icons', isOpen: true, startedBySession: true },
+  ];
+  assert.equal(countOtherChats(chats, 'me'), 1);
+});
+
+test('counts one session once, and a chat with no title yet', () => {
+  const chats = [
+    { id: 'me', title: 'Mine', isOpen: true, startedBySession: false },
+    { id: 'my-earlier-file', title: 'Mine', isOpen: true, startedBySession: false },
+    { id: 'first-file', title: 'Owner chat', isOpen: true, startedBySession: false },
+    { id: 'second-file', title: 'Owner chat', isOpen: true, startedBySession: false },
+    { id: 'new-chat', title: null, isOpen: true, startedBySession: false },
+    { id: 'idle', title: 'Old', isOpen: false, startedBySession: false },
+  ];
+  assert.equal(countOtherChats(chats, 'me'), 2);
 });
 
 test('reads the latest context size and survives a broken or missing transcript', () => {

@@ -20,6 +20,7 @@ const ALLOWED_AT_NIGHT = /^\s*(urgent\b|\/close\b)/i;
 const FRESH_CHAT_TOKENS = 200_000;
 const MAX_OPEN_CHATS = 3;
 const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
+const CHILD_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 const PACE_CHECK_EVERY_MS = 4 * 60 * 60 * 1000;
 const TRANSCRIPT_TAIL_BYTES = 512 * 1024;
 // The first entrypoint field sits about 4.5 KB into a transcript, after the setup lines.
@@ -84,17 +85,54 @@ export function isOwnerTranscript(transcriptHead) {
   return /"entrypoint":"(cli|claude-desktop)"/.test(transcriptHead);
 }
 
+// A session started by another session opens with an sdk turn. Only the first
+// turn counts: chats the owner started get sdk turns later too.
+export function isStartedBySession(transcriptHead) {
+  return transcriptHead.match(/"turnOrigin":"([^"]+)"/)?.[1] === 'sdk';
+}
+
+function lastTitle(transcriptPath) {
+  const size = statSync(transcriptPath).size;
+  const start = Math.max(0, size - TRANSCRIPT_TAIL_BYTES);
+  const tail = readBytes(transcriptPath, start, size - start);
+  return [...tail.matchAll(/"type":"custom-title","customTitle":"([^"]+)"/g)].at(-1)?.[1] ?? null;
+}
+
+// One session can span several transcripts in a project, and only the first shows
+// who started it. They share a title, so the title ties them together.
+export function countOtherChats(transcripts, sessionId) {
+  const childTitles = new Set(transcripts.filter((chat) => chat.startedBySession).map((chat) => chat.title));
+  const ownTitle = transcripts.find((chat) => chat.id === sessionId)?.title;
+  const otherChats = transcripts.filter((chat) => {
+    if (!chat.isOpen || chat.startedBySession || chat.id === sessionId) return false;
+    return !chat.title || (!childTitles.has(chat.title) && chat.title !== ownTitle);
+  });
+  return new Set(otherChats.map((chat) => chat.title ?? chat.id)).size;
+}
+
+function readProjectChats(folderPath, sessionId, now) {
+  const chats = [];
+  for (const fileName of readdirSync(folderPath)) {
+    if (!fileName.endsWith('.jsonl')) continue;
+    const filePath = join(folderPath, fileName);
+    const age = now.getTime() - statSync(filePath).mtimeMs;
+    if (age > CHILD_LOOKBACK_MS) continue;
+    const head = readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES);
+    if (!isOwnerTranscript(head)) continue;
+    const id = fileName.slice(0, -'.jsonl'.length);
+    const isOpen = age <= OPEN_CHAT_WINDOW_MS;
+    const startedBySession = isStartedBySession(head);
+    if (!isOpen && !startedBySession && id !== sessionId) continue;
+    chats.push({ id, title: lastTitle(filePath), isOpen, startedBySession });
+  }
+  return chats;
+}
+
 function countOtherOpenChats(sessionId, now) {
   let openChats = 0;
   for (const folder of readdirSync(projectsDir, { withFileTypes: true })) {
     if (!folder.isDirectory()) continue;
-    const folderPath = join(projectsDir, folder.name);
-    for (const fileName of readdirSync(folderPath)) {
-      if (!fileName.endsWith('.jsonl') || fileName === `${sessionId}.jsonl`) continue;
-      const filePath = join(folderPath, fileName);
-      if (now.getTime() - statSync(filePath).mtimeMs > OPEN_CHAT_WINDOW_MS) continue;
-      if (isOwnerTranscript(readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES))) openChats += 1;
-    }
+    openChats += countOtherChats(readProjectChats(join(projectsDir, folder.name), sessionId, now), sessionId);
   }
   return openChats;
 }
