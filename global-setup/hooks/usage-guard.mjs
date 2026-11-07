@@ -18,7 +18,7 @@ const START_MINUTE = 6 * 60;
 // /close saves the day's work, so stopping it at night would defeat the point.
 const ALLOWED_AT_NIGHT = /^\s*(urgent\b|\/close\b)/i;
 const FRESH_CHAT_TOKENS = 200_000;
-const MAX_OPEN_CHATS = 2;
+const MAX_OPEN_CHATS = 3;
 const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
 const PACE_CHECK_EVERY_MS = 4 * 60 * 60 * 1000;
 const TRANSCRIPT_TAIL_BYTES = 512 * 1024;
