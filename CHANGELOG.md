@@ -19,6 +19,7 @@ All notable changes to this project are documented here. The format is based on
 - **`docs/HEADLESS_JOBS.template.md`: how to run unattended agent work.** One fresh `claude -p` per job, started by a scheduler, with the nine rules that keep it reliable.
 
 ### Fixed
+- **Commits made in PowerShell now auto-push.** The post-commit hooks were registered for Bash only, so on Windows a PowerShell commit stayed local. Re-running `setup.ps1` updates an existing install.
 - **A session no longer trusts a stale model readout.** `get_session` can lag behind the real model when a session is started or changed from the phone: a session running Haiku read back Opus at high, then stopped to ask the owner which model it was on. The system prompt's model now wins, a mismatch means the effort is not visible, and the owner is never asked.
 - **Sessions read their effort in the desktop app instead of saying "not visible".** `/autonomous` still told agents that any effort the owner did not state counts as not visible, so those sessions never called `get_session`. It now says to read it first, and `user-prompt-owner-rule.js` repeats that on every message.
 - **Hooks no longer crash in a project whose `package.json` says `"type": "commonjs"`.** The `.js` hooks use `import`, so Node refused to load them and every one failed quietly, including auto-push and the session resume banner. New `.claude/hooks/package.json` marks that folder as ES modules.

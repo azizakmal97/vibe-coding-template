@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * GLOBAL PostToolUse (Bash) hook.
+ * GLOBAL PostToolUse (Bash, PowerShell) hook.
  * Detects a successful `git commit` and auto-pushes to the remote.
  *
  * Why: per-edit commits only survive on local disk. Auto-push survives

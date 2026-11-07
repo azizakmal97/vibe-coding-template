@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Adds the template's global hooks to ~/.claude/settings.json without touching anything else.
- * Run by setup.ps1; safe to run again (a hook already registered is left as it is).
+ * Run by setup.ps1; safe to run again (a hook already registered only gets its matcher updated).
  *
  *     node global-setup/register-hooks.mjs
  *     node global-setup/register-hooks.mjs --usage-guard    (also the optional usage guard)
@@ -16,7 +16,7 @@ const settingsPath = join(claudeDir, 'settings.json');
 const hooksDir = join(claudeDir, 'hooks').replace(/\\/g, '/');
 
 const WANTED = [
-  { event: 'PostToolUse', matcher: 'Bash', file: 'post-commit-push.mjs' },
+  { event: 'PostToolUse', matcher: 'Bash|PowerShell', file: 'post-commit-push.mjs' },
   { event: 'SessionStart', matcher: '', file: 'session-start-template-sync.mjs' },
 ];
 
@@ -32,8 +32,15 @@ const added = [];
 for (const { event, matcher, file } of WANTED) {
   const command = `node "${hooksDir}/${file}"`;
   const entries = (settings.hooks[event] = settings.hooks[event] || []);
-  const alreadyThere = entries.some((entry) => (entry.hooks || []).some((hook) => (hook.command || '').includes(file)));
-  if (alreadyThere) continue;
+  const registered = entries.find((entry) => (entry.hooks || []).some((hook) => (hook.command || '').includes(file)));
+  if (registered) {
+    // An older install keeps its entry, so a widened matcher has to be carried over.
+    if ((registered.matcher || '') !== matcher) {
+      registered.matcher = matcher;
+      added.push(`${event}: ${file} now matches ${matcher}`);
+    }
+    continue;
+  }
   let entry = entries.find((candidate) => (candidate.matcher || '') === matcher);
   if (!entry) {
     entry = { matcher, hooks: [] };
