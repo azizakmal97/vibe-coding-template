@@ -159,6 +159,7 @@ Reply rules:
 - No generic openers ("Great question!", "Thanks for sharing!", "Love this").
 - No emoji as the first character, no emoji-only replies.
 - No heart emojis in replies (owner, 2026-10-31: "tak payah la love2 tu").
+- No private details of other people in a reply: never name a group, its travel date, a package or an agency (owner, 2026-11-08: "tak perlu la sebut grup bila dan grup apa"). Answer the feeling, not the logistics.
 - A posted reply with a small flaw stays up: never delete and repost to fix it (owner, 2026-10-31). Check length before typing: TikTok replies stop at 150 characters.
 - No pitching: no offer, no link, no "check my page".
 - To a critic: concede the true part in their words, then hold the line. Never delete a fair critic, never reply twice on one thread.
