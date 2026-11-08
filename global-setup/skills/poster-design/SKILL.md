@@ -87,6 +87,7 @@ Brand rules win over this file. The project's own local media skill or CLAUDE.md
 3. Check against the brief's pass checklist; log pass/fail per item in the post's `log.md`.
 4. Copy on the image (titles, labels) passes the project's antislop check like the caption.
 5. Say plainly what you did not check (for example: not viewed on a phone).
+- **Illustrator by script: no confirm dialog** (owner, 2026-11-08: "i don't want to manually click on the continue"). Never start `Illustrator.exe <file.jsx>`: it asks "run this script?". Run the jsx through COM with `powershell -NoProfile -File ~/.claude/scripts/run-illustrator-jsx.ps1 <file.jsx>` (template: `global-setup/scripts/run-illustrator-jsx.ps1`), set `app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS` in the jsx, and quit Illustrator when done. A vector map or poster for Illustrator: export the PDF page as SVG with text as paths, open that, save as .ai.
 
 ## Related skills
 - `video-studio`: video pipeline, Flow covers for reels, encode, upload order.

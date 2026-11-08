@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Changed
+- **Illustrator scripts run with no confirm dialog.** `global-setup/scripts/run-illustrator-jsx.ps1` runs a .jsx through COM; `poster-design` says never to pass a .jsx on the Illustrator command line.
 - **Replies never name other people's group, date or agency.** `social-growth` reply rules: answer the feeling, not the logistics.
 - **Fresh chat at 200k, not 500k.** The token tiers on a 1M window now reach red at 200k, because chats past that size were half of all calls but 69% of the burn on the plan limit.
 - **Effort follows the work, not the phase tag.** A `high` tag covers the new part only: repeat work on something settled runs `medium`, fixes and re-renders `low` to `medium`, and `high` stays for new decisions and work where being wrong is expensive.
