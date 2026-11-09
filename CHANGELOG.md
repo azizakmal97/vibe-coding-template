@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Changed
+- **One travel direction no longer means one camera move.** `motion-design`: it covers cuts between scenes only; each scene gets its own move, and no picture source runs more than 3 scenes in a row.
 - **Illustrator scripts run with no confirm dialog.** `global-setup/scripts/run-illustrator-jsx.ps1` runs a .jsx through COM; `poster-design` says never to pass a .jsx on the Illustrator command line.
 - **Replies never name other people's group, date or agency.** `social-growth` reply rules: answer the feeling, not the logistics.
 - **Fresh chat at 200k, not 500k.** The token tiers on a 1M window now reach red at 200k, because chats past that size were half of all calls but 69% of the burn on the plan limit.

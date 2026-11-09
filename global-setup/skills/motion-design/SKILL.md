@@ -34,7 +34,7 @@ Research behind it (2026-10-22): heygen-com/hyperframes skills `motion-doctrine`
 - **Retention numbers (insights, 2026-10-25: a 36 s reel averaged 7 s watched):** the answer starts by 3 s, something changes on screen every 1–1.5 s, 20–35 s unless the topic needs more, and the last frame leads back into the first.
 
 ## 2. Visual grammar (pick a small set and repeat it)
-Use **at most 3 transition types per reel**, chosen up front, and one travel direction for the whole film (never ping-pong).
+Use **at most 3 transition types per reel**, chosen up front. Slides and whips BETWEEN scenes keep one travel direction (never ping-pong). This never means one camera move: **each scene gets its own camera move and no two scenes in a row share one**. No picture source runs more than 3 scenes in a row, in any length of video. Plan each scene's move and source before building, and measure them on the render: a rule nothing measures gets skipped.
 
 | Technique | Recipe (GSAP) | HyperFrames registry item (`npx hyperframes@<pinned> add <name>`) |
 |---|---|---|
