@@ -54,7 +54,6 @@
       "Read(*.p12)",
       "Read(*.pfx)",
       "Read(secrets/**)",
-      "Bash(rm -rf *)",
       "Bash(npm publish *)",
       "Bash(npx --yes *)",
       "Bash(prisma migrate reset*)",

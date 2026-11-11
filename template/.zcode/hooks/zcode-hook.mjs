@@ -39,7 +39,7 @@ const BLOCK = 2;
 
 /**
  * Guards installed next to this adapter, used for any project that does not carry
- * its own copy. Blocking `rm -rf /` or `DROP TABLE` is not project-specific, so a
+ * its own copy. Blocking `DROP TABLE` or a secret-file read is not project-specific, so a
  * repo that never had the template applied should still get the net rather than
  * silently getting nothing.
  */

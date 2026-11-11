@@ -169,7 +169,7 @@ the caveat below.
   skips what is not there — so a project that never had this template applied gets no
   guard, silently. `install-zcode.mjs` therefore also copies the whole hook set to
   `~/.zcode/hooks/guards/`, which the adapter falls back to when the project has no
-  copy of its own. Blocking `rm -rf /` is not project-specific.
+  copy of its own. Blocking `DROP TABLE` is not project-specific.
 - **Hooks do fire.** [zai-org/feedback#32](https://github.com/zai-org/feedback/issues/32)
   reported hooks never running for the native agent; that is not what v3.11.x does.
   `SessionStart`, `UserPromptSubmit`, `PreToolUse` and `PostToolUse` all fire, and the

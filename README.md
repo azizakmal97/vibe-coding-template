@@ -45,7 +45,7 @@ This is not a framework. It's a **set of plain files** (rules + hooks + CI) you 
 | Over-engineering | **File-size budgets** enforced in CI — god-files get split before they metastasize |
 | Scope drift | **Scope lock:** agent states which files change BEFORE editing anything |
 | Session death = lost work | **Per-edit commits + auto-push** — crashed session loses ~nothing |
-| Secret leaks + destructive commands | **Permission deny-list + hooks** block `rm -rf`, `DROP TABLE`, `cat .env`, etc. |
+| Secret leaks + destructive commands | **Permission deny-list + hooks** block `DROP TABLE`, `cat .env`, etc. |
 | Rule chaos (different per agent) | **Single source of truth:** `AGENTS.md` → auto-generates config for every agent |
 
 **Result:** Your AI agent behaves like a senior engineer, not a burnout shipping broken code at 3 AM.
@@ -69,7 +69,7 @@ It's MIT. Use it, fork it, ship it. No import, no dependency, no lock-in.
 
 ![Vibe Coding Template — destructive and secret-leaking commands blocked automatically](demo/vibe-coding-demo.gif)
 
-*Your AI agent's destructive and secret-leaking commands (`rm -rf`, `DROP TABLE`, `cat .env`) are blocked before they run. Reproduce or regenerate this GIF with [`demo/demo.tape`](demo/demo.tape).*
+*Your AI agent's destructive and secret-leaking commands (`DROP TABLE`, `cat .env`) are blocked before they run. Reproduce or regenerate this GIF with [`demo/demo.tape`](demo/demo.tape).*
 
 ---
 
@@ -211,7 +211,7 @@ your-project/
 ### The headline features
 
 - **Single-source rules.** Edit `AGENTS.md`; run `node scripts/sync-agent-rules.mjs`; every agent's config regenerates — Cursor, Windsurf, Copilot shims *and* the whole `.zcode/` layout. No drift.
-- **Safety hooks (Claude Code + ZCode).** Block `rm -rf /`, `DROP TABLE`, `DELETE` without `WHERE`, `git reset --hard HEAD~N`, and reading/printing secret files (`.env`, `.dev.vars`, `*.key`…). Warn on risky migrations. One set of hook scripts serves both agents — [how](#zcode-glm-with-the-same-guardrails).
+- **Safety hooks (Claude Code + ZCode).** Block `DROP TABLE`, `DELETE` without `WHERE`, `git reset --hard HEAD~N`, and reading/printing secret files (`.env`, `.dev.vars`, `*.key`…). Warn on risky migrations. One set of hook scripts serves both agents — [how](#zcode-glm-with-the-same-guardrails).
 - **Death-defense workflow.** Per-edit commits with `wip(phase):` prefixes, an auto-push hook, and a session-resume protocol mean a crashed or rate-limited session loses ~nothing. `/resume` picks up exactly where it stopped.
 - **Test-before-commit gate.** No "I think it works." Typecheck **and** build (they catch different bugs), tests, file-size check — all green before commit.
 - **File-size budgets.** Soft warning + hard CI failure per file type, so god-files get split *before* they metastasize.

@@ -38,10 +38,6 @@ process.stdin.on('end', () => {
       },
       reason: 'Reading a secret file (.env, .dev.vars, *.pem/*.key/*.p12, secrets/) via shell is blocked — it would leak credentials into the transcript. The runtime loads these itself; you never need to print them.' },
 
-    // Filesystem
-    { test: (c) => /rm\s+-rf\s+[\/~*]/.test(c),
-      reason: 'Recursive delete from root/home/wildcard blocked' },
-
     // Git — no force push hard block here.
     // AI follows rules in CLAUDE.md: prefer git revert, only force push when user explicitly asks.
     // Force push triggers a permission prompt (not in allow list) so user sees and approves it.

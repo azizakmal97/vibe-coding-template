@@ -24,7 +24,7 @@ Type "cd template   # the guardrails your AI agent runs into:"
 Enter
 Sleep 1.2s
 
-Type `echo '{"command":"rm -rf /"}' | node .claude/hooks/validate-command.js`
+Type `echo '{"command":"git reset --hard HEAD~3"}' | node .claude/hooks/validate-command.js`
 Enter
 Sleep 2s
 
