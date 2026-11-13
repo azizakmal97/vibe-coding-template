@@ -10,7 +10,7 @@
 
 import { closeSync, existsSync, openSync, readFileSync, readdirSync, readSync, statSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const STOP_MINUTE = 23 * 60 + 30;
@@ -20,6 +20,10 @@ const ALLOWED_AT_NIGHT = /^\s*(urgent\b|\/close\b)/i;
 // The app resumes a chat by itself once the plan limit resets; work cut off by the
 // limit must finish even at night (owner rule, 2026-11-14).
 const LIMIT_AUTO_CONTINUE = /usage limit while you were working|usage-limit notes no longer apply/i;
+// Sessions talk to each other in plain text as well as in tags: a started chat's
+// brief, a message from another chat, an idle notice. None of it is the owner typing
+// (owner rule, 2026-11-14: never block a session's helpers at night).
+const FROM_ANOTHER_SESSION = /^\s*(<|\[|(Task|Background) \(from the session that started this one\)|Another Claude session sent a message:)/;
 const FRESH_CHAT_TOKENS = 200_000;
 const MAX_OPEN_CHATS = 3;
 const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
@@ -48,12 +52,12 @@ export function isOwnerChat(env) {
   return env.CLAUDE_CODE_ENTRYPOINT === 'claude-desktop' && env.CLAUDE_CODE_SESSION_ATTENDED === '1';
 }
 
-export function shouldBlock({ now, env, prompt }) {
+// isChildChat is a function so the transcript is only read at night.
+export function shouldBlock({ now, env, prompt, isChildChat = () => false }) {
   if (!isOwnerChat(env) || !isQuietHours(now)) return false;
-  // Messages from the app and from other sessions arrive wrapped in a tag.
-  if (prompt.trimStart().startsWith('<')) return false;
-  if (LIMIT_AUTO_CONTINUE.test(prompt)) return false;
-  return !ALLOWED_AT_NIGHT.test(prompt);
+  if (FROM_ANOTHER_SESSION.test(prompt) || LIMIT_AUTO_CONTINUE.test(prompt)) return false;
+  if (ALLOWED_AT_NIGHT.test(prompt)) return false;
+  return !isChildChat();
 }
 
 function readBytes(path, start, length) {
@@ -89,10 +93,11 @@ export function isOwnerTranscript(transcriptHead) {
   return /"entrypoint":"(cli|claude-desktop)"/.test(transcriptHead);
 }
 
-// A session started by another session opens with an sdk turn. Only the first
-// turn counts: chats the owner started get sdk turns later too.
+// A session started by another session opens with an sdk or host_synthetic turn.
+// Only the first turn counts: chats the owner started get sdk turns later too.
 export function isStartedBySession(transcriptHead) {
-  return transcriptHead.match(/"turnOrigin":"([^"]+)"/)?.[1] === 'sdk';
+  const firstOrigin = transcriptHead.match(/"turnOrigin":"([^"]+)"/)?.[1];
+  return firstOrigin === 'sdk' || firstOrigin === 'host_synthetic';
 }
 
 function lastTitle(transcriptPath) {
@@ -132,6 +137,24 @@ function readProjectChats(folderPath, sessionId, now) {
   return chats;
 }
 
+function isRecentTranscript(filePath, now) {
+  return filePath.endsWith('.jsonl') && now.getTime() - statSync(filePath).mtimeMs <= CHILD_LOOKBACK_MS;
+}
+
+// A restart of a started chat opens a new transcript with a human turn, so the
+// title ties it back to the transcript that shows who started it.
+export function isChildChat(transcriptPath, now) {
+  if (!transcriptPath || !existsSync(transcriptPath)) return false;
+  if (isStartedBySession(readBytes(transcriptPath, 0, TRANSCRIPT_HEAD_BYTES))) return true;
+  const title = lastTitle(transcriptPath);
+  if (!title) return false;
+  const folderPath = dirname(transcriptPath);
+  return readdirSync(folderPath)
+    .map((fileName) => join(folderPath, fileName))
+    .filter((filePath) => filePath !== transcriptPath && isRecentTranscript(filePath, now))
+    .some((filePath) => isStartedBySession(readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES)) && lastTitle(filePath) === title);
+}
+
 function countOtherOpenChats(sessionId, now) {
   let openChats = 0;
   for (const folder of readdirSync(projectsDir, { withFileTypes: true })) {
@@ -168,7 +191,8 @@ function main() {
   const payload = JSON.parse(readFileSync(0, 'utf8'));
   const now = new Date();
   const env = process.env;
-  if (shouldBlock({ now, env, prompt: payload.prompt ?? '' })) {
+  const prompt = payload.prompt ?? '';
+  if (shouldBlock({ now, env, prompt, isChildChat: () => isChildChat(payload.transcript_path, now) })) {
     process.stderr.write(BLOCK_MESSAGE);
     process.exit(2);
   }

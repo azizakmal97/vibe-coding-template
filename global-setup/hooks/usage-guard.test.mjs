@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { countOtherChats, isOwnerTranscript, isQuietHours, isStartedBySession, lastContextTokens, shouldBlock } from './usage-guard.mjs';
+import { countOtherChats, isChildChat, isOwnerTranscript, isQuietHours, isStartedBySession, lastContextTokens, shouldBlock } from './usage-guard.mjs';
 
 const at = (hour, minute) => new Date(2026, 10, 7, hour, minute);
 const desktopChat = { CLAUDE_CODE_ENTRYPOINT: 'claude-desktop', CLAUDE_CODE_SESSION_ATTENDED: '1' };
@@ -48,6 +48,39 @@ test('lets the override word and app messages through', () => {
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: '<side-sessions-event>done' }), false);
 });
 
+test('lets other sessions talk to a chat at night, even in plain text', () => {
+  const fromSessions = [
+    'Task (from the session that started this one):\nBuild the rig.',
+    'Background (from the session that started this one):\nBina3D is a tool.',
+    'Another Claude session sent a message: <cross-session-message>hi</cross-session-message>',
+    '[Cross-session idle notice] "Bina3D code review" is idle now.',
+  ];
+  for (const prompt of fromSessions) assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt }), false, prompt);
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'start a task for the rig' }), true);
+});
+
+test('never blocks a chat that another session started', () => {
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'keep going', isChildChat: () => true }), false);
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'keep going', isChildChat: () => false }), true);
+});
+
+test('finds a started chat from its own transcript or a restart with the same title', () => {
+  const folder = mkdtempSync(join(tmpdir(), 'guard-'));
+  const transcript = (name, firstOrigin, title) => {
+    const path = join(folder, name);
+    writeFileSync(path, `{"turnOrigin":"${firstOrigin}"}\n{"type":"custom-title","customTitle":"${title}"}\n`);
+    return path;
+  };
+  const now = new Date();
+  const child = transcript('child.jsonl', 'host_synthetic', 'Rig review');
+  const restart = transcript('restart.jsonl', 'human', 'Rig review');
+  const owner = transcript('owner.jsonl', 'human', 'My chat');
+  assert.equal(isChildChat(child, now), true);
+  assert.equal(isChildChat(restart, now), true);
+  assert.equal(isChildChat(owner, now), false);
+  assert.equal(isChildChat(join(folder, 'missing.jsonl'), now), false);
+});
+
 test('counts only chats, not jobs or setup-only transcripts, as open', () => {
   assert.equal(isOwnerTranscript('{"entrypoint":"claude-desktop"}'), true);
   assert.equal(isOwnerTranscript('{"entrypoint":"cli"}'), true);
@@ -58,6 +91,7 @@ test('counts only chats, not jobs or setup-only transcripts, as open', () => {
 test('reads who started a session from its first turn only', () => {
   const started = (firstTurn, laterTurn) => `{"turnOrigin":"${firstTurn}"}\n{"turnOrigin":"${laterTurn}"}`;
   assert.equal(isStartedBySession(started('sdk', 'human')), true);
+  assert.equal(isStartedBySession(started('host_synthetic', 'human')), true);
   assert.equal(isStartedBySession(started('human', 'sdk')), false);
   assert.equal(isStartedBySession('{"type":"setup"}'), false);
 });
