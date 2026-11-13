@@ -3,7 +3,7 @@
  * UserPromptSubmit hook: protects the owner's sleep and plan limit.
  *
  * Stops new messages from 11:30pm to 6am, and tells the agent when a chat is too
- * long, too many chats are open, or the weekly pace needs a check. Only the
+ * long or the weekly pace needs a check. Only the
  * owner's own chats are touched: a night job must never be blocked, so anything
  * that cannot be identified as attended goes through.
  */
@@ -25,8 +25,6 @@ const LIMIT_AUTO_CONTINUE = /usage limit while you were working|usage-limit note
 // (owner rule, 2026-11-14: never block a session's helpers at night).
 const FROM_ANOTHER_SESSION = /^\s*(<|\[|(Task|Background) \(from the session that started this one\)|Another Claude session sent a message:)/;
 const FRESH_CHAT_TOKENS = 200_000;
-const MAX_OPEN_CHATS = 3;
-const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
 const CHILD_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 const PACE_CHECK_EVERY_MS = 4 * 60 * 60 * 1000;
 const TRANSCRIPT_TAIL_BYTES = 512 * 1024;
@@ -34,7 +32,6 @@ const TRANSCRIPT_TAIL_BYTES = 512 * 1024;
 const TRANSCRIPT_HEAD_BYTES = 16 * 1024;
 
 const claudeDir = join(homedir(), '.claude');
-const projectsDir = join(claudeDir, 'projects');
 const statePath = join(claudeDir, '.usage-guard.json');
 
 export const BLOCK_MESSAGE = `It's past 11:30pm, so Claude has stopped new work until 6am. Time to sleep.
@@ -89,10 +86,6 @@ export function lastContextTokens(transcriptPath) {
   return 0;
 }
 
-export function isOwnerTranscript(transcriptHead) {
-  return /"entrypoint":"(cli|claude-desktop)"/.test(transcriptHead);
-}
-
 // A session started by another session opens with an sdk or host_synthetic turn.
 // Only the first turn counts: chats the owner started get sdk turns later too.
 export function isStartedBySession(transcriptHead) {
@@ -105,36 +98,6 @@ function lastTitle(transcriptPath) {
   const start = Math.max(0, size - TRANSCRIPT_TAIL_BYTES);
   const tail = readBytes(transcriptPath, start, size - start);
   return [...tail.matchAll(/"type":"custom-title","customTitle":"([^"]+)"/g)].at(-1)?.[1] ?? null;
-}
-
-// One session can span several transcripts in a project, and only the first shows
-// who started it. They share a title, so the title ties them together.
-export function countOtherChats(transcripts, sessionId) {
-  const childTitles = new Set(transcripts.filter((chat) => chat.startedBySession).map((chat) => chat.title));
-  const ownTitle = transcripts.find((chat) => chat.id === sessionId)?.title;
-  const otherChats = transcripts.filter((chat) => {
-    if (!chat.isOpen || chat.startedBySession || chat.id === sessionId) return false;
-    return !chat.title || (!childTitles.has(chat.title) && chat.title !== ownTitle);
-  });
-  return new Set(otherChats.map((chat) => chat.title ?? chat.id)).size;
-}
-
-function readProjectChats(folderPath, sessionId, now) {
-  const chats = [];
-  for (const fileName of readdirSync(folderPath)) {
-    if (!fileName.endsWith('.jsonl')) continue;
-    const filePath = join(folderPath, fileName);
-    const age = now.getTime() - statSync(filePath).mtimeMs;
-    if (age > CHILD_LOOKBACK_MS) continue;
-    const head = readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES);
-    if (!isOwnerTranscript(head)) continue;
-    const id = fileName.slice(0, -'.jsonl'.length);
-    const isOpen = age <= OPEN_CHAT_WINDOW_MS;
-    const startedBySession = isStartedBySession(head);
-    if (!isOpen && !startedBySession && id !== sessionId) continue;
-    chats.push({ id, title: lastTitle(filePath), isOpen, startedBySession });
-  }
-  return chats;
 }
 
 function isRecentTranscript(filePath, now) {
@@ -155,15 +118,6 @@ export function isChildChat(transcriptPath, now) {
     .some((filePath) => isStartedBySession(readBytes(filePath, 0, TRANSCRIPT_HEAD_BYTES)) && lastTitle(filePath) === title);
 }
 
-function countOtherOpenChats(sessionId, now) {
-  let openChats = 0;
-  for (const folder of readdirSync(projectsDir, { withFileTypes: true })) {
-    if (!folder.isDirectory()) continue;
-    openChats += countOtherChats(readProjectChats(join(projectsDir, folder.name), sessionId, now), sessionId);
-  }
-  return openChats;
-}
-
 function paceCheckIsDue(now) {
   const state = existsSync(statePath) ? JSON.parse(readFileSync(statePath, 'utf8')) : {};
   if (now.getTime() - (state.lastPaceCheck ?? 0) < PACE_CHECK_EVERY_MS) return false;
@@ -176,10 +130,6 @@ function collectNotices({ payload, env, now }) {
   const contextTokens = lastContextTokens(payload.transcript_path);
   if (contextTokens > FRESH_CHAT_TOKENS) {
     notices.push(`This chat is ${Math.round(contextTokens / 1000)}k long, past the 200k limit. Never stop mid-task for this. When the current task is finished and checked, end that reply with one line telling the owner this is a good moment to run /close and open a fresh chat. If work is still going, say how much is left before that moment.`);
-  }
-  const openChats = countOtherOpenChats(payload.session_id, now) + 1;
-  if (openChats > MAX_OPEN_CHATS) {
-    notices.push(`The owner has ${openChats} chats active in the last 15 minutes; the limit is ${MAX_OPEN_CHATS}. Tell them in one line to finish one first.`);
   }
   if (env.CLAUDE_CODE_ENTRYPOINT === 'claude-desktop' && paceCheckIsDue(now)) {
     notices.push(`Pace check: read the plan limits with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch). A safe week is 14% a day. If "Weekly · all models" is ahead of that, tell the owner in one line how much per day is left until the reset.`);
