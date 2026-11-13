@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Changed
+- **Design, graphics and video editing may run on Fable too.** Owner rule (2026-11-13): these now run on Opus 5.5 or Fable. A Fable session keeps design work instead of handing it down to Opus. Still never Sonnet, Haiku or GLM, and never handed down to a cheaper subagent.
 - **Recursive delete is no longer blocked.** The `rm -rf` deny-list entry and the `validate-command.js` hard block were removed at the owner's decision on 2026-11-11. Every other block (force push, hard reset, destructive SQL, secret-file reads) is unchanged.
 - **One travel direction no longer means one camera move.** `motion-design`: it covers cuts between scenes only; each scene gets its own move, and no picture source runs more than 3 scenes in a row.
 - **Illustrator scripts run with no confirm dialog.** `global-setup/scripts/run-illustrator-jsx.ps1` runs a .jsx through COM; `poster-design` says never to pass a .jsx on the Illustrator command line.

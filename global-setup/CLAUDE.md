@@ -19,8 +19,8 @@ model assignment. Never run a whole project on one model by default.
 
 | Slot | Current name | Use for |
 |---|---|---|
-| Anthropic frontier | **Fable 5.1** (`claude-fable-5-1`) | Only when Opus 5.5 at `high`/`xhigh` already fell short: the hardest long-horizon agentic work, gnarly multi-system debugging. Owner opt-in per task, never a default |
-| Anthropic flagship | **Opus 5.5** (`claude-opus-5-5`) | Architecture, hard debugging, security review, novel copy/brand voice, tricky refactors, and always design, graphics and video editing |
+| Anthropic frontier | **Fable 5.1** (`claude-fable-5-1`) | Only when Opus 5.5 at `high`/`xhigh` already fell short: the hardest long-horizon agentic work, gnarly multi-system debugging. Owner opt-in per task, never a default, except design, graphics and video editing, which may run on it |
+| Anthropic flagship | **Opus 5.5** (`claude-opus-5-5`) | Architecture, hard debugging, security review, novel copy/brand voice, tricky refactors, and always design, graphics and video editing (Fable may do these too) |
 | Anthropic workhorse | **Sonnet 5.5** (`claude-sonnet-5-5`) | Default for normal feature work and edits |
 | Anthropic small | **Haiku 5.5** (`claude-haiku-5-5`) | Status checks, log inspection, mechanical edits, build runs |
 | DeepSeek heavy | V-series Pro | Bulk codegen, mass test scaffolding |
@@ -64,10 +64,12 @@ row is a real trade: for work assigned to Opus because being wrong is expensive 
 money, patient-data correctness, brand voice), either run it on Anthropic or say in the
 plan that you didn't.
 
-**Design, graphics and video editing always run on Opus 5.5** (owner rule,
-2026-10-25). That covers UI and visual design, graphics, thumbnails and covers,
-storyboards, and video edits and re-renders, even of a locked design. Never Sonnet,
-Haiku or GLM, never handed down to a cheaper subagent, whatever a plan tag says.
+**Design, graphics and video editing always run on Opus 5.5 or Fable** (owner rule,
+2026-10-25; Fable added 2026-11-13). That covers UI and visual design, graphics,
+thumbnails and covers, storyboards, and video edits and re-renders, even of a locked
+design. Either model may do it: on a Fable session the work stays there, with no
+handoff down to Opus, and on an Opus session it stays on Opus. Never Sonnet, Haiku
+or GLM, never handed down to a cheaper subagent, whatever a plan tag says.
 Effort still varies: high for a new look, lower for an edit to a settled one.
 
 ### Rules
@@ -151,7 +153,7 @@ the declaration saying so. A model switch re-reads the whole conversation with n
 prompt cache, and a subagent spins up a fresh context, so both cost more than a few
 calls at the bigger model's price. This only works downward: a tiny task tagged for
 a STRONGER model still needs that model. Design, graphics and video editing stay
-on Opus regardless.
+on Opus or Fable regardless.
 
 **Downward handoff (Claude Code only).** Work tagged for a cheaper Claude model
 than this session (Fable > Opus > Sonnet > Haiku) needs no swap: hand it to a
@@ -193,7 +195,7 @@ step up.
 
 - Opus for status checks / build runs / log reading — burns cost for no upside.
 - Sonnet for novel copywriting, brand voice, or architecture calls — output reads thin.
-- Anything but Opus for design, graphics or video editing — owner rule, no exceptions.
+- Anything but Opus or Fable for design, graphics or video editing — owner rule, no exceptions.
 - Never switch model mid-task "just to try" — it costs the prompt cache for nothing.
 
 ## 2. Token Budget (Always)

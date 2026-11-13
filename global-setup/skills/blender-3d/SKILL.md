@@ -8,7 +8,7 @@ description: General Blender 5.2 and AI-3D method - headless scripting, the rend
 Project rules win over this file: the project's own local skill names its scripts, characters, art rules and review tool. 3D video scenes (vessels, valves, surgery staging, render timing) are in `video-studio`.
 
 ## Owner rules (all projects)
-- **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
+- **Design, graphics and video editing run on Opus 5.5 or Fable** (owner rule, 2026-10-25; Fable added 2026-11-13): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
 - **Exact geometry and anatomy come from Blender or code**, never from an image model (owner rule, permanent). Flow drafts the look; Blender draws what must be right.
 
 ## 0. Review gate: every render, every time

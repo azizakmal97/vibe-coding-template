@@ -10,7 +10,7 @@ This skill decides **what the motion looks like**. The tools and the pipeline (B
 Research behind it (2026-10-22): heygen-com/hyperframes skills `motion-doctrine` + `cut-the-curve` (Apache-2.0), the yihui-dev/awesome-opus5-5-videos prompt collection (ideas paraphrased, prompts belong to their creators), and motion-design write-ups (GSAP eases, Ken Burns, Vox/Johnny Harris map work, short-form retention).
 
 ## Owner rules (all projects)
-- **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
+- **Design, graphics and video editing run on Opus 5.5 or Fable** (owner rule, 2026-10-25; Fable added 2026-11-13): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Effort varies: high for a new look, lower for an edit to a settled one.
 - **No black-outline text.** Clean type on panels or pills with soft shadows (owner rejected outlined text, 2026-10-22: "looks like noobs design").
 - **"3D" means a real lit scene** with a moving camera. Lines sliding over a picture get rejected (owner, 2026-10-22/23).
 - **Glow, particles and bloom are allowed when they look good** (owner, 2026-11-02: "i only don't want it if it bad quality or bad presentation"). Use them where they mean something (a nerve signal, heat, sparks off a break) at film quality: soft falloff, lit by the scene, never hiding the subject. Cheap versions still get cut: flat sprite dots, a blur halo round everything, idle floating specks.

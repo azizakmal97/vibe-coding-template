@@ -11,7 +11,7 @@ This skill decides **what to say and how to find it**. How it looks is in `motio
 
 ## Owner rules (all projects)
 - **The hook is what this audience has forgotten or never saw.** Before scoring, name the audience and what it already knows. A hook they could say themselves fails, however high it scores: the five checks in section 1 measure shape, never novelty. Write at least five hooks from five formulas, fail any that tells this audience something it knows, and put the runners-up in the brief. For an expert audience, dig for the mechanism, the structure that decides the outcome, or the number that breaks what they assumed.
-- **Design, graphics and video editing run on Opus 5.5 only** (owner rule, 2026-10-25): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Writing a hook, caption or reply is copy, not design, but brand or clinical copy still goes to Opus.
+- **Design, graphics and video editing run on Opus 5.5 or Fable** (owner rule, 2026-10-25; Fable added 2026-11-13): never Sonnet, Haiku or GLM, never handed down to a cheaper subagent. Writing a hook, caption or reply is copy, not design, but brand or clinical copy still goes to Opus.
 - Nothing is posted, liked, followed or messaged by an agent without the owner's yes on the approval desk.
 - Never invent a number, a case, a result or a quote. If a hook needs a number nobody gave you, leave `{{number}}` and flag it.
 - The project's source and accuracy rules beat every growth rule here.

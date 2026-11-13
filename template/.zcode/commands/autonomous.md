@@ -64,7 +64,7 @@ effort and the owner-stated session effort is lower, treat it as a mismatch too.
 this session (Fable > Opus > Sonnet > Haiku) runs as a subagent instead of being
 deferred: the Agent tool with `model` and `effort` from the tag, and a brief naming
 the files, the exact change and the check to run. Design, graphics and video
-editing are Opus whatever their tag says, so they are never handed down or run on
+editing are Opus or Fable whatever their tag says, so they are never handed down or run on
 GLM. A tiny bullet (about three tool calls or fewer, no decisions) just runs here:
 a subagent costs more than the calls it saves. Hand down only bullets a brief
 can fully carry; a bullet that needs this conversation's context runs here instead.
