@@ -17,6 +17,9 @@ const STOP_MINUTE = 23 * 60 + 30;
 const START_MINUTE = 6 * 60;
 // /close saves the day's work, so stopping it at night would defeat the point.
 const ALLOWED_AT_NIGHT = /^\s*(urgent\b|\/close\b)/i;
+// The app resumes a chat by itself once the plan limit resets; work cut off by the
+// limit must finish even at night (owner rule, 2026-11-14).
+const LIMIT_AUTO_CONTINUE = /usage limit while you were working|usage-limit notes no longer apply/i;
 const FRESH_CHAT_TOKENS = 200_000;
 const MAX_OPEN_CHATS = 3;
 const OPEN_CHAT_WINDOW_MS = 15 * 60 * 1000;
@@ -49,6 +52,7 @@ export function shouldBlock({ now, env, prompt }) {
   if (!isOwnerChat(env) || !isQuietHours(now)) return false;
   // Messages from the app and from other sessions arrive wrapped in a tag.
   if (prompt.trimStart().startsWith('<')) return false;
+  if (LIMIT_AUTO_CONTINUE.test(prompt)) return false;
   return !ALLOWED_AT_NIGHT.test(prompt);
 }
 

@@ -35,6 +35,13 @@ test('lets /close through at night, but not a message that only mentions it', ()
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: '/closet' }), true);
 });
 
+test('lets the app resume a chat after the plan limit resets, even at night', () => {
+  const resumed = 'I hit my usage limit while you were working, but it has reset now. Please continue from where you left off.';
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: resumed }), false);
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: "[Earlier usage-limit notes no longer apply. Continue working normally. Don't mention this to the user.]" }), false);
+  assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'what is my usage limit' }), true);
+});
+
 test('lets the override word and app messages through', () => {
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'Urgent: the site is down' }), false);
   assert.equal(shouldBlock({ now: at(1, 0), env: desktopChat, prompt: 'this is not urgent' }), true);
