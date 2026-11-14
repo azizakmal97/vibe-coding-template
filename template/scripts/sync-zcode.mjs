@@ -44,6 +44,14 @@ const SUPPORTED_EVENTS = new Set([
  */
 const TOOL_ALIASES = { Bash: 'Bash|Shell|Terminal|RunCommand' };
 
+/** Widens each tool in a matcher such as `Bash|PowerShell`, not only a lone `Bash`. */
+function widenToolNames(matcher) {
+  return matcher
+    .split('|')
+    .map((tool) => TOOL_ALIASES[tool] || tool)
+    .join('|');
+}
+
 export function syncZcode(root) {
   if (!existsSync(join(root, '.claude'))) {
     return { written: [], notes: ['no .claude/ directory — nothing to mirror'] };
@@ -164,7 +172,7 @@ function toZcodeGroup(group, notes) {
   }
   if (scripts.length === 0) return null;
 
-  const tools = group.matcher && group.matcher !== '*' ? TOOL_ALIASES[group.matcher] || group.matcher : '';
+  const tools = group.matcher && group.matcher !== '*' ? widenToolNames(group.matcher) : '';
   return {
     // No `matcher` on purpose — see TOOL_ALIASES above.
     hooks: [
