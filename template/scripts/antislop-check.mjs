@@ -7,7 +7,7 @@
  *   node scripts/antislop-check.mjs --since <git-ref>      # CI: changed user-facing files
  *
  * Catches the antislop rules a script can decide: em/en dashes, buzzwords, generic CTAs,
- * removed focus outlines, infinite animation, tap targets under 44px, theme-token
+ * a comma before a Malay joining word ("dan", "atau"), removed focus outlines, infinite animation, tap targets under 44px, theme-token
  * contrast, and CSS classes used but never defined. Judgment rules (template layouts,
  * purpose, mobile parity) cannot be scripted, so --gate also requires a written Delivery
  * Gate report at anti-slop/gates/<file name>.md, newer than the file, with no FAIL line.
@@ -47,6 +47,9 @@ const BUZZWORDS = [
   'best-in-class', 'ai-powered', 'ai powered', 'unlock', 'elevate', 'empower', 'delve',
 ];
 const GENERIC_CTAS = ['Get Started', 'Learn More', 'Try Now', 'Explore', 'Discover'];
+// Malay takes no comma before these joining words; the English-style serial comma reads
+// as AI (owner rule). Lowercase only, so the name "Dan" in English text is left alone.
+const MALAY_NO_COMMA_BEFORE = ['dan', 'atau', 'serta', 'untuk', 'oleh'];
 
 // Files people read: pages, components, styles, copy dictionaries, CMS content, app UI.
 const USER_FACING = [
@@ -128,6 +131,13 @@ function checkGenericCtas(text, add) {
   for (const cta of GENERIC_CTAS) {
     const re = new RegExp(`>\\s*${cta}\\s*(<|\\{)`, 'g');
     for (const m of text.matchAll(re)) add('R-15', lineOf(text, m.index), `generic CTA "${cta}"`);
+  }
+}
+
+function checkMalayCommas(text, add) {
+  const re = new RegExp(`,\\s+(${MALAY_NO_COMMA_BEFORE.join('|')})\\b`, 'g');
+  for (const m of text.matchAll(re)) {
+    add('MALAY', lineOf(text, m.index), `comma before "${m[1]}" (Malay copy takes none)`);
   }
 }
 
@@ -262,6 +272,7 @@ function checkFile(file, gate, rules) {
   checkDashes(text, add);
   checkBuzzwords(text, rules.allowedPhrases, add);
   checkGenericCtas(text, add);
+  checkMalayCommas(text, add);
   checkProjectBans(text, file, rules, add);
   checkFocusOutline(text, add);
   checkInfiniteAnimation(text, add);
