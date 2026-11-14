@@ -192,8 +192,8 @@ NEXT SESSION SHOULD: <one specific action>
 
 ## Token-Budget Estimation
 
-Use the tiers in `rules/token-budget.md` (1M window: green < 200k, orange from
-250k, red from 300k; 200k window: orange from 100k, red from 140k):
+Use the tiers in the global rule (`~/.claude/CLAUDE.md` section 2). Without the
+global setup, use the fallback line in `rules/token-budget.md`:
 - green / yellow → safe, continue. A large next phase is not a reason to bail.
 - orange → finish current phase, do NOT start next.
 - red → bail at next safe checkpoint NOW.

@@ -24,6 +24,8 @@ const LIMIT_AUTO_CONTINUE = /usage limit while you were working|usage-limit note
 // brief, a message from another chat, an idle notice. None of it is the owner typing
 // (owner rule, 2026-11-14: never block a session's helpers at night).
 const FROM_ANOTHER_SESSION = /^\s*(<|\[|(Task|Background) \(from the session that started this one\)|Another Claude session sent a message:)/;
+// The red tier on a 1M window. It changes together with the tier table in
+// CLAUDE.md section 2 "Token Budget", the one place the tiers are written.
 const FRESH_CHAT_TOKENS = 300_000;
 const CHILD_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 const PACE_CHECK_EVERY_MS = 4 * 60 * 60 * 1000;

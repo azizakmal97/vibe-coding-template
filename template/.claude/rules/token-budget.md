@@ -9,27 +9,16 @@ Always loaded. Applies to all sessions. Critical during `/autonomous` loops wher
 
 ## Context Capacity Tiers
 
-Tiers are in tokens and depend on the session's context window. The current
-Claude models (Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5) all have 1M; use the
-200k column only for a model that names 200k (Haiku 4.5, or a GLM/other plan).
+The tier numbers and the reasons behind them live in one place: the global rule,
+`~/.claude/CLAUDE.md` section 2 "Token Budget" (ZCode: `~/.zcode/AGENTS.md`, built
+from the same file). When that rule is loaded, it wins over the fallback line below. Do not copy its table back here.
 
-| Used (1M window) | Used (200k window) | State | Behavior |
-|---|---|---|---|
-| < 200k | < 60k | green | normal speed; can spawn subagents freely |
-| 200-250k | 60-100k | yellow | prefer subagents for big reads; switch caveman to full |
-| 250-300k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
-| > 300k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
+Fallback, only for a computer or tool without the global setup (it may lag behind the global rule): 1M window: yellow from 200k, orange from 250k, red from 300k; 200k window: yellow from 60k, orange from 100k, red from 140k.
 
-Why a 1M window bails at 300k (owner rule, 2026-11-14, raised from the 200k of 2026-11-07).
-Not lower: setup alone is 100 to 140k, so a 200k chat had about 60k of room and one job
-took ten chats, each paying for setup again. Not higher: chats past 200k were half of all
-calls but 69% of the burn on the plan limit (19 Oct to 6 Nov); cached turns are cheap, but
-their cost still grows with context size, and recall of early details gets weaker. The
-estimate behind 300k: a fresh chat's first read costs about what ten turns of a 250k chat
-cost. After a break longer than the cache lifetime (1 hour on a plan, 5 minutes on usage
-credits) the next turn reprocesses the whole context, so a chat already past 200k is closed
-instead of resumed, and so is any chat after an overnight break: a fresh session that
-starts from `PROGRESS.md` is cheaper there.
+What each state means: green, work normally; yellow, send big reads to subagents
+and switch caveman to full; orange, finish the current phase and do NOT start the
+next, caveman ultra for narration; red, bail at the next safe checkpoint (Bail
+Pattern below).
 
 The size of a phase is no reason to bail by itself. In green, start the next phase
 even if it is large; the tiers stop it safely if it runs long.

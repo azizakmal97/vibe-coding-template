@@ -209,7 +209,8 @@ step up.
 
 Estimate context use from turns elapsed, files read, screenshots, response length
 (about 90k is fixed setup). You don't see exact usage; act on the tier. Current
-models have a 1M window; use the 200k column only for a model that names 200k.
+models have a 1M window; use the 200k column only for a model that names 200k
+(Haiku 4.5, or a GLM or other plan).
 
 | Used (1M) | Used (200k) | State | Behavior |
 |---|---|---|---|
@@ -221,12 +222,18 @@ models have a 1M window; use the 200k column only for a model that names 200k.
 A 1M session bails at 300k (owner rule, 2026-11-14, raised from the 200k of 2026-11-07).
 Not lower: setup alone is 100 to 140k, so a 200k chat had about 60k of room and one job
 took ten chats, each paying for setup again. Not higher: chats past 200k were half of all
-calls but 69% of the burn on the plan limit (19 Oct to 6 Nov), and cached turns are cheap
-but grow with size. The estimate behind 300k: a fresh chat's first read costs about what
+calls but 69% of the burn on the plan limit (19 Oct to 6 Nov), cached turns are cheap
+but grow with size, and recall of early details gets weaker. The estimate behind 300k: a fresh chat's first read costs about what
 ten turns of a 250k chat cost. After a break past the cache lifetime (1 h on a plan, 5 min
 on credits) the next turn reprocesses everything, so a chat already past 200k is closed
 instead of resumed, and so is any chat after an overnight break: a fresh session from
 `PROGRESS.md` is cheaper there. A large next phase is not a reason to bail while green.
+
+This table is the only place the tier numbers and their reasons live. A project's
+`.claude/rules/token-budget.md` and `/autonomous` only point here, plus one fallback
+line for a tool without this file; this table wins over that line. Change the red
+number on a 1M window together with `FRESH_CHAT_TOKENS` in `hooks/usage-guard.mjs`,
+which is the only place the long-chat reminder gets its number.
 
 Habits: graph/grep before broad reads; spawn a subagent for any file > 500 LOC or
 multi-file investigation (it keeps the big read in its own context); never re-read
