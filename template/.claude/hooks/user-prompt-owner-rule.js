@@ -15,8 +15,11 @@ Before saying a feature with a spec is finished, run /done-check
 (.claude/commands/done-check.md) yourself.
 Session effort: in the Claude desktop app, read it with
 mcp__ccd_session_mgmt__get_session "self" (load it with ToolSearch if deferred).
-Trust it only if its model matches your system prompt. If not, it is stale: your
-system prompt's model is the real one, say effort is not visible, and never ask
-the owner which model is running. Never write "not visible" without trying first.
+Your real model is the one system prompt line "You are powered by the model named
+<X>. The exact model ID is <id>." After a model switch from the phone, that tool's
+model and the line "This iteration of Claude is ..." both keep the old model.
+Trust the tool's effort only if its model matches the "powered by" line. If not,
+it is stale: say effort is not visible, and never ask the owner which model is
+running. Never write "not visible" without trying first.
 `);
 process.exit(0);

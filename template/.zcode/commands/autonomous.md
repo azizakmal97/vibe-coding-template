@@ -34,13 +34,17 @@ back to this command when the loop must follow the PROGRESS.md phase protocol
 model. Inside this loop a mismatch defers the work instead of stopping the loop.
 
 **This session's model** is the one named in your system prompt (e.g. Opus 5.5,
-GLM-5.3). If it isn't named, ask once before the first bullet; never guess. Say it
+GLM-5.3). On Claude Code that is the one line
+`You are powered by the model named <X>. The exact model ID is <id>.` and nothing
+else: after a model switch from the phone, the app's own line
+`This iteration of Claude is ...` and the `get_session` readout both keep the old
+model. If it isn't named, ask once before the first bullet; never guess. Say it
 once at loop start:
 `Model gate: this session is **<model>** · effort **<app-reported or owner-stated effort, or "not visible">**`.
 In the Claude desktop app, read it first: call `mcp__ccd_session_mgmt__get_session`
 with `"self"` (load it with ToolSearch if deferred) and use its `effort` field, but
-only if its `model` matches your system prompt; a mismatch means it is stale, and
-your system prompt's model is the real one, so never ask the owner. Otherwise say
+only if its `model` matches that `powered by` line; a mismatch means it is stale, and
+the `powered by` model is the real one, so never ask the owner. Otherwise say
 "not visible" only where that tool does not exist and the owner has not stated it.
 
 **Owner override.** The gate is lifted only when the message that started the

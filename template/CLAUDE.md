@@ -361,8 +361,11 @@ repair, not five: failed cheap runs cost more than an early step up.
 Claude Code may show no session effort in context, or one that differs from what
 the owner set in `/model`. In the Claude desktop app, call
 `mcp__ccd_session_mgmt__get_session` with `"self"` and use its `effort` field,
-marked `(app-reported) ✓`. Trust it only if its `model` matches your system prompt.
-A mismatch means it is stale: your system prompt's model is the real one, so say
+marked `(app-reported) ✓`. Trust it only if its `model` matches the real model:
+the one line in your system prompt that reads `You are powered by the model named <X>.
+The exact model ID is <id>.` After a model switch from the phone, the app's readout and
+the app's own line `This iteration of Claude is ...` both keep the old model, so neither
+counts. A mismatch means the readout is stale: use the `powered by` model, say
 not visible and never ask the owner which model is running. Elsewhere, treat it as not visible unless the owner
 stated it in this conversation, and never mark an effort `✓` you have not verified.
 
