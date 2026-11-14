@@ -15,17 +15,21 @@ Claude models (Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5) all have 1M; use the
 
 | Used (1M window) | Used (200k window) | State | Behavior |
 |---|---|---|---|
-| < 130k | < 60k | green | normal speed; can spawn subagents freely |
-| 130-165k | 60-100k | yellow | prefer subagents for big reads; switch caveman to full |
-| 165-200k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
-| > 200k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
+| < 200k | < 60k | green | normal speed; can spawn subagents freely |
+| 200-250k | 60-100k | yellow | prefer subagents for big reads; switch caveman to full |
+| 250-300k | 100-140k | orange | finish current phase, do NOT start next; caveman ultra for narration |
+| > 300k | > 140k | red | BAIL at next safe checkpoint; commit pause; exit |
 
-Why a 1M window still bails at 200k (owner rule, 2026-11-07: chats past 200k were half of all calls but 69% of the
-burn on the plan limit, 19 Oct to 6 Nov): cached turns are cheap, but their
-cost still grows with context size; after a break longer than the cache lifetime
-(1 hour on a plan, 5 minutes on usage credits) the next turn reprocesses the whole
-context; and recall of early details gets weaker. A fresh session that starts from
-`PROGRESS.md` is cheaper past that point, and after any overnight break.
+Why a 1M window bails at 300k (owner rule, 2026-11-14, raised from the 200k of 2026-11-07).
+Not lower: setup alone is 100 to 140k, so a 200k chat had about 60k of room and one job
+took ten chats, each paying for setup again. Not higher: chats past 200k were half of all
+calls but 69% of the burn on the plan limit (19 Oct to 6 Nov); cached turns are cheap, but
+their cost still grows with context size, and recall of early details gets weaker. The
+estimate behind 300k: a fresh chat's first read costs about what ten turns of a 250k chat
+cost. After a break longer than the cache lifetime (1 hour on a plan, 5 minutes on usage
+credits) the next turn reprocesses the whole context, so a chat already past 200k is closed
+instead of resumed, and so is any chat after an overnight break: a fresh session that
+starts from `PROGRESS.md` is cheaper there.
 
 The size of a phase is no reason to bail by itself. In green, start the next phase
 even if it is large; the tiers stop it safely if it runs long.

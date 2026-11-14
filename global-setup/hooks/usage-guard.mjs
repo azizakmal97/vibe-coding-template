@@ -24,7 +24,7 @@ const LIMIT_AUTO_CONTINUE = /usage limit while you were working|usage-limit note
 // brief, a message from another chat, an idle notice. None of it is the owner typing
 // (owner rule, 2026-11-14: never block a session's helpers at night).
 const FROM_ANOTHER_SESSION = /^\s*(<|\[|(Task|Background) \(from the session that started this one\)|Another Claude session sent a message:)/;
-const FRESH_CHAT_TOKENS = 200_000;
+const FRESH_CHAT_TOKENS = 300_000;
 const CHILD_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 const PACE_CHECK_EVERY_MS = 4 * 60 * 60 * 1000;
 const TRANSCRIPT_TAIL_BYTES = 512 * 1024;
@@ -129,7 +129,7 @@ function collectNotices({ payload, env, now }) {
   const notices = [];
   const contextTokens = lastContextTokens(payload.transcript_path);
   if (contextTokens > FRESH_CHAT_TOKENS) {
-    notices.push(`This chat is ${Math.round(contextTokens / 1000)}k long, past the 200k limit. Never stop mid-task for this. When the current task is finished and checked, end that reply with one line telling the owner this is a good moment to run /close and open a fresh chat. If work is still going, say how much is left before that moment.`);
+    notices.push(`This chat is ${Math.round(contextTokens / 1000)}k long, past the ${FRESH_CHAT_TOKENS / 1000}k limit. Never stop mid-task for this. When the current task is finished and checked, end that reply with one line telling the owner this is a good moment to run /close and open a fresh chat. If work is still going, say how much is left before that moment.`);
   }
   if (env.CLAUDE_CODE_ENTRYPOINT === 'claude-desktop' && paceCheckIsDue(now)) {
     notices.push(`Pace check: read the plan limits with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch). A safe week is 14% a day. If "Weekly · all models" is ahead of that, tell the owner in one line how much per day is left until the reset.`);

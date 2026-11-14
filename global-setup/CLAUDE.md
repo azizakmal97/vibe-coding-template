@@ -213,17 +213,20 @@ models have a 1M window; use the 200k column only for a model that names 200k.
 
 | Used (1M) | Used (200k) | State | Behavior |
 |---|---|---|---|
-| < 130k | < 60k | green | normal; spawn subagents freely |
-| 130-165k | 60-100k | yellow | prefer subagents for big reads |
-| 165-200k | 100-140k | orange | finish current phase, do NOT start the next |
-| > 200k | > 140k | red | bail at next safe checkpoint; commit; exit |
+| < 200k | < 60k | green | normal; spawn subagents freely |
+| 200-250k | 60-100k | yellow | prefer subagents for big reads |
+| 250-300k | 100-140k | orange | finish current phase, do NOT start the next |
+| > 300k | > 140k | red | bail at next safe checkpoint; commit; exit |
 
-A 1M session still bails at 200k (owner rule, 2026-11-07: chats past 200k were half of all calls but 69% of the
-burn on the plan limit, 19 Oct to 6 Nov). Cached turns are cheap but grow with size, and
-after a break past the cache lifetime (1 h on a plan, 5 min on credits) the next
-turn reprocesses everything. Past 200k, or after an overnight break, a fresh
-session from `PROGRESS.md` is cheaper. A large next phase is not a
-reason to bail while green.
+A 1M session bails at 300k (owner rule, 2026-11-14, raised from the 200k of 2026-11-07).
+Not lower: setup alone is 100 to 140k, so a 200k chat had about 60k of room and one job
+took ten chats, each paying for setup again. Not higher: chats past 200k were half of all
+calls but 69% of the burn on the plan limit (19 Oct to 6 Nov), and cached turns are cheap
+but grow with size. The estimate behind 300k: a fresh chat's first read costs about what
+ten turns of a 250k chat cost. After a break past the cache lifetime (1 h on a plan, 5 min
+on credits) the next turn reprocesses everything, so a chat already past 200k is closed
+instead of resumed, and so is any chat after an overnight break: a fresh session from
+`PROGRESS.md` is cheaper there. A large next phase is not a reason to bail while green.
 
 Habits: graph/grep before broad reads; spawn a subagent for any file > 500 LOC or
 multi-file investigation (it keeps the big read in its own context); never re-read
