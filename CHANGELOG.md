@@ -16,6 +16,8 @@ All notable changes to this project are documented here. The format is based on
 - **Effort follows the work, not the phase tag.** A `high` tag covers the new part only: repeat work on something settled runs `medium`, fixes and re-renders `low` to `medium`, and `high` stays for new decisions and work where being wrong is expensive.
 
 ### Added
+- **The antislop checker flags a comma before a Malay joining word.** `antislop-check.mjs` now fails on ", dan", ", atau", ", serta", ", untuk" and ", oleh" (rule `MALAY`). The owner's rule lived only in prose, so it kept slipping through.
+- **The global rules carry the owner's laptop-only rules.** `global-setup/CLAUDE.md` now holds the Malay comma rule, close browser tabs, close child sessions, no stuck background shells, share RAM, low RAM and the full RAM report. They existed only in the installed copy, which a re-run of `setup.ps1` would have overwritten.
 - **Optional usage guard.** `.\setup.ps1 -UsageGuard` stops new messages from 11:30pm to 6am (start with "urgent" to override; /close, night jobs, the app's resume after a plan-limit reset and chats started by another chat all pass) and warns on long chats and weekly pace. Off by default.
 - **`content-method` skill.** One method for every brand repo: the same commands, the viral gate, a required `look:` line per post, the owner's yes on a reel script, and a nightly job that builds approved reels on the engine.
 - **`poster-design`: every cover comes from Google Flow.** A new picture per cover, with the text set in code.

@@ -10,6 +10,10 @@ Owner rule, 2026-11-02 ("remember forever"): every reply is short, simple and pa
 Lead with the answer, no recaps or filler. Ask every question in plain, easy words,
 one decision at a time, naming things the way the owner sees them.
 
+Malay copy in every project (owner rule, 2026-11-08): never put a comma before
+"dan", "atau", "serta", "untuk" or "oleh". It reads as AI slop, and the template's
+`antislop-check.mjs` flags it.
+
 ## 1. Model Selection per Task (Always)
 
 Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task
@@ -230,6 +234,52 @@ Refuse a tool call that would: push context past ~80%, Read a file > 5000 LOC
 without a subagent, or Grep across `**/*` without scoping. Instead narrow scope,
 spawn a subagent, or bail.
 
+**Close browser tabs (owner rule, 2026-11-06).** Close every tab and window you open
+as soon as you finish with it, in every browser, including a window started from the
+shell. Check before ending any turn.
+
+**Close child sessions (owner rule, 2026-11-07).** A session you started gets archived
+as soon as its task is finished and checked. Never leave one open.
+
+**No stuck background shells (owner rule, 2026-11-06).** A forgotten PowerShell job
+ate a CPU core and RAM for 2+ hours. Every background command gets a hard time limit
+(a script timeout, or a foreground call with `timeout`). Never scan a huge folder
+tree (Temp, AppData, a whole drive) recursively in a shell; use a bounded tool such
+as `robocopy /L` or the Storage settings, or skip the measurement. Before ending
+any turn, check every background job you started: finished, or stop it (TaskStop)
+and say so. Never end a turn with one still running unless the owner asked for it.
+
+**Share RAM between sessions (owner rule, 2026-11-11).** Before a RAM-heavy run
+(Blender, a Remotion or ffmpeg render, the emulator), check free RAM and send the
+other linked sessions one line saying what will run and for how long; say when it
+ends. One heavy job at a time across all sessions. Hold yours while another session
+is rendering or free RAM is under about 1.2 GB.
+
+**Low RAM: look and act before reporting (owner rule, 2026-11-12: "why i should tell u
+everytime to optimize it").** When free RAM is under about 1.5 GB at session start or
+before heavy work, do this unasked, in one pass: (1) measure where it went (programs by
+memory, how many chats and tool servers are open); (2) stop what is yours and idle (your
+own dev servers, background jobs, Blender, browser tabs, finished helpers); (2b) message
+every other open chat (owner, same day: "always communicate with other claude session, so
+u know what to stop"): say what you run, ask what they run and still need, and ask them
+to stop their own idle servers and jobs and reply in a line; (3) tell the
+owner in plain numbers what is left and the one action of his that frees the most
+(usually closing an idle chat: each open chat costs about 1 GB with its tool servers, and
+a very long chat costs more). Never stop another chat's programs and never touch
+TradingView. Seen 2026-11-12: 16 GB was full with Claude 3.8 GB (3 chats), 28 node tool
+servers 2.4 GB (every chat starts its own copies, REA alone 250 MB each), Windows 2.2 GB.
+
+**A RAM report adds up to the total (owner rule, 2026-11-14: "where are the others?? why
+i should ask this multiple times").** Never list only the top programs. Every RAM report
+shows all the buckets in GB and a total line equal to what Windows can use: programs'
+own memory (top names plus one "all other programs" line), pages programs share, graphics
+memory lent from RAM, Windows itself (pools, drivers, cache), standby cache, truly free.
+Say which bucket was found by subtraction. Measure with `Win32_PerfFormattedData_PerfOS_Memory`,
+per-process `WorkingSetPrivate` and the counter `\GPU Adapter Memory(*)\Shared Usage`:
+`Get-Process` working sets count shared pages once per program and leave out Windows and
+graphics. Seen 2026-11-14, 15.7 GB: programs 5.4, shared pages about 2.6 (by subtraction),
+graphics 2.4, Windows 1.9, standby cache 1.6, free 1.8.
+
 ## 3. Graphify After Structural Changes (Always)
 
 - If `graphify-out/GRAPH_REPORT.md` exists, read it FIRST before any full-repo
@@ -282,10 +332,10 @@ have to remember it. Notes:
   `powershell -NoProfile -File ~/.claude/scripts/trash.ps1 <paths>` (Windows; copy
   `global-setup/scripts/trash.ps1` there and set `TRASH_ROOTS` to your project folders).
   Restorable by design. Never recycle tracked source files or another session's work.
-- Media you download: the same turn it is copied into its project, recycle the
-  Downloads copy; at every close, recycle any of your downloads with a hash-identical
-  copy in a project or whose post is live or dropped. Never touch the owner's own
-  files there (recordings, chat folders, installers).
+- Media you download (owner rule, 2026-11-05, "remember forever"): the same turn it is
+  copied into its project, recycle the Downloads copy; at every close, recycle any of
+  your downloads with a hash-identical copy in a project or whose post is live or
+  dropped. Never touch the owner's own files there (recordings, chat folders, installers).
 
 ## 6. Learn From Errors — Capture & Recall (this IS "gets faster over time")
 
