@@ -4,7 +4,7 @@
 **Last update:** _YYYY-MM-DD by Agent_
 **Last commit:** _hash_
 **Plan reference:** `AUDIT_AND_ROADMAP.md` (if exists) OR project README roadmap section.
-**Model strategy:** see `AGENTS.md` → "Model & Tool Selection per Task" and `CLAUDE.md` §22. Every phase below MUST carry an explicit `Model:` line.
+**Model strategy:** the global rule `~/.claude/CLAUDE.md` section 1 (without it: `AGENTS.md` → "Model Selection per Task"); this project's overrides in `CLAUDE.md` §22. Every phase below MUST carry an explicit `Model:` and `Effort:` line.
 
 ---
 
@@ -177,7 +177,8 @@ Every Friday:
 **Completed:** _YYYY-MM-DD_
 **Commits:** _hash → hash_
 **Spec:** _specs/<slug>.md, or none_
-**Model:** _Sonnet | Opus | Haiku | DeepSeek Pro | DeepSeek Flash | Gemini Pro | Gemini Flash — see AGENTS.md "Model & Tool Selection per Task"_
+**Model:** _Sonnet | Opus | Haiku | DeepSeek Pro | DeepSeek Flash | Gemini Pro | Gemini Flash — see `~/.claude/CLAUDE.md` section 1_
+**Effort:** _low | medium | high_
 
 **Plan for this phase:**
 - [ ] Edit file A *(Model: ...)*

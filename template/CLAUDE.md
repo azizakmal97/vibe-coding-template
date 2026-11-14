@@ -278,146 +278,19 @@ Run `/handover` to generate / refresh the 5 plain-language docs.
 
 ## 22. Model Selection per Task
 
-Full vendor-neutral matrix + tradeoff explanation lives in `AGENTS.md` → "Model & Tool Selection per Task". This section adds Claude-Code-specific operational rules.
+The model lineup, prices, benchmark notes and Rules 1 to 5 live in one place: the
+global rule, `~/.claude/CLAUDE.md` section 1 "Model Selection per Task" (ZCode:
+`~/.zcode/AGENTS.md`, built from the same file). When that rule is loaded, it wins
+over the fallback in `AGENTS.md`. Do not copy its lineup or rules back here.
 
-### Rule 1 — Declare model at the START of every task, in plans AND in live prompts
+Without the global setup, read the fallback line in `AGENTS.md` → "Model Selection
+per Task" before the first task (it may lag behind the global rule).
 
-Whenever the user gives any instruction — whether inside a formal plan phase OR as a
-direct one-off prompt — the FIRST sentence must declare which model owns this task
-AND which model is actually running. Name both: "Model: Haiku" on an Opus session
-reads as if Haiku were running. Format:
+### This project
 
-> `Task: **Sonnet 5.5 · medium** · Running: **Sonnet 5.5** ✓` — then proceed.
-> `Task: **Haiku 5.5 · low** · Running: **Opus 5.5** — tiny task, staying (Rule 4)` — then proceed.
-> `Task: **Sonnet 5.5 · medium** · Running: **Opus 5.5** — handing down (Rule 4)` — then proceed.
-> `Task: **Opus 5.5 · high** · Running: **Sonnet 5.5** — switch first` — then stop.
-
-**A `high` tag covers the new part only.** Repeating work on something already settled, such as
-another page on a set design or another feature on an agreed pattern, runs `medium`; fixes run `low`
-to `medium`. `high` stays for new decisions and for work where being wrong is expensive. Set the
-session's effort to match before starting.
-
-This applies to EVERY task: feature work, bug fix, a single file edit, a question
-that leads to code, a refactor, a review, anything. The declaration comes before the
-first tool call or line of output. No exceptions.
-
-### Rule 2 — In plans, every entry carries a model line
-
-Every phase block in `PROGRESS.md` carries a `Model:` line plus per-bullet
-annotation. Open the right model BEFORE marking the phase 🟡 in-progress. A plan
-bullet with no model annotation is incomplete.
-
-### Rule 3 — End every turn by naming the model for the NEXT step
-
-Explicitly, every time, even if it's already written in the plan. The user opens a
-fresh session per step and needs the next-model called out so they pick the cheapest
-capable session without re-reading the plan.
-
-### Rule 4 — Only execute tasks matching the CURRENT session's model (both directions)
-
-Don't take Opus-assigned work on a Sonnet session, and don't do Sonnet-assigned work
-on an Opus session. Check the assignment BEFORE the first edit. On a mismatch: stop,
-state which model to switch to, wait for the user to swap. Planning across the
-boundary is fine; executing is not, unless the user explicitly says "run it on this
-model anyway", or one of the two exceptions below applies.
-
-**Tiny task: stay put.** A task tagged for a cheaper model that takes a few tool
-calls (about three or fewer) and needs no decisions runs on the current model, with
-the declaration saying so. A model switch re-reads the whole conversation with no
-prompt cache, and a subagent spins up a fresh context, so both cost more than a few
-calls at the bigger model's price. Downward only, and never for design, graphics or
-video editing, which stay on Opus or Fable.
-
-**Downward handoff.** Work tagged for a cheaper Claude model than this session
-(Fable > Opus > Sonnet > Haiku) needs no swap: hand it to a subagent through the
-Agent tool, with `model` set to the tag's model and `effort` to the tag's effort.
-Only when a brief can carry the whole task: the files, the exact change, and the
-check that proves it. Review the subagent's diff and run that check yourself before
-committing. Never hand work upward: Opus or Fable work needs the full context a
-brief drops, so swap the session.
-
-Inside `/autonomous` a mismatch defers that work instead of stopping: the loop
-finishes everything this model owns, then stops and names the model to switch to.
-See `/autonomous` → "Model Gate".
-
-### Rule 5 — When a check fails, escalate once, one step up
-
-A check is a test, typecheck, lint, build or review verdict. Try one repair on the
-same model and effort. If that fails too, stop repairing and step up. One failed
-repair, not five: failed cheap runs cost more than an early step up.
-
-- It missed something it could have seen (skipped a file, didn't run the tests,
-  ignored an instruction) → **effort** one step up, same model. For the main
-  session ask the owner to raise it (`/model`); for a subagent, re-run it with a
-  higher `effort`.
-- It had the full context and was still wrong → **model** one step up
-  (Haiku → Sonnet → Opus → Fable). For the main session that is a Rule 4 swap. A
-  handed-down subagent's step up is usually this session: take the task back.
-- After a model step up fixes it, save a one-line routing lesson
-  (`rules/memory.md`): `<task pattern> → <model · effort that worked>`.
-
-### Reading the session effort
-
-Claude Code may show no session effort in context, or one that differs from what
-the owner set in `/model`. In the Claude desktop app, call
-`mcp__ccd_session_mgmt__get_session` with `"self"` and use its `effort` field,
-marked `(app-reported) ✓`. Trust it only if its `model` matches the real model:
-the one line in your system prompt that reads `You are powered by the model named <X>.
-The exact model ID is <id>.` After a model switch from the phone, the app's readout and
-the app's own line `This iteration of Claude is ...` both keep the old model, so neither
-counts. A mismatch means the readout is stale: use the `powered by` model, say
-not visible and never ask the owner which model is running. Elsewhere, treat it as not visible unless the owner
-stated it in this conversation, and never mark an effort `✓` you have not verified.
-
-### Project pin
-
-`.claude/settings.json` carries `"model": "claude-sonnet-5-5"` (or current Sonnet)
-as the project default. Every fresh session in this repo opens on that model unless
-the user overrides with `/model`.
-
-### Switching Claude models
-
-- `/model opus` / `/model haiku` — swaps within the current session if supported.
-- If mid-session swap is not supported: checkpoint → new session → `/model <target>`
-  → `/resume`.
-- **Never switch mid-task "just to try"** — costs the cache for no upside.
-
-### Leaving Claude Code (DeepSeek / Gemini paths)
-
-Before switching to Cursor / Aider / Continue / Gemini Studio / direct API:
-
-1. `/checkpoint` — runs verification + commits current state so hooks fire.
-2. Confirm push succeeded (`git status` shows "up to date with origin").
-3. Open the alternate tool. Do the bulk / multimodal / translation work.
-4. Return to Claude Code for verification: `bunx tsc --noEmit && <lint/test/build>`
-   so post-edit and file-budget hooks fire on the merged state.
-
-### Concrete model lineup (last reviewed 2026-10-19, monthly)
-
-| Slot | Current name | Notes |
-|---|---|---|
-| Anthropic frontier | Fable 5.1 (`claude-fable-5-1`) | Opt-in only, when Opus 5.5 at high fell short; $10/$50 per 1M
-| Anthropic flagship | Opus 5.5 (`claude-opus-5-5`) | Architecture, complex debug, copy, legal, security review, and always design, graphics and video editing (Fable may do these too); $4/$20 |
-| Anthropic workhorse | Sonnet 5.5 (`claude-sonnet-5-5`) | Default project pin; $2/$10 |
-| Anthropic small | Haiku 5.5 (`claude-haiku-5-5`) | Status checks, mechanical edits; $0.10/$0.50 |
-| DeepSeek heavy | V4 Pro | Bulk codegen, mass test scaffolding |
-| DeepSeek small | V4 Flash | Format / lint auto-fix |
-| Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context |
-| Google small | Gemini 3 Flash | Spell-check, screenshot smoke |
-
-**Benchmarks (Artificial Analysis, 2026-10-19).** Intelligence Index / cost per index task (USD):
-Opus 5.5 max 58 / 5.98 · high 54 / 1.82 · medium 51 / 1.34 — Sonnet 5.5 max 56 / 5.46 · high 47 / 0.88 ·
-medium 41 / 0.48 — Fable 5.1 max 53 / 7.63 — Haiku 5.5 max 43 / 0.21 · medium 34 / 0.05. At equal effort Opus
-leads; Sonnet at `max` costs 3× Opus `high` for +2 points, so never run Sonnet at max. Healthcare index
-(max): Opus 61, Sonnet 58, Fable 58.
-
-**Review at project adoption.** These names will go stale. Update both this section
-and `AGENTS.md` matrix when starting a new project from this template.
-
-### Anti-patterns
-
-- Opus for status checks, build runs, log inspection — burn for no upside.
-- Sonnet for novel copywriting, brand voice, or architectural calls — output reads thin.
-- Anything but Opus or Fable for design, graphics or video editing (`AGENTS.md` matrix): never Sonnet, Haiku or GLM, never handed down.
-- Leaving Claude Code without committing first — non-Claude tools don't fire `.claude/` hooks.
-- Inheriting this lineup unchanged six months from now without checking what shipped.
+- **Project pin:** `.claude/settings.json` carries `"model": "claude-sonnet-5-5"` (or
+  the current Sonnet), so every fresh session here opens on it unless `/model` overrides.
+- **Plans:** every phase block in `PROGRESS.md` carries a `Model:` and an `Effort:`
+  line, plus a `(Model: <model> · <effort>)` tag on each bullet.
+- **Overrides:** _none yet. Add this project's own model rules here, e.g. "design
+  work runs on Fable"; they win over the global rule._

@@ -97,74 +97,26 @@ See `PROGRESS.md`. If a phase is `🟡 in-progress`, follow the 9-step resume pr
 
 ---
 
-## Model & Tool Selection per Task
+## Model Selection per Task
 
-Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task model assignment. The model decision drives which IDE/tool you open: Claude Code uses Anthropic models inside this repo's `.claude/` safety net; DeepSeek + Gemini run outside it (Cursor / Aider / Continue / Roo Code / direct API) and lose the death-defense hooks.
+Every plan, phase and task carries a model and an effort. The lineup, prices,
+benchmark notes and the rules (declare the model and effort before the first tool
+call, run only the work your session's model owns, escalate once when a check fails)
+live in one place: the global rule, `~/.claude/CLAUDE.md` section 1 "Model Selection
+per Task" (ZCode: `~/.zcode/AGENTS.md`, built from the same file). When that rule is
+loaded, it wins over the fallback line below. Do not copy its lineup or rules back here.
 
-**Review the model list at project adoption** — concrete 2026 names below WILL go stale. Bump versions and rebalance assignments at the start of every new project scaffolded from this template.
+Fallback, only for a computer or tool without the global setup (it may lag behind the global rule): hard work (architecture, unclear root cause, security, auth, money, legal or brand copy) → Opus · high; normal feature work → Sonnet · medium; status checks, build runs and mechanical edits → Haiku · low; design, graphics and video editing → Opus or Fable, never lower; on a GLM plan, GLM-5.3 at `high` for Opus work, GLM-5.3 at `low` for Sonnet work, GLM-5.3-Flash for Haiku work. Say the task's model and effort before the first tool call, and give every plan bullet a model and an effort.
 
-### Vendor tradeoff
+**In this project:** every phase block in `PROGRESS.md` carries a `Model:` and an
+`Effort:` line, plus a `(Model: <model> · <effort>)` tag on each bullet. Match it
+before opening the session. This project's own model rules, if any, are in
+`CLAUDE.md` §22 and win over the global rule.
 
-- **Claude (Opus / Sonnet / Haiku)** — runs inside `.claude/` hooks: SessionStart resume, pre-commit checkpoint, post-edit file-size, post-commit auto-push, secret-read deny-list. Use for anything that touches code AND benefits from death-defense.
-- **DeepSeek (Pro / Flash)** — cheaper per token, strong at code, weak at architectural ambiguity. Run via Cursor / Aider. No `.claude/` hooks. Worth it only for bulk mechanical work where savings dominate.
-- **Gemini (Pro / Flash)** — native multimodal (PNG / PDF / screenshot), large context window (1M+), strong at translation + cultural nuance. Run via API / AI Studio / IDE plugins. No `.claude/` hooks. Worth it for visual QA, long-context whole-repo questions, and i18n translation passes.
-- **GLM (5.3 / 5.3-Flash)** — a flat-rate GLM Coding Plan instead of per-token Anthropic billing, 1M context, thinking effort selectable per model (`low` / `high` / `max`). Two ways to run it, and the difference matters more than the model does:
-  - *ZCode driving Claude Code as its Agent CLI* (or the Claude Code CLI pointed at `https://api.z.ai/api/anthropic`) — the whole `.claude/` layer applies unchanged. Treat it exactly like a Claude session with a cheaper model.
-  - *The native ZCode Agent* — reads this file, runs the same hooks **only** after `.zcode/` is installed as a plugin, and never gets a permission deny-list. Verify the guard fires before trusting it (`.zcode/README.md`).
-
-### Decision matrix (starting defaults — customize at project start)
-
-| Task type | Model | Tool | Reason |
-|---|---|---|---|
-| Implementation of a defined feature | **Sonnet** (current: Sonnet 5.5) | Claude Code | Spec exists; hooks fire |
-| Tests (TDD red→green, one feature) | **Sonnet** | Claude Code | Pattern; hooks fire |
-| Scaffolding (component, route, schema stub) | **Sonnet** | Claude Code | Repeatable |
-| Bug fix with known root cause | **Sonnet** | Claude Code | Surgical |
-| Docs polish, README updates | **Sonnet** | Claude Code | Low-stakes prose |
-| Architecture / structural decision | **Opus** (current: Opus 5.5) | Claude Code | Trade-offs matter |
-| Complex debugging (root cause unclear) | **Opus** | Claude Code | Reasoning across layers |
-| Security review / `/security-audit` / `/code-review high+` | **Opus** | Claude Code | Subtle issues; every finding verified by a second agent |
-| Cross-cutting refactor (5+ files) | **Opus** | Claude Code | Many edges held in mind |
-| Copywriting (hero, product pitch, tone) | **Opus** | Claude Code | Voice + brand judgment |
-| Design, graphics, video editing (UI and visual design, thumbnails, covers, storyboards, video edits and re-renders) | **Opus or Fable**, always | Claude Code | Owner rule: never Sonnet, Haiku or GLM, never handed down, whatever the plan tag says |
-| Legal / compliance content (Privacy / Terms / ToS) | **Opus** | Claude Code | Compliance precision |
-| Performance investigation (bundle, runtime) | **Opus** | Claude Code | Diagnostic depth |
-| Hardest long-horizon work, after Opus at high fell short | **Fable** (current: Fable 5.1) | Claude Code | Frontier tier, 2.5× Opus price; opt-in only |
-| Bulk codegen (same pattern across 5+ files) | **DeepSeek Pro** (current: V4 Pro) | Cursor / Aider | Pattern repetition cheap |
-| Mass test scaffolding (E2E suite, fixtures) | **DeepSeek Pro** | Cursor / Aider | Repetitive; price wins |
-| i18n translation pass (cultural nuance) | **Gemini Pro** (current: 3 Pro) | API / Studio | Translation quality + long context |
-| Visual QA from screenshots (design diff, mobile check) | **Gemini Pro** | API / Studio | Native multimodal |
-| Long-context whole-repo question (after `/graphify`) | **Gemini Pro** | API / Studio | 1M context covers GRAPH_REPORT + code |
-| Spell-check / copy proofread | **Gemini Flash** (current: 3 Flash) | API / Studio | Cheap + good at prose |
-| Bulk screenshot smoke (i18n toggle, cross-browser viewport) | **Gemini Flash** | API / Studio | Multimodal + cheap |
-| Mechanical sync (`AGENTS.md` → shim files) | **Haiku** (current: Haiku 5.5) | Claude Code | One script run |
-| Status checks (`git log`, ci status, "is X live") | **Haiku** | Claude Code | Cheap = right |
-| Single-line edit per explicit instruction | **Haiku** | Claude Code | No judgment |
-| Format / lint auto-fix passes | **DeepSeek Flash** (current: V4 Flash) | Cursor / Aider | Mechanical; price wins |
-| Any Sonnet-row task, on a GLM plan | **GLM-5.3** effort `low` | ZCode (Agent CLI: Claude Code) | Flat-rate; hooks still fire |
-| Any Opus-row task, on a GLM plan | **GLM-5.3** effort `high`/`max` | ZCode (Agent CLI: Claude Code) | Buy thinking, not a bigger bill |
-| Any Haiku-row task, on a GLM plan | **GLM-5.3-Flash** | ZCode | Cheap = right |
-
-**Substituting GLM for an Opus row is a real trade, not a free swap.** For work assigned to Opus *because being wrong is expensive* — auth, money, patient-data correctness, legal copy, brand voice — either run it on Anthropic or say in the plan that you didn't. Design, graphics and video editing have no GLM option at all: they run on Opus or Fable. Don't quietly downgrade and call the assignment met.
-
-### Workflow rules
-
-1. **Default to Sonnet in Claude Code.** It's the project pin (`.claude/settings.json`). Most work goes here.
-2. **Escalate to Opus only for the rows above.** Open a fresh session, `/model opus`, then `/resume`.
-3. **Drop to non-Claude tools only when bulk-mechanical OR multimodal OR translation.** Before doing so: commit current Claude Code work, push, then switch tools. Never run two agents on the same files concurrently.
-4. **After non-Claude work, return to Claude Code for verification.** Run typecheck + lint + tests + build here so `.claude/` hooks + file-budget checks fire on the merged result.
-
-### Per-phase assignment lives in `PROGRESS.md`
-
-Every phase block in `PROGRESS.md` carries a `Model:` line plus per-bullet model annotation. Match the assignment before opening the session.
-
-### Anti-patterns
-
-- Opus for `npm run build` / `git status` / log inspection — burn for no upside.
-- Sonnet for novel copywriting, brand voice, or architectural calls — output reads thin; you'll redo it.
-- DeepSeek / Gemini for anything touching the death-defense path without a Claude verification pass — hooks didn't fire; state may be unsafe.
-- Switching Claude models mid-session "just to try" — costs the cache, gains nothing.
-- Inheriting this matrix unchanged into a new project without checking what the latest model lineup is.
+**Outside Claude Code:** DeepSeek and Gemini run in other tools (Cursor, Aider, an
+API) where `.claude/` hooks never fire. Commit and push first, never run two agents
+on the same files at once, then come back to Claude Code to run typecheck, lint,
+tests and build.
 
 ---
 

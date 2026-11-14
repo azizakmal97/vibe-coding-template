@@ -19,19 +19,24 @@ Malay copy in every project (owner rule, 2026-11-08): never put a comma before
 Every plan, phase, task block, or roadmap entry MUST carry an explicit per-task
 model assignment. Never run a whole project on one model by default.
 
+This section is the only full copy of the lineup, the prices, the benchmark notes
+and Rules 1 to 5. A template project's `CLAUDE.md` §22 and `AGENTS.md` "Model
+Selection per Task" only point here, with one fallback line for a computer or tool
+without this file. Change the rules here, never there.
+
 ### Current lineup (last reviewed 2026-10-19 — names go stale; a monthly routine re-checks benchmarks and prices)
 
 | Slot | Current name | Use for |
 |---|---|---|
 | Anthropic frontier | **Fable 5.1** (`claude-fable-5-1`) | Only when Opus 5.5 at `high`/`xhigh` already fell short: the hardest long-horizon agentic work, gnarly multi-system debugging. Owner opt-in per task, never a default, except design, graphics and video editing, which may run on it |
-| Anthropic flagship | **Opus 5.5** (`claude-opus-5-5`) | Architecture, hard debugging, security review, novel copy/brand voice, tricky refactors, and always design, graphics and video editing (Fable may do these too) |
-| Anthropic workhorse | **Sonnet 5.5** (`claude-sonnet-5-5`) | Default for normal feature work and edits |
+| Anthropic flagship | **Opus 5.5** (`claude-opus-5-5`) | Architecture, hard debugging (root cause unclear), security review (`/security-audit`, `/code-review high` and up), novel copy/brand voice, legal and compliance text, performance investigation, cross-cutting refactors (5+ files), and always design, graphics and video editing (Fable may do these too) |
+| Anthropic workhorse | **Sonnet 5.5** (`claude-sonnet-5-5`) | Default for normal feature work and edits: a defined feature, its tests, scaffolding, a bug fix with a known root cause, docs |
 | Anthropic small | **Haiku 5.5** (`claude-haiku-5-5`) | Status checks, log inspection, mechanical edits, build runs |
 | DeepSeek heavy | V-series Pro | Bulk codegen, mass test scaffolding |
 | DeepSeek small | V-series Flash | Format / lint auto-fix |
-| Google heavy | Gemini 3 Pro | Translation, multimodal QA, long-context reads |
+| Google heavy | Gemini 3 Pro | Translation, multimodal QA from screenshots, long-context whole-repo questions |
 | Google small | Gemini 3 Flash | Spell-check, screenshot smoke |
-| Z.AI heavy | GLM-5.3 (effort `high`/`max`) | Flat-rate substitute for Sonnet/Opus rows — see the caveat below |
+| Z.AI heavy | GLM-5.3 | Flat-rate substitute: effort `low` for Sonnet rows, `high`/`max` for Opus rows — see the caveat below |
 | Z.AI small | GLM-5.3-Flash | Flat-rate substitute for Haiku rows |
 
 #### Anthropic capabilities (verified 2026-10-15 against the claude-api skill's model table, cached 2026-10-06)
@@ -52,7 +57,8 @@ Cost ratios that matter for slot choice: Opus 5.5 is only **2×** Sonnet 5.5, an
   a higher effort: Sonnet max (56) > Opus high (54) > Opus medium (51). Healthcare & medicine index (max):
   Opus 61, Sonnet 58, Fable 5.1 58. Fable 5.1 max (53) scores below Opus 5.5 high.
   Cost per index task (USD): Opus max 5.98 · Sonnet max 5.46 · Opus high 1.82 · Opus medium 1.34 ·
-  Sonnet high 0.88 · Sonnet medium 0.48 · Fable max 7.63 · Haiku max 0.21 / medium 0.05.
+  Sonnet high 0.88 · Sonnet medium 0.48 · Fable max 7.63 · Haiku max 0.21 / medium 0.05
+  (Haiku 5.5 index: max 43, medium 34).
   So: never run Sonnet at `max` (3× Opus `high`'s cost for +2 points); hard or clinical work → Opus 5.5
   `high`; normal building → Sonnet 5.5 `medium`/`high`; mechanical → Haiku.
 
@@ -67,6 +73,11 @@ before any hook runs — see `template/.zcode/README.md`. Substituting GLM for a
 row is a real trade: for work assigned to Opus because being wrong is expensive (auth,
 money, patient-data correctness, brand voice), either run it on Anthropic or say in the
 plan that you didn't.
+
+**Outside Claude Code there are no hooks.** DeepSeek and Gemini run in other tools
+(Cursor, Aider, Continue, AI Studio, a direct API call) where a project's `.claude/`
+hooks never fire, so use them only for bulk mechanical, multimodal or translation
+work, where the savings or the skill are worth that.
 
 **Design, graphics and video editing always run on Opus 5.5 or Fable** (owner rule,
 2026-10-25; Fable added 2026-11-13). That covers UI and visual design, graphics,
@@ -140,7 +151,8 @@ must come before the first tool call or line of output.
 
 **Rule 2 — In plans, every entry carries a model AND effort line.**
 In `PROGRESS.md`, every phase block carries a `Model:` + `Effort:` line plus per-bullet
-annotation. A plan bullet with no model AND effort annotation is incomplete.
+annotation. A plan bullet with no model AND effort annotation is incomplete. Open the
+right model before marking the phase 🟡 in-progress.
 
 **Rule 3 — End every turn by naming the model AND effort for the NEXT step.**
 Explicitly, every time, even if it's already written in the plan. The user opens a
@@ -178,8 +190,9 @@ model to switch to. The command's "Model Gate" section has the rules.
 - Switch Claude models with `/model opus|sonnet|haiku`. If mid-session swap isn't
   supported: checkpoint → new session → `/model <target>` → `/resume`.
 - Before leaving Claude Code for another tool (Cursor/Aider/Gemini/direct API):
-  `/checkpoint` first so hooks fire and work is pushed. Return to Claude Code for
-  final verification so post-edit + file-budget hooks run on the merged state.
+  `/checkpoint` first so hooks fire, and confirm the push landed. Never run two
+  agents on the same files at once. Return to Claude Code for final verification
+  (typecheck, lint, tests, build) so post-edit + file-budget hooks run on the merged state.
 
 **Rule 5 — When a check fails, escalate once, one step up.**
 A check is a test, typecheck, lint, build or review verdict. Try one repair on the
@@ -204,6 +217,9 @@ step up.
 - Sonnet for novel copywriting, brand voice, or architecture calls — output reads thin.
 - Anything but Opus or Fable for design, graphics or video editing — owner rule, no exceptions.
 - Never switch model mid-task "just to try" — it costs the prompt cache for nothing.
+- DeepSeek or Gemini on anything touching the death-defense path (commits, pushes,
+  hooks) without a Claude verification pass: the hooks didn't fire, so the state may be unsafe.
+- Leaving Claude Code without committing first: other tools don't fire `.claude/` hooks.
 
 ## 2. Token Budget (Always)
 

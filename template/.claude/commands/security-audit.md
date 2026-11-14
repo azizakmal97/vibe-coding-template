@@ -6,7 +6,7 @@ argument-hint: "[quick|standard] [optional scope: a path or feature, e.g. apps/a
 # /security-audit
 
 Model: **Opus 5.5 · high** (security review: being wrong is expensive). On another
-model, stop and ask for `/model opus` first (`CLAUDE.md` §22 Rule 4).
+model, stop and ask for `/model opus` first (Rule 4 in `~/.claude/CLAUDE.md` section 1).
 
 Arguments: `$ARGUMENTS`
 

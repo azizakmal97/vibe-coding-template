@@ -28,7 +28,8 @@ back to this command when the loop must follow the PROGRESS.md phase protocol
 
 ## Model Gate
 
-`CLAUDE.md` §22 Rule 4 says a session only executes work assigned to its own
+Rule 4 of the global model rule (`~/.claude/CLAUDE.md` section 1, ZCode:
+`~/.zcode/AGENTS.md`) says a session only executes work assigned to its own
 model. Inside this loop a mismatch defers the work instead of stopping the loop.
 
 **This session's model** is the one named in your system prompt (e.g. Opus 5.5,
@@ -50,12 +51,13 @@ loop says so ("run everything on this model", `/autonomous any-model`). Write
 `owner override` next to every bullet run that way.
 
 **A bullet's model** is its `(Model: …)` tag, else the phase's `Model:` line. If
-neither exists, assign one from `AGENTS.md` → "Model & Tool Selection per Task"
+neither exists, assign one from the lineup in the global rule (`~/.claude/CLAUDE.md`
+section 1; without it, the fallback line in `AGENTS.md` → "Model Selection per Task")
 and write it into PROGRESS.md before gating. Planning for another model is
 allowed; executing its work is not.
 
 **A bullet runs here** when its model names this session's model, or names a slot
-this session is the listed substitute for in that same AGENTS.md table (on a GLM
+this session is the listed substitute for in that same lineup (on a GLM
 plan: GLM-5.3 for Sonnet rows, GLM-5.3-Flash for Haiku rows). An Opus row runs on
 GLM only if the bullet or phase explicitly says GLM is acceptable, because the
 owner can't be asked mid-loop whether the trade is fine. DeepSeek and Gemini rows
@@ -72,7 +74,7 @@ a subagent costs more than the calls it saves. Hand down only bullets a brief
 can fully carry; a bullet that needs this conversation's context runs here instead.
 Review the diff and run the check yourself before `/checkpoint`. If it fails, re-run
 the subagent once one effort step up when it missed something, or take the bullet
-back and do it here when it was wrong with full context (`CLAUDE.md` §22 Rule 5).
+back and do it here when it was wrong with full context (global rule, Rule 5).
 Never hand a bullet upward. Write `handed down` next to each bullet run this way.
 
 **Deferring.** Skip a mismatched bullet and continue with the next one that runs
@@ -134,7 +136,7 @@ LOOP:
         - Exit loop with summary report.
   6. IF hook blocked OR test failed OR build failed:
         - Hook blocked → report to user + exit loop.
-        - Test or build failed → one repair, no more (CLAUDE.md §22 Rule 5). Still
+        - Test or build failed → one repair, no more (global model rule, Rule 5). Still
           failing → report + exit loop, with the Rule 5 step up (more effort, or
           which model) in NEXT SESSION SHOULD.
   7. IF user has interrupted (input received):
