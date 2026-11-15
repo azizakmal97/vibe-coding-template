@@ -11,7 +11,9 @@ Execute the 9-step session-resume protocol:
 1. Read `CLAUDE.md` (already auto-loaded; re-read §13).
 2. Read `PROGRESS.md` — find the `🟡 in-progress` phase.
 3. `git log --oneline -20` — see recent `wip:` commits.
-4. `git status` — see if any file is mid-edit.
+4. `git status` — see if any file is mid-edit. Then
+   `gh run list --workflow "Security Scan" --limit 1`: the scan runs weekly, so a
+   red run drops out of `/check-ci`'s last five after a few pushes. Red → report it.
 5. Read the active phase's "Plan for this phase" block.
 6. Reconcile uncommitted changes:
    - Match plan? → finish that one edit + commit.

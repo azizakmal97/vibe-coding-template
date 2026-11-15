@@ -18,6 +18,9 @@ step; say "nothing to do" for a step that has none, never skip it silently.
    - Not pushed: `git push`, then re-check `git status -sb`. Never force-push.
    - A push that deploys (check the project's `CLAUDE.md`): confirm the deploy
      ran, or say plainly that it is unverified.
+   - Where the repo has a weekly "Security Scan" workflow:
+     `gh run list --workflow "Security Scan" --limit 1`. Red goes under STILL OWED
+     (it runs weekly, so `/check-ci`'s last five runs miss it).
 2. **Project records.** Update only what this session changed:
    - `PROGRESS.md`: tick finished bullets, mark the active phase, add a resume
      note (`continue from bullet N; last touched <file>`) for anything unfinished.
