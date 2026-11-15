@@ -24,7 +24,7 @@ Every brand repo has the same five. The engine has the one that builds reels.
 
 **1. Date.** Follow the brand's cadence. Run `hq dates <project>` before giving a post a date, and again at the end of the run: it must print no CLASH. Look four days ahead, so a reel has time for the owner's yes and a night's build.
 
-**1b. No repeats.** Before writing a brief, list what is posted, scheduled and awaiting, and search earlier briefs and captions for the topic. The same condition with the same lesson or hook is a repeat, even in another format or language. A repeat is not written: flag it and take the next planned post.
+**1b. No repeats.** Before writing a brief, list what is posted, scheduled and awaiting, and search earlier briefs and captions for the topic. Compare by subject (two or three words), not by title. The same subject is a repeat, even from a new angle or in another format or language, while the plan still holds a subject the account has never posted: never-posted subjects come first. Only when none is left does an old subject pass, with a new hook and an earlier post at least 60 days old. A repeat is not written: flag it and take the next planned post.
 
 **2. Viral gate**. An outlier from the last 30 days named, three hooks from three formulas scored, the winner 70+ with no check under 55, the payoff on screen in the first second. A brief without them is not ready.
 
