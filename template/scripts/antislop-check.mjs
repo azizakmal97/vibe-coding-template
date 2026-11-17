@@ -25,7 +25,7 @@
  */
 
 import { readFileSync, existsSync, statSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const ROOT = process.cwd();
@@ -216,8 +216,20 @@ function checkTokenContrast(css, cssOffset, text, add) {
   }
 }
 
-// Single-file pages only: a class with no CSS rule renders unstyled. A visually-hidden
-// screen-reader paragraph once shipped visible this way after a rewrite dropped its CSS.
+// A class with no CSS rule renders unstyled. A visually-hidden screen-reader paragraph
+// once shipped visible this way after a rewrite dropped its CSS.
+// Local <link rel="stylesheet"> files count too, or every class on a multi-file page is reported.
+function linkedLocalCss(html, file) {
+  const hrefs = [...html.matchAll(/<link[^>]+rel="stylesheet"[^>]*>/gi)]
+    .map((m) => (m[0].match(/href="([^"]+)"/) || [])[1])
+    .filter((href) => href && !/^(https?:)?\/\//.test(href));
+  return hrefs
+    .map((href) => join(dirname(file), href))
+    .filter((path) => existsSync(path))
+    .map((path) => readFileSync(path, 'utf8'))
+    .join('\n');
+}
+
 function checkUndefinedClasses(html, css, add) {
   const defined = new Set([...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map((m) => m[1]));
   const markup = html.replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<script[\s\S]*?<\/script>/gi, '');
@@ -286,7 +298,7 @@ function checkFile(file, gate, rules) {
       checkTokenContrast(css, offset, text, add);
     }
     if (isHtml) {
-      checkUndefinedClasses(text, blocks.map((b) => b.css).join('\n'), add);
+      checkUndefinedClasses(text, blocks.map((b) => b.css).join('\n') + '\n' + linkedLocalCss(text, file), add);
       checkEyebrowAboveH1(text, add);
       if (gate) checkGateReport(file, add);
     }
