@@ -181,5 +181,6 @@
     ]
   },
   "model": "claude-sonnet-5-5",
+  "outputStyle": "Owner Short",
   "autoMemoryEnabled": true
 }

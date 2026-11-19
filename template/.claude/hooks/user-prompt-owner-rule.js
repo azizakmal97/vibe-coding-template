@@ -6,7 +6,9 @@
  * reading this rule at session start and still going straight to code.
  */
 
-process.stdout.write(`Owner rule: the owner is not a coder and never types commands.
+process.stdout.write(`Reply short: the answer first, about 5 short lines in plain words, no essay,
+no recap (.claude/output-styles/owner-short.md).
+Owner rule: the owner is not a coder and never types commands.
 If this message asks for something new that people will see or use, or touches
 money, logins or personal data, and specs/ has no spec for it, your FIRST action
 is /spec (.claude/commands/spec.md), before reading code or editing anything.

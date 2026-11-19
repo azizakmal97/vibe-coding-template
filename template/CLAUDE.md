@@ -190,9 +190,13 @@ Split a component (UI) or file (any project) BEFORE adding any new feature when 
 
 See `rules/frontend.md` for UI split pattern; `rules/refactor.md` for general split pattern.
 
-## 16. Communication Style (caveman default)
+## 16. Communication Style (short replies, caveman default)
 
-Default response style is caveman-lite (see `.claude/skills/caveman-default/SKILL.md`).
+Replies to the owner are short and plain: the answer first, about 5 short lines, no
+essay. `.claude/settings.json` turns on the output style `.claude/output-styles/owner-short.md`,
+and `user-prompt-owner-rule.js` repeats it on every message.
+
+Under that, narration is caveman-lite (see `.claude/skills/caveman-default/SKILL.md`).
 Adjust via `.claude/identity.json` (`technicalLevel`, `verbosity`).
 
 Cuts narration tokens ~40% without losing readability for a non-coder maintainer.

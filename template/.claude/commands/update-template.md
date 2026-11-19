@@ -32,7 +32,7 @@ Upstream: https://github.com/azizakmal97/vibe-coding-template (public, no login)
 
 - `.claude/hooks/` — the safety net
 - `.claude/rules/` — the rule files
-- `.claude/agents/`, `.claude/skills/`
+- `.claude/agents/`, `.claude/skills/`, `.claude/output-styles/`
 - `.claude/commands/` — ADD template commands that are missing; NEVER delete a
   command this project added itself
 - `scripts/`, `docs/` templates
@@ -45,7 +45,7 @@ Upstream: https://github.com/azizakmal97/vibe-coding-template (public, no login)
 ## What NEVER updates (project-owned)
 
 `CLAUDE.md`, `PROGRESS.md`, `memory/`, `settings.json` (except the hook merge
-in Phase 3), `identity.json`, `package-manager.json`, `file-budgets.json`,
+in Phase 3, and adding `"outputStyle": "Owner Short"` when the key is missing), `identity.json`, `package-manager.json`, `file-budgets.json`,
 `.audit-accepted.json`, `preset commands.json`, `anti-slop/` (rules.json, gate
 reports, audits), anything under `src/`, `.env*`.
 
