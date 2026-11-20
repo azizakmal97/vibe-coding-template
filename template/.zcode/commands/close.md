@@ -1,5 +1,5 @@
 ---
-description: Close the session properly — save, record, clean up and report before the owner opens a new session.
+description: Update all related files and do proper closing before i close and delete this session and start on new session, so the new session get the context to continue.
 ---
 
 <!-- GENERATED from .claude/ by scripts/sync-zcode.mjs — DO NOT EDIT. Edit the .claude/ source and re-run. -->

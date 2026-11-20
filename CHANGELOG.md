@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Changed
+- **New `/close` wording.** Owner's words (2026-11-21): the command and skill description now reads "Update all related files and do proper closing before i close and delete this session and start on new session, so the new session get the context to continue." Changed in every active repo too.
 - **Short replies by default.** Owner rule (2026-11-19): no essays. A new output style, `.claude/output-styles/owner-short.md`, is on in `settings.json` (answer first, about 5 short plain lines, no recap), and `user-prompt-owner-rule.js` repeats it with every message. `AGENTS.md` rule 17 covers other tools, and `/update-template` now copies `output-styles/`. Rolled out to all 13 active repos.
 - **Design, graphics and video editing may run on Fable too.** Owner rule (2026-11-13): these now run on Opus 5.5 or Fable. A Fable session keeps design work instead of handing it down to Opus. Still never Sonnet, Haiku or GLM, and never handed down to a cheaper subagent.
 - **Recursive delete is no longer blocked.** The `rm -rf` deny-list entry and the `validate-command.js` hard block were removed at the owner's decision on 2026-11-11. Every other block (force push, hard reset, destructive SQL, secret-file reads) is unchanged.

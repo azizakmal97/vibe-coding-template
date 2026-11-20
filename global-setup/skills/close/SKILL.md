@@ -1,6 +1,6 @@
 ---
 name: close
-description: Close the session properly — commit and push every repo touched, update PROGRESS/CHANGELOG/docs and memory, stop background jobs, and report what is safe and what is still owed.
+description: Update all related files and do proper closing before i close and delete this session and start on new session, so the new session get the context to continue.
 disable-model-invocation: true
 ---
 
